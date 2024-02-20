@@ -13,32 +13,29 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
-# list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  Julgen/Font.cpp
-  Julgen/Font.h
-  Julgen/GameObject.cpp
-  Julgen/GameObject.h
-  Julgen/InputManager.cpp
-  Julgen/InputManager.h
-  Julgen/Main.cpp
-  Julgen/Julgen.cpp
-  Julgen/Julgen.h
-  Julgen/Renderer.cpp
-  Julgen/Renderer.h
-  Julgen/ResourceManager.cpp
-  Julgen/ResourceManager.h
-  Julgen/Scene.cpp
-  Julgen/Scene.h
-  Julgen/SceneManager.cpp
-  Julgen/SceneManager.h
-  Julgen/TextObject.cpp
-  Julgen/TextObject.h
-  Julgen/Texture2D.cpp
-  Julgen/Texture2D.h
-  Julgen/Transform.cpp
-  Julgen/Transform.h
+
+# Set the source directory
+set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
+
+# Gather all source files under Julgen/ directory
+file(GLOB_RECURSE JULGEN_SOURCE_FILES
+    ${JULGEN_SOURCE_DIR}/*.cpp
+    ${JULGEN_SOURCE_DIR}/*.h
 )
+
+# list source files here
+add_executable(${TARGET_NAME} ${TARGET_PARAM} ${JULGEN_SOURCE_FILES})
+
+# Include directories
+target_include_directories(${TARGET_NAME} PRIVATE
+    ${JULGEN_SOURCE_DIR}
+    ${JULGEN_SOURCE_DIR}/Components
+    ${JULGEN_SOURCE_DIR}/Main
+    ${JULGEN_SOURCE_DIR}/Engine
+    ${JULGEN_SOURCE_DIR}/ObjectSystem
+)
+
+
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

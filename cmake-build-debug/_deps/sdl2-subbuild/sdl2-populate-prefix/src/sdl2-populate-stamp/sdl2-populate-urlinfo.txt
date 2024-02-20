@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=C:/Program Files/JetBrains/CLion 2023.3.4/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Git/Julgen/cmake-build-debug/_deps/sdl2-subbuild/sdl2-populate-prefix/src/sdl2-populate-stamp/download-sdl2-populate.cmake;COMMAND;C:/Program Files/JetBrains/CLion 2023.3.4/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Git/Julgen/cmake-build-debug/_deps/sdl2-subbuild/sdl2-populate-prefix/src/sdl2-populate-stamp/verify-sdl2-populate.cmake;COMMAND;C:/Program Files/JetBrains/CLion 2023.3.4/bin/cmake/win/x64/bin/cmake.exe;-P;C:/Git/Julgen/cmake-build-debug/_deps/sdl2-subbuild/sdl2-populate-prefix/src/sdl2-populate-stamp/extract-sdl2-populate.cmake
+source_dir=C:/Git/Julgen/cmake-build-debug/_deps/sdl2-src
+work_dir=C:/Git/Julgen/cmake-build-debug/_deps
+url(s)=https://www.libsdl.org/release/SDL2-devel-2.28.5-VC.zip
+hash=
+no_extract=
+

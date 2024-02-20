@@ -1,0 +1,13 @@
+# ninja log v5
+16	478	7301517706281260	CMakeFiles/julgen.dir/Julgen/Components/Transform.cpp.obj	278a64db1d693794
+30	615	7301517707575495	CMakeFiles/julgen.dir/Julgen/InputManager.cpp.obj	79907cd701b557a7
+1	630	7301517707797561	CMakeFiles/julgen.dir/Julgen/Components/Texture2D.cpp.obj	3285d0f3474c7730
+68	744	7301517708943746	CMakeFiles/julgen.dir/Julgen/SceneManager.cpp.obj	eab4581052d2103
+9	886	7301517710362193	CMakeFiles/julgen.dir/Julgen/Font.cpp.obj	213608884c8362b6
+53	1002	7301517711525843	CMakeFiles/julgen.dir/Julgen/Scene.cpp.obj	b02f27edcef1d7e1
+36	1103	7301517712544907	CMakeFiles/julgen.dir/Julgen/Renderer.cpp.obj	d8940cdc15544811
+4	1257	7301517714074837	CMakeFiles/julgen.dir/Julgen/Components/TextObject.cpp.obj	a5a839094943674c
+49	1389	7301517715380965	CMakeFiles/julgen.dir/Julgen/ResourceManager.cpp.obj	b4cf3a6f65fe3c88
+12	1519	7301517716696979	CMakeFiles/julgen.dir/Julgen/GameObject.cpp.obj	eb59faf64d7fdf17
+21	1610	7301517717603608	CMakeFiles/julgen.dir/Julgen/Main/Main.cpp.obj	db3a355cdc7ea215
+33	1816	7301517719664027	CMakeFiles/julgen.dir/Julgen/Main/Julgen.cpp.obj	43c245afd477df80
