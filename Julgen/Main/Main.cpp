@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL_egl.h>
 
 #if _DEBUG
 	// ReSharper disable once CppUnusedIncludeDirective
@@ -7,13 +8,16 @@
 	#endif
 #endif
 
+
+#include <filesystem>
+
 #include "Julgen.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "TextObject.h"
 #include "Scene.h"
 
-#include <filesystem>
+
 
 using namespace jul;
 

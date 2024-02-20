@@ -13,7 +13,10 @@ namespace jul
 		Scene& CreateScene(const std::string& name);
 
 		void Update();
+		void LateUpdate();
+		void FixedUpdate();
 		void Render();
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

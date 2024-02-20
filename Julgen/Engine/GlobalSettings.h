@@ -13,8 +13,11 @@ namespace jul
 		inline static constexpr int WINDOW_WIDTH{ RENDER_WIDTH * 4 };
 		inline static constexpr int WINDOW_HEIGHT{ RENDER_HEIGHT * 4 };
 
-		inline static char CONTENT_PATH[] = "Content/";
+		inline static constexpr char CONTENT_PATH[] = "Content/";
 
+#ifdef WIN32
+		inline static constexpr bool SHOW_CONSOLE = true;
+#endif
 
 	};
 }

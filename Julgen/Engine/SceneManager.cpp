@@ -9,6 +9,15 @@ void jul::SceneManager::Update()
 	}
 }
 
+void jul::SceneManager::LateUpdate()
+{
+}
+
+void jul::SceneManager::FixedUpdate()
+{
+
+}
+
 void jul::SceneManager::Render()
 {
 	for (const auto& scene : m_scenes)

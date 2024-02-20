@@ -12,6 +12,9 @@
 #include <SDL_ttf.h>
 
 #include "Julgen.h"
+
+#include <thread>
+
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -114,30 +117,66 @@ jul::Julgen::~Julgen()
 
 void jul::Julgen::Run(const std::function<void()>& load)
 {
-	load();
 
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #else
 
+#ifdef WIN32
+	if constexpr (GlobalSettings::SHOW_CONSOLE)
+	{
+		if (AllocConsole())
+		{
+			FILE* empty;
+			freopen_s(&empty, "CONOUT$", "w", stdout);
+			freopen_s(&empty, "CONOUT$", "w", stderr);
+		}
+	}
+#endif
+
+
+	load();
+
+
+	auto lastTime = std::chrono::high_resolution_clock::now();
+
+	double lag = 0.0;
 
 	while (not m_IsApplicationQuitting)
 	{
+		// Handle delta time
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		const double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
+		lastTime = currentTime;
+		lag += deltaTime;
+		Timing::SetDeltaTime(deltaTime);
+
+
+		// Fixed Update
 		m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
+		while (lag >= Timing::FIXED_TIME_STEP)
+		{
+			SceneManager::GetInstance().FixedUpdate();
 
+			lag -= Timing::FIXED_TIME_STEP;
+		}
+
+		// Update
 		SceneManager::GetInstance().Update();
+		// Late Update
+		SceneManager::GetInstance().LateUpdate();
 
-		Timing::SetDeltaTime(0.001f);
-
+		// Render
 		Renderer::GetInstance().Render();
+
 
 		Timing::AddToFrameCount();
 
-		std::cout << "Hello console" << std::endl;
+		std::cout << 1.0 / Timing::GetDeltaTime() << '\n';
 
+		// Vsync should be enabled!
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-
-
 
 #endif
 
