@@ -19,7 +19,7 @@ void jul::ResourceManager::Init(const std::filesystem::path& dataPath)
 
 std::shared_ptr<jul::Texture2D> jul::ResourceManager::LoadTexture(const std::string& file) const
 {
-	const auto fullPath = m_dataPath/file;
+	const auto fullPath = m_dataPath / file;
 	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
 	if (texture == nullptr)
 	{

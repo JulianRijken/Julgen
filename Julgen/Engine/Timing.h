@@ -10,12 +10,12 @@ namespace jul
 
 		static constexpr double FIXED_TIME_STEP = 1.0 / 60.0;
 
-		static void SetTimeScale(double timeScale);
+		static void SetTimeScale(double timeScale) { m_TimeScale = timeScale; }
 
+		[[nodiscard]] static int GetFrameCount() { return m_FrameCount; }
 		[[nodiscard]] static double GetDeltaTime() { return m_DeltaTime * m_TimeScale; }
 		[[nodiscard]] static double GetFixedDeltaTime() { return FIXED_TIME_STEP; }
 		[[nodiscard]] static double GetUnScaledDeltaTime() { return m_DeltaTime; }
-		[[nodiscard]] static int GetFrameCount() { return m_FrameCount; }
 		[[nodiscard]] static double GetTimeScale() { return m_TimeScale; }
 
 	private:

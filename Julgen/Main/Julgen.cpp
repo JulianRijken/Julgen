@@ -115,7 +115,7 @@ jul::Julgen::~Julgen()
 	SDL_Quit();
 }
 
-void jul::Julgen::Run(const std::function<void()>& load)
+void jul::Julgen::Run()
 {
 
 #ifdef __EMSCRIPTEN__
@@ -134,14 +134,14 @@ void jul::Julgen::Run(const std::function<void()>& load)
 	}
 #endif
 
-
-	load();
-
-
+	SceneManager& sceneManager = SceneManager::GetInstance();
+	sceneManager.LoadScene("Start"); // TODO: Replace this hardcoded start scene
+ 
+	//////////////
+	/// GAME LOOP
+	//////////////
 	auto lastTime = std::chrono::high_resolution_clock::now();
-
 	double lag = 0.0;
-
 	while (not m_IsApplicationQuitting)
 	{
 		// Handle delta time
@@ -156,23 +156,22 @@ void jul::Julgen::Run(const std::function<void()>& load)
 		m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
 		while (lag >= Timing::FIXED_TIME_STEP)
 		{
-			SceneManager::GetInstance().FixedUpdate();
+			sceneManager.FixedUpdate();
 
 			lag -= Timing::FIXED_TIME_STEP;
 		}
 
 		// Update
-		SceneManager::GetInstance().Update();
+		sceneManager.Update();
 		// Late Update
-		SceneManager::GetInstance().LateUpdate();
+		sceneManager.LateUpdate();
+
 
 		// Render
 		Renderer::GetInstance().Render();
 
 
 		Timing::AddToFrameCount();
-
-		std::cout << 1.0 / Timing::GetDeltaTime() << '\n';
 
 		// Vsync should be enabled!
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));

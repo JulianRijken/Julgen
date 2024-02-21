@@ -1,29 +1,46 @@
 #pragma once
-#include <string>
+
 #include <memory>
-#include "Transform.h"
+#include <vector>
+
+#include "Component.h"
+#include "Object.h"
+
 
 namespace jul
 {
-	class Texture2D;
+	class Transform;
 
-	class GameObject 
+	class GameObject final : public Object
 	{
-		Transform m_transform{};
-		std::shared_ptr<Texture2D> m_texture{};
+		friend class SceneManager;
+		friend class Scene;
+
 	public:
-		virtual void Update();
-		virtual void Render() const;
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
+		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
-		GameObject() = default;
-		virtual ~GameObject();
+		template<class ComponentType, class... Args>
+		std::enable_if_t<std::is_base_of_v<Component, ComponentType>, ComponentType&>
+			AddComponent(Args&&... args)
+		{
+			std::shared_ptr<ComponentType> addedComponent{ std::make_shared<ComponentType>(std::forward<Args>(args)...) };
+			m_Components.emplace_back(addedComponent);
 
-		GameObject(GameObject&& other) = delete;
-		GameObject(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
+			Component* castComponentPtr{ static_cast<Component*>(addedComponent.get()) };
+			castComponentPtr->m_ParentGameObjectPtr = this;
+
+			return *addedComponent;
+		}
+
+	private:
+
+		void Update();
+		void Render() const;
+
+		Transform* m_TransformPtr;
+		std::vector<std::shared_ptr<Component>> m_Components{};
+
+		GameObject(const std::string& name);
 	};
 }

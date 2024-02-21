@@ -7,11 +7,11 @@ namespace jul
 	public:
 
 		inline static constexpr char WINDOW_TITLE[] = "Custom window title";
-		inline static constexpr int RENDER_WIDTH{ 320 };
-		inline static constexpr int RENDER_HEIGHT{ 224 };
+		inline static constexpr int RENDER_WIDTH{ 640 };
+		inline static constexpr int RENDER_HEIGHT{ 480 };
 
-		inline static constexpr int WINDOW_WIDTH{ RENDER_WIDTH * 4 };
-		inline static constexpr int WINDOW_HEIGHT{ RENDER_HEIGHT * 4 };
+		inline static constexpr int WINDOW_WIDTH{ RENDER_WIDTH };
+		inline static constexpr int WINDOW_HEIGHT{ RENDER_HEIGHT };
 
 		inline static constexpr char CONTENT_PATH[] = "Content/";
 

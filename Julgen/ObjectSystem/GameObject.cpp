@@ -1,24 +1,33 @@
-#include <string>
 #include "GameObject.h"
-#include "ResourceManager.h"
-#include "Renderer.h"
 
-jul::GameObject::~GameObject() = default;
+#include <iostream>
 
-void jul::GameObject::Update(){}
+#include "RenderComponent.h"
+
+
+jul::GameObject::GameObject(const std::string& name) :
+	Object(name)
+{
+}
+
+
+
+void jul::GameObject::Update()
+{
+}
 
 void jul::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+	// HORRIBLE
+	// TODO:  Do I go with the render function to render function to render function or do It like I did for afterburner
+
+	for (const std::shared_ptr<Component>& component : m_Components)
+	{
+		RenderComponent* castComponentPtr{ dynamic_cast<RenderComponent*>(component.get()) };
+
+		if(castComponentPtr)
+		castComponentPtr->Render();
+	}
 }
 
-void jul::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
-}
 
-void jul::GameObject::SetPosition(float x, float y)
-{
-	m_transform.SetPosition(x, y, 0.0f);
-}

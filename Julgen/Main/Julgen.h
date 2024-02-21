@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 
 namespace jul
 {
@@ -12,7 +11,7 @@ namespace jul
 		explicit Julgen();
 		~Julgen();
 
-		void Run(const std::function<void()>& load);
+		void Run();
 
 		Julgen(Julgen&& other) = delete;
 		Julgen(const Julgen& other) = delete;
