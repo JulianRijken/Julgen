@@ -3,17 +3,17 @@
 
 namespace jul
 {
-	class RenderComponent : public Component
+	class Renderer : public Component
 	{
 
 	public:
-		RenderComponent(int renderLayer = 0, bool visible = true, const std::string& name = "Renderer");
-		~RenderComponent() override = default;
+		Renderer(int renderLayer = 0, bool visible = true, const std::string& name = "Renderer");
+		~Renderer() override = default;
 
-		RenderComponent(RenderComponent&&) = delete;
-		RenderComponent(const RenderComponent&) = delete;
-		RenderComponent& operator=(RenderComponent&&) = delete;
-		RenderComponent& operator=(const RenderComponent&) = delete;
+		Renderer(Renderer&&) = delete;
+		Renderer(const Renderer&) = delete;
+		Renderer& operator=(Renderer&&) = delete;
+		Renderer& operator=(const Renderer&) = delete;
 
 		[[nodiscard]] int GetRenderLayer() const { return m_RenderLayer; }
 		void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }

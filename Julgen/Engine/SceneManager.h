@@ -17,7 +17,7 @@ namespace jul
 
 		// Required to call update and render
 		friend class Julgen;
-		friend class Renderer;
+		friend class RenderManager;
 
 	public:
 
@@ -51,7 +51,7 @@ namespace jul
 		std::shared_ptr<Scene> m_ActiveScene{};
 		//std::vector<std::shared_ptr<Scene>> m_Scenes{};
 
-		TextRenderer* test;
+		TextRenderer* REMOVEME;
 	};
 
 }

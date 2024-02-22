@@ -13,6 +13,7 @@ namespace jul
 	{
 	public:
 		void Init(const std::filesystem::path& data);
+
 		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
 		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
 

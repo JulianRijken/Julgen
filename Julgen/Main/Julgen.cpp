@@ -16,10 +16,11 @@
 #include <thread>
 
 #include "SceneManager.h"
-#include "Renderer.h"
+#include "RenderManager.h"
 #include "ResourceManager.h"
-#include "GlobalSettings.h"
 #include "InputManager.h"
+
+#include "GlobalSettings.h"
 #include "Timing.h"
 
 
@@ -35,15 +36,6 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 	std::cout << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
 #endif
 }
-
-#ifdef __EMSCRIPTEN__
-#include "emscripten.h"
-
-void LoopCallback(void* arg)
-{
-	static_cast<jul::Julgen*>(arg)->RunOneFrame();
-}
-#endif
 
 // Why bother with this? Because sometimes students have a different SDL version installed on their pc.
 // That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
@@ -64,19 +56,20 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_image version ", version);
 
 	SDL_TTF_VERSION(&version)
-	LogSDLVersion("We compiled against SDL_ttf version ", version);
+		LogSDLVersion("We compiled against SDL_ttf version ", version);
 
 	version = *TTF_Linked_Version();
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
+
 jul::Julgen::Julgen()
 {
 	PrintSDLVersion();
-	
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
-	
+
 
 	g_window = SDL_CreateWindow(
 		GlobalSettings::WINDOW_TITLE,
@@ -87,10 +80,10 @@ jul::Julgen::Julgen()
 		SDL_WINDOW_OPENGL
 	);
 
-	if (g_window == nullptr) 
+	if (g_window == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
-	Renderer::GetInstance().Init(g_window);
+	RenderManager::GetInstance().Init(g_window);
 
 
 #if __EMSCRIPTEN__
@@ -103,82 +96,70 @@ jul::Julgen::Julgen()
 
 	contentLocation.append(GlobalSettings::CONTENT_PATH);
 #endif
-	
+
 	ResourceManager::GetInstance().Init(contentLocation);
 }
 
 jul::Julgen::~Julgen()
 {
-	Renderer::GetInstance().Destroy();
+	RenderManager::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 	SDL_Quit();
 }
 
+
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+
+void LoopCallback(void* arg)
+{
+	static_cast<jul::Julgen*>(arg)->RunOneFrame();
+}
+#endif
+
 void jul::Julgen::Run()
 {
+	SceneManager::GetInstance().LoadScene("Start"); // TODO: Replace this hardcoded start scene
 
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #else
 
-#ifdef WIN32
-	if constexpr (GlobalSettings::SHOW_CONSOLE)
-	{
-		if (AllocConsole())
-		{
-			FILE* empty;
-			freopen_s(&empty, "CONOUT$", "w", stdout);
-			freopen_s(&empty, "CONOUT$", "w", stderr);
-		}
-	}
-#endif
-
-	SceneManager& sceneManager = SceneManager::GetInstance();
-	sceneManager.LoadScene("Start"); // TODO: Replace this hardcoded start scene
- 
-	//////////////
-	/// GAME LOOP
-	//////////////
-	auto lastTime = std::chrono::high_resolution_clock::now();
-	double lag = 0.0;
 	while (not m_IsApplicationQuitting)
 	{
-		// Handle delta time
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		const double deltaTime = std::chrono::duration<double>(currentTime - lastTime).count();
-		lastTime = currentTime;
-		lag += deltaTime;
-		Timing::SetDeltaTime(deltaTime);
+		RunOneFrame();
+	}
+#endif
+}
 
+void jul::Julgen::RunOneFrame()
+{
+	Time::UpdateDeltaTime();
 
-		// Fixed Update
-		m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
-		while (lag >= Timing::FIXED_TIME_STEP)
-		{
-			sceneManager.FixedUpdate();
+	m_Lag += Time::GetDeltaTime();
 
-			lag -= Timing::FIXED_TIME_STEP;
-		}
-
-		// Update
-		sceneManager.Update();
-		// Late Update
-		sceneManager.LateUpdate();
-
-
-		// Render
-		Renderer::GetInstance().Render();
-
-
-		Timing::AddToFrameCount();
-
-		// Vsync should be enabled!
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	// Fixed Update
+	m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
+	while (m_Lag >= Time::GetFixedDeltaTime())
+	{
+		SceneManager::GetInstance().FixedUpdate();
+		m_Lag -= Time::GetFixedDeltaTime();
 	}
 
-#endif
+	// Update
+	SceneManager::GetInstance().Update();
+	// Late Update
+	SceneManager::GetInstance().LateUpdate();
 
 
+	// Render
+	RenderManager::GetInstance().Render();
+
+
+	Time::AddToFrameCount();
+
+	// Avoid over using resources when VSync is not on
+	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 

@@ -4,6 +4,7 @@ namespace jul
 {
 	class Julgen final
 	{
+		double m_Lag{};
 		bool m_IsApplicationQuitting{};
 
 	public:
@@ -12,10 +13,11 @@ namespace jul
 		~Julgen();
 
 		void Run();
+		void RunOneFrame();
 
-		Julgen(Julgen&& other) = delete;
-		Julgen(const Julgen& other) = delete;
-		Julgen& operator=(Julgen&& other) = delete;
-		Julgen& operator=(const Julgen& other) = delete;
+		Julgen(Julgen&&) = delete;
+		Julgen(const Julgen&) = delete;
+		Julgen& operator=(Julgen&&) = delete;
+		Julgen& operator=(const Julgen&) = delete;
 	};
 }

@@ -3,7 +3,7 @@
 #include <SDL_ttf.h>
 
 #include "ResourceManager.h"
-#include "Renderer.h"
+#include "RenderManager.h"
 #include "Texture2D.h"
 #include "Font.h"
 
@@ -20,7 +20,7 @@ void jul::ResourceManager::Init(const std::filesystem::path& dataPath)
 std::shared_ptr<jul::Texture2D> jul::ResourceManager::LoadTexture(const std::string& file) const
 {
 	const auto fullPath = m_dataPath / file;
-	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
+	auto texture = IMG_LoadTexture(RenderManager::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
 	if (texture == nullptr)
 	{
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());

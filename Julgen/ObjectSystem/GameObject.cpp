@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "RenderComponent.h"
+#include "Renderer.h"
 
 
 jul::GameObject::GameObject(const std::string& name) :
@@ -23,10 +23,10 @@ void jul::GameObject::Render() const
 
 	for (const std::shared_ptr<Component>& component : m_Components)
 	{
-		RenderComponent* castComponentPtr{ dynamic_cast<RenderComponent*>(component.get()) };
+		Renderer* castComponentPtr{ dynamic_cast<Renderer*>(component.get()) };
 
 		if(castComponentPtr)
-		castComponentPtr->Render();
+			castComponentPtr->Render();
 	}
 }
 

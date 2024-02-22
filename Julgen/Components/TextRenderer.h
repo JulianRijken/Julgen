@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
 #include <string>
-#include "RenderComponent.h"
+
+#include "Renderer.h"
 #include "SDL_pixels.h"
 
 namespace jul
@@ -11,7 +12,7 @@ namespace jul
 	class Font;
 	class Texture;
 
-	class TextRenderer final : public RenderComponent
+	class TextRenderer final : public Renderer
 	{
 	public:
 

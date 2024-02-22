@@ -8,7 +8,7 @@ namespace jul
 	/**
 	 * Simple RAII wrapper for the SDL renderer
 	 */
-	class Renderer final : public Singleton<Renderer>
+	class RenderManager final : public Singleton<RenderManager>
 	{
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};

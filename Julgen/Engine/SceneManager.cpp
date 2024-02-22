@@ -21,19 +21,18 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	if(name == "Start")
 	{
 		GameObject& background = AddGameObject("Background");
-		background.AddComponent<SpriteRenderer>("background.tga");
 
+		background.AddComponent<SpriteRenderer>("background.tga");
 
 		GameObject& logo = AddGameObject("Logo");
 		logo.AddComponent<SpriteRenderer>("logo.tga");
 		logo.GetTransform().SetPosition(216, 180,0);
 
 
-
 		auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
 		GameObject& fpsCounter = AddGameObject("FPS Counter");
-		test = &fpsCounter.AddComponent<TextRenderer>("Time For Bed", font);
+		REMOVEME = &fpsCounter.AddComponent<TextRenderer>("Time For Bed", font);
 		fpsCounter.GetTransform().SetPosition(40, 40, 0);
 	}
 
@@ -48,6 +47,7 @@ jul::GameObject& jul::SceneManager::AddGameObject(const std::string& name)
 	// All game objects always have a transform
 	newGameObject->m_TransformPtr = &newGameObject->AddComponent<Transform>();
 
+
 	return *newGameObject;
 }
 
@@ -56,7 +56,7 @@ jul::GameObject& jul::SceneManager::AddGameObject(const std::string& name)
 
 void jul::SceneManager::Update()
 {
-	test->SetText(std::to_string(static_cast<int>(std::round(1.0 / Timing::GetDeltaTime()))));
+	REMOVEME->SetText(std::to_string(static_cast<int>(std::round(1.0 / Time::GetDeltaTime()))));
 
 
 	m_ActiveScene->Update();

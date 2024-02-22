@@ -4,13 +4,13 @@
 #include <utility>
 
 #include "Font.h"
-#include "Renderer.h"
+#include "RenderManager.h"
 #include "SDL_ttf.h"
 #include "Texture2D.h"
 #include "Transform.h"
 
 jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, int renderLayer, bool visible, const std::string& name):
-	RenderComponent(renderLayer, visible, name),
+	Renderer(renderLayer, visible, name),
 	m_Text(text),
 	m_TextColor(255,255,255,255),
 	m_FontSPtr(std::move(font)),
@@ -20,7 +20,7 @@ jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> f
 }
 
 jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, SDL_Color m_TextColor, int renderLayer, bool visible, const std::string& name) :
-	RenderComponent(renderLayer, visible, name),
+	Renderer(renderLayer, visible, name),
 	m_Text(text),
 	m_TextColor(m_TextColor),
 	m_FontSPtr(std::move(font)),
@@ -41,7 +41,7 @@ void jul::TextRenderer::Render() const
 	if (m_TextTextureSPtr != nullptr)
 	{
 		const auto& pos = GetTransform().GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
+		RenderManager::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
 	}
 }
 
@@ -54,7 +54,7 @@ void jul::TextRenderer::UpdateText()
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 		}
-		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
+		auto texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), surf);
 		if (texture == nullptr)
 		{
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());

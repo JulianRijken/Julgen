@@ -13,6 +13,7 @@ namespace jul
 		friend class GameObject;
 
 	public:
+
 		Component(const std::string& name = "Component");
 		~Component() override = default;
 

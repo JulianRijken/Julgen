@@ -15,6 +15,9 @@ namespace jul
 
 		inline static constexpr char CONTENT_PATH[] = "Content/";
 
+		inline static constexpr double FIXED_TIME_STEP = 1.0 / 60.0;
+
+
 #ifdef WIN32
 		inline static constexpr bool SHOW_CONSOLE = true;
 #endif

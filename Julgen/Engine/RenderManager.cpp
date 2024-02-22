@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <cstring>
-#include "Renderer.h"
+#include "RenderManager.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
 
@@ -18,7 +18,7 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void jul::Renderer::Init(SDL_Window* window)
+void jul::RenderManager::Init(SDL_Window* window)
 {
 	m_window = window;
 	m_renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -28,7 +28,7 @@ void jul::Renderer::Init(SDL_Window* window)
 	}
 }
 
-void jul::Renderer::Render() const
+void jul::RenderManager::Render() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
@@ -39,7 +39,7 @@ void jul::Renderer::Render() const
 	SDL_RenderPresent(m_renderer);
 }
 
-void jul::Renderer::Destroy()
+void jul::RenderManager::Destroy()
 {
 	if (m_renderer != nullptr)
 	{
@@ -48,7 +48,7 @@ void jul::Renderer::Destroy()
 	}
 }
 
-void jul::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -57,7 +57,7 @@ void jul::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void jul::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -67,4 +67,4 @@ void jul::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-SDL_Renderer* jul::Renderer::GetSDLRenderer() const { return m_renderer; }
+SDL_Renderer* jul::RenderManager::GetSDLRenderer() const { return m_renderer; }

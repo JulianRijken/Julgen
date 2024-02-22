@@ -194,6 +194,12 @@ target_compile_options(${TARGET_NAME} PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
+# Set seperatly to avoid subcheck errors :) 
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/O3>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-O3>
+)
+
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Content@/\" -sSDL2_IMAGE_FORMATS=['tga','png']")

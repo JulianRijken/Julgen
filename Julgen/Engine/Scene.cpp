@@ -27,8 +27,7 @@ void Scene::Update()
 
 void Scene::Render() const
 {
-	for (const auto& object : m_GameObjectsInSceneSPtr)
-		object->Render();
-	
+	for (const std::shared_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+		gameObject->Render();
 }
 

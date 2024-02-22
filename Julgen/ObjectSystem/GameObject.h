@@ -16,18 +16,19 @@ namespace jul
 		friend class SceneManager;
 		friend class Scene;
 
+
 	public:
 
 		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
 		template<class ComponentType, class... Args>
-		std::enable_if_t<std::is_base_of_v<Component, ComponentType>, ComponentType&>
-			AddComponent(Args&&... args)
+		requires std::derived_from<ComponentType, Component>
+		ComponentType& AddComponent(Args&&... args)
 		{
-			std::shared_ptr<ComponentType> addedComponent{ std::make_shared<ComponentType>(std::forward<Args>(args)...) };
-			m_Components.emplace_back(addedComponent);
+			auto addedComponent = std::make_shared<ComponentType>(std::forward<Args>(args)...);
+			m_Components.push_back(addedComponent);
 
-			Component* castComponentPtr{ static_cast<Component*>(addedComponent.get()) };
+			const auto castComponentPtr{static_cast<Component*>(addedComponent.get())};
 			castComponentPtr->m_ParentGameObjectPtr = this;
 
 			return *addedComponent;
