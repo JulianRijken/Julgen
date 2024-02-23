@@ -10,9 +10,10 @@ namespace jul
 	{
 	public:
 
-		SpriteRenderer(const std::string& fileName = {}, int renderLayer = 0, bool visible = true, const std::string& name = "SpriteRenderer");
-
+		
 	private:
+
+		SpriteRenderer(const std::string& fileName = {}, int renderLayer = 0, bool visible = true, const std::string& name = "SpriteRenderer");
 
 
 		void Render() const override;

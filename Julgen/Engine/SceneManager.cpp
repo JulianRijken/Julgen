@@ -20,9 +20,14 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
-		GameObject& background = AddGameObject("Background");
 
+		/// PROBLEM
+
+		GameObject& background = AddGameObject("Background");
 		background.AddComponent<SpriteRenderer>("background.tga");
+		//SpriteRenderer test{};
+
+
 
 		GameObject& logo = AddGameObject("Logo");
 		logo.AddComponent<SpriteRenderer>("logo.tga");
