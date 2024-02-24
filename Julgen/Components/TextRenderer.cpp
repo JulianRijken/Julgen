@@ -32,7 +32,6 @@ jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> f
 void jul::TextRenderer::SetText(const std::string& text)
 {
 	m_Text = text;
-
 	UpdateText();
 }
 
@@ -40,7 +39,7 @@ void jul::TextRenderer::Render() const
 {
 	if (m_TextTextureSPtr != nullptr)
 	{
-		const auto& pos = GetTransform().GetPosition();
+		auto& pos = Transform().Position();
 		RenderManager::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
 	}
 }

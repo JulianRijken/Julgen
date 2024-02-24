@@ -2,32 +2,50 @@
 
 #include <iostream>
 
-#include "Renderer.h"
+#include "Transform.h"
 
 
-jul::GameObject::GameObject(const std::string& name) :
-	Object(name)
+jul::GameObject::GameObject(const std::string& name, const glm::vec3& position) :
+	Object(name),
+	m_Transform(position)
+{}
+
+
+void jul::GameObject::Destroy()
 {
+	Object::Destroy();
+	 
+	for (const auto& component : m_Components)
+		component->Destroy();
 }
 
 
-
-void jul::GameObject::Update()
+void jul::GameObject::Cleanup()
 {
-}
-
-void jul::GameObject::Render() const
-{
-	// HORRIBLE
-	// TODO:  Do I go with the render function to render function to render function or do It like I did for afterburner
-
-	for (const std::shared_ptr<Component>& component : m_Components)
+	for (auto iterator = m_Components.begin(); iterator != m_Components.end();)
 	{
-		Renderer* castComponentPtr{ dynamic_cast<Renderer*>(component.get()) };
-
-		if(castComponentPtr)
-			castComponentPtr->Render();
+		if ((*iterator)->IsBeingDestroyed())
+			iterator = m_Components.erase(iterator);
+		else
+			iterator++;
 	}
 }
 
+void jul::GameObject::Update() const
+{
+	for (const auto& component : m_Components)
+		component->Update();	
+}
+
+void jul::GameObject::LateUpdate() const
+{
+	for (const auto& component : m_Components)
+		component->LateUpdate();
+}
+
+void jul::GameObject::FixedUpdate() const
+{
+	for (const auto& component : m_Components)
+		component->FixedUpdate();
+}
 

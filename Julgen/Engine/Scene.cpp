@@ -13,21 +13,44 @@ m_Name(name)
 {}
 
 
-void Scene::AddGameObjectToScene(std::shared_ptr<GameObject> object)
+GameObject* Scene::AddGameObjectToScene(std::unique_ptr<GameObject>&& object)
 {
 	m_GameObjectsInSceneSPtr.emplace_back(std::move(object));
+	return m_GameObjectsInSceneSPtr.back().get();
 }
 
 
-void Scene::Update()
+void Scene::Update() const
 {
-	for(const std::shared_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+	for(const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
 		gameObject->Update();
 }
 
-void Scene::Render() const
+void Scene::LateUpdate() const
 {
-	for (const std::shared_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
-		gameObject->Render();
+	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+		gameObject->LateUpdate();
+}
+
+void Scene::FixedUpdate() const
+{
+	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+		gameObject->FixedUpdate();
+}
+
+void Scene::Cleanup()
+{
+	// Cleanup all components from the game objects
+	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+		gameObject->Cleanup();
+
+	// Remove all game objects that are set to be destroyed
+	for (auto iterator = m_GameObjectsInSceneSPtr.begin(); iterator != m_GameObjectsInSceneSPtr.end();)
+	{
+		if ((*iterator)->IsBeingDestroyed())
+			iterator = m_GameObjectsInSceneSPtr.erase(iterator);
+		else
+			iterator++;
+	}
 }
 

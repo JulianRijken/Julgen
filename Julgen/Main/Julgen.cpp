@@ -21,7 +21,7 @@
 #include "InputManager.h"
 
 #include "GlobalSettings.h"
-#include "Timing.h"
+#include "GameTime.h"
 
 
 SDL_Window* g_window{};
@@ -103,8 +103,10 @@ jul::Julgen::Julgen()
 jul::Julgen::~Julgen()
 {
 	RenderManager::GetInstance().Destroy();
+
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
+
 	SDL_Quit();
 }
 
@@ -127,25 +129,25 @@ void jul::Julgen::Run()
 #else
 
 	while (not m_IsApplicationQuitting)
-	{
 		RunOneFrame();
-	}
+	
 #endif
 }
 
 void jul::Julgen::RunOneFrame()
 {
-	Time::UpdateDeltaTime();
+	GameTime::Update();
 
-	m_Lag += Time::GetDeltaTime();
+	m_Lag += GameTime::GetDeltaTime();
 
 	// Fixed Update
 	m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
-	while (m_Lag >= Time::GetFixedDeltaTime())
+	while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
 		SceneManager::GetInstance().FixedUpdate();
-		m_Lag -= Time::GetFixedDeltaTime();
+		m_Lag -= GameTime::GetFixedDeltaTime();
 	}
+
 
 	// Update
 	SceneManager::GetInstance().Update();
@@ -156,8 +158,10 @@ void jul::Julgen::RunOneFrame()
 	// Render
 	RenderManager::GetInstance().Render();
 
+	// Cleans up all the objects marked for deletion
+	SceneManager::GetInstance().Cleanup();
 
-	Time::AddToFrameCount();
+	GameTime::AddToFrameCount();
 
 	// Avoid over using resources when VSync is not on
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));

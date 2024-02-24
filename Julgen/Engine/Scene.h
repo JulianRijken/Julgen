@@ -9,15 +9,18 @@ namespace jul
 	{
 		friend class SceneManager;
 
-		void Update();
-		void Render() const;
+		void Update() const;
+		void LateUpdate() const;
+		void FixedUpdate() const;
 
-		void AddGameObjectToScene(std::shared_ptr<GameObject> object);
+		void Cleanup();
+
+		GameObject* AddGameObjectToScene(std::unique_ptr<GameObject>&& object);
 
 		explicit Scene(const std::string& name);
 
 		std::string m_Name;
-		std::vector<std::shared_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
+		std::list<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
 	};
 
 }

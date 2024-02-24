@@ -1,8 +1,9 @@
 #pragma once
+#include "Singleton.h"
+
 #include <filesystem>
 #include <string>
 #include <memory>
-#include "Singleton.h"
 
 namespace jul
 {
@@ -11,15 +12,18 @@ namespace jul
 
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
+		friend class Singleton;
+
 	public:
 		void Init(const std::filesystem::path& data);
 
-		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
-		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
+		[[nodiscard]] std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
+		[[nodiscard]] std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
 
 	private:
-		friend class Singleton;
+
 		ResourceManager() = default;
+
 		std::filesystem::path m_dataPath;
 	};
 }

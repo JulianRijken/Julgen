@@ -1,47 +1,81 @@
 #pragma once
 
+#include <list>
 #include <memory>
-#include <vector>
 
 #include "Component.h"
 #include "Object.h"
-
+#include "Transform.h"
 
 namespace jul
 {
-	class Transform;
 
 	class GameObject final : public Object
 	{
 		friend class SceneManager;
 		friend class Scene;
 
-
 	public:
 
-		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
+		[[nodiscard]] Transform& GetTransform() { return m_Transform; }
 
-		template<class ComponentType, class... Args>
+
+		void Destroy() override;
+
+
+		template <typename ComponentType, typename... Args>
 		requires std::derived_from<ComponentType, Component>
-		ComponentType& AddComponent(Args&&... args)
+		ComponentType* AddComponent(Args&&... args) 		
 		{
-			auto addedComponent = std::make_shared<ComponentType>(std::forward<Args>(args)...);
-			m_Components.push_back(addedComponent);
+			auto& addedComponent = m_Components.emplace_back(std::make_unique<ComponentType>(args...));
+			addedComponent->m_ParentGameObjectPtr = this;
+			addedComponent->Awake();
 
-			const auto castComponentPtr{static_cast<Component*>(addedComponent.get())};
-			castComponentPtr->m_ParentGameObjectPtr = this;
+			return reinterpret_cast<ComponentType*>(addedComponent.get());
+		}
 
-			return *addedComponent;
+		// Calls Destroy on the component
+		// Ideally, Destroy() on the component is preferred
+		template <typename ComponentType>
+		requires std::derived_from<ComponentType, Component>
+		void DestroyComponent(ComponentType* component)
+		{
+			component->Destroy();
+		}
+
+
+		template <typename ComponentType>
+		requires std::derived_from<ComponentType, Component>
+		ComponentType* GetComponent() const
+		{
+			for (const auto& componentPtr : m_Components)
+			{
+				if (auto castedComponentPtr = dynamic_cast<ComponentType*>(componentPtr.get()))
+					return castedComponentPtr;
+			}
+
+			return nullptr;
+		}
+
+
+		template <typename ComponentType>
+		requires std::derived_from<ComponentType, Component>
+		bool HasComponent() const
+		{
+			return GetComponent<ComponentType>() != nullptr;
 		}
 
 	private:
 
-		void Update();
-		void Render() const;
+		void Cleanup();
 
-		Transform* m_TransformPtr;
-		std::vector<std::shared_ptr<Component>> m_Components{};
+		void Update() const;
+		void LateUpdate() const;
+		void FixedUpdate() const;
 
-		GameObject(const std::string& name);
+		Transform m_Transform;
+		std::list<std::unique_ptr<Component>> m_Components{};
+
+		GameObject(const std::string& name, const glm::vec3& position);
 	};
 }

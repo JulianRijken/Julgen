@@ -5,12 +5,25 @@ class Object
 {
 public:
 
-	[[nodiscard]] const std::string& GetName() const { return m_Name; }
-
-protected:
-	Object(const std::string& name = "Object");
 	virtual ~Object() = default;
 
+	Object(Object&&) = delete;
+	Object(const Object&) = delete;
+	Object& operator=(Object&&) = delete;
+	Object& operator=(const Object&) = delete;
+
+	[[nodiscard]] const std::string& GetName() const { return m_Name; }
+	[[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
+
+	virtual void Destroy();
+
+protected:
+
+	Object(const std::string& name = "Object");
+
+
 private:
+
+	bool m_BeingDestroyed;
 	std::string m_Name;
 };

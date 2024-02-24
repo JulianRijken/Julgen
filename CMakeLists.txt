@@ -19,6 +19,7 @@ set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
 # Gather all source files under Julgen/ directory
 file(GLOB_RECURSE JULGEN_SOURCE_FILES
+    ${JULGEN_SOURCE_DIR}/*.hpp
     ${JULGEN_SOURCE_DIR}/*.cpp
     ${JULGEN_SOURCE_DIR}/*.h
 )
@@ -33,6 +34,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Main
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
+    ${JULGEN_SOURCE_DIR}/Game
 )
 
 
