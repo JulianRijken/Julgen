@@ -1,8 +1,14 @@
+#include "RenderManager.h"
+
 #include <stdexcept>
 #include <cstring>
-#include "RenderManager.h"
+#include <algorithm>
+#include <set>
+
+#include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "Transform.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -20,31 +26,51 @@ int GetOpenGLDriverIndex()
 
 void jul::RenderManager::Init(SDL_Window* window)
 {
-	m_window = window;
-	m_renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (m_renderer == nullptr) 
-	{
+	m_Window = window;
+	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+	if (m_Renderer == nullptr) 
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
-	}
 }
 
-void jul::RenderManager::Render() const
+void jul::RenderManager::Render()
 {
 	const auto& color = GetBackgroundColor();
-	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-	SDL_RenderClear(m_renderer);
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderClear(m_Renderer);
 
-	SceneManager::GetInstance().Render();
+
+	auto renderers = std::vector(s_GlobalRendererPtrs.begin(), s_GlobalRendererPtrs.end());
+
+	const auto compareDistance = [](const Renderer* a, const Renderer* b)
+	{
+		return a->Transform().Position().z > b->Transform().Position().z;
+	};
+
+	const auto compareLayer = [](const Renderer* a, const Renderer* b)
+		{
+			return a->GetRenderLayer() < b->GetRenderLayer();
+		};
+
+	std::ranges::sort(renderers, compareDistance);
+	std::ranges::stable_sort(renderers, compareLayer);
+
+	for (const Renderer* renderer : renderers)
+	{
+		if(renderer->IsVisible())
+			renderer->Render();
+	}
+
 	
-	SDL_RenderPresent(m_renderer);
+	SDL_RenderPresent(m_Renderer);
 }
 
 void jul::RenderManager::Destroy()
 {
-	if (m_renderer != nullptr)
+	if (m_Renderer != nullptr)
 	{
-		SDL_DestroyRenderer(m_renderer);
-		m_renderer = nullptr;
+		SDL_DestroyRenderer(m_Renderer);
+		m_Renderer = nullptr;
 	}
 }
 
@@ -66,5 +92,3 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
 	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
-
-SDL_Renderer* jul::RenderManager::GetSDLRenderer() const { return m_renderer; }

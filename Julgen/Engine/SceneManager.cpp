@@ -1,54 +1,67 @@
 #include "SceneManager.h"
 
 #include <iostream>
+#include <ranges>
 
+#include "Bounce.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Scene.h"
-#include "SpriteRenderer.h"
 #include "TextRenderer.h"
-#include "Timing.h"
 #include "Transform.h"
+#include "FpsCounter.h"
+#include "SpriteRenderer.h"
+#include "AutoMove.h"
 
 
 void jul::SceneManager::LoadScene(const std::string& name)
 {
-	// Set new active scene
-	// This should unload the last active scene
+	// Unload all loaded scenes
+	m_LoadedScenes.clear();
+
+	// Set new loaded scene as active
 	m_ActiveScene = std::shared_ptr<Scene>(new Scene{ name });
 
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
-		GameObject& background = AddGameObject("Background");
-
-		background.AddComponent<SpriteRenderer>("background.tga");
-
-		GameObject& logo = AddGameObject("Logo");
-		logo.AddComponent<SpriteRenderer>("logo.tga");
-		logo.GetTransform().SetPosition(216, 180,0);
-
-
+		// TODO: Fonts should be stored in a resource manager and loaded by name
 		auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
-		GameObject& fpsCounter = AddGameObject("FPS Counter");
-		REMOVEME = &fpsCounter.AddComponent<TextRenderer>("Time For Bed", font);
-		fpsCounter.GetTransform().SetPosition(40, 40, 0);
+
+		GameObject* background = AddGameObject("Background");
+		background->AddComponent<SpriteRenderer>("background.tga",-100);
+
+		GameObject* assignment = AddGameObject("AssignmentText", { 100, 20, 0 });
+		assignment->AddComponent<TextRenderer>("Programming 4 Assignment", font);
+
+
+		for (int i = 0; i < 5; ++i)
+		{
+			const float offset = static_cast<float>(i) / 5.0f;
+
+			GameObject* logo = AddGameObject("Logo", { -20 + offset * 50, 180, 0 });
+			logo->AddComponent<SpriteRenderer>("logo.tga", -10);
+			logo->AddComponent<Bounce>(50.0f * offset);
+			logo->AddComponent<AutoMove>(glm::vec3{ 100,0,0 });
+		}
+
+		GameObject* fpsCounter = AddGameObject("Fps Counter", {40,40,0});
+		fpsCounter->AddComponent<FpsCounter>();
+		fpsCounter->AddComponent<TextRenderer>("error", font);
+		fpsCounter->AddComponent<Bounce>(30.0f, 0.3f);
 	}
 
 
+	// Add scenes to loaded scenes
+	m_LoadedScenes[name] = m_ActiveScene;
 }
 
-jul::GameObject& jul::SceneManager::AddGameObject(const std::string& name)
+jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
-	const auto newGameObject = std::shared_ptr<GameObject>(new GameObject{name});
-	m_ActiveScene->AddGameObjectToScene(newGameObject);
-
-	// All game objects always have a transform
-	newGameObject->m_TransformPtr = &newGameObject->AddComponent<Transform>();
-
-
-	return *newGameObject;
+	// TODO: I want to use make unique here but game has a private constructor
+	auto newGameObject = std::unique_ptr<GameObject>(new GameObject(name, position));
+	return m_ActiveScene->AddGameObjectToScene(std::move(newGameObject));
 }
 
 
@@ -56,24 +69,25 @@ jul::GameObject& jul::SceneManager::AddGameObject(const std::string& name)
 
 void jul::SceneManager::Update()
 {
-	REMOVEME->SetText(std::to_string(static_cast<int>(std::round(1.0 / Time::GetDeltaTime()))));
-
-
-	m_ActiveScene->Update();
+	for (const auto& scene : m_LoadedScenes | std::views::values)
+		scene->Update();
 }
 
 void jul::SceneManager::LateUpdate()
 {
+	for (const auto& scene : m_LoadedScenes | std::views::values)
+		scene->LateUpdate();
 }
 
 void jul::SceneManager::FixedUpdate()
 {
-
+	for (const auto& scene : m_LoadedScenes | std::views::values)
+		scene->FixedUpdate();
 }
 
-void jul::SceneManager::Render() const
+void jul::SceneManager::Cleanup()
 {
-	m_ActiveScene->Render();
+	for (const auto& scene : m_LoadedScenes | std::views::values)
+		scene->Cleanup();
 }
-
 

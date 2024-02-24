@@ -1,8 +1,10 @@
 #pragma once
-#include <vector>
 #include <string>
 #include <memory>
+#include <unordered_map>
+
 #include "Singleton.h"
+#include "glm/vec3.hpp"
 
 
 namespace jul
@@ -21,37 +23,25 @@ namespace jul
 
 	public:
 
-
-
-		// Loads scene by name
 		void LoadScene(const std::string& name);
 
-		// Adds a new game object to the active scene
-		GameObject& AddGameObject(const std::string& name);
-
-
-
-		/// Optional for future
-		//// Creates empty scene at run time
-		//void CreateScene(const std::string& name);
-
-		//MoveGameObjectToScene() 
+		GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
 
 
 	private:
 
-
 		void Update();
 		void LateUpdate();
 		void FixedUpdate();
-		void Render() const;
+
+		void Cleanup();
 
 		SceneManager() = default;
 
 		std::shared_ptr<Scene> m_ActiveScene{};
-		//std::vector<std::shared_ptr<Scene>> m_Scenes{};
 
-		TextRenderer* REMOVEME;
+		// TODO: Scenes are now stored with their name, but this might be redundant as the scene class also stores the name
+		std::unordered_map<std::string, std::shared_ptr<Scene>> m_LoadedScenes{};
 	};
 
 }

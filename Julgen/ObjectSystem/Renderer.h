@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Component.h"
 
 namespace jul
@@ -6,9 +7,11 @@ namespace jul
 	class Renderer : public Component
 	{
 
+		friend class RenderManager;
+
 	public:
 		Renderer(int renderLayer = 0, bool visible = true, const std::string& name = "Renderer");
-		~Renderer() override = default;
+		~Renderer() override;
 
 		Renderer(Renderer&&) = delete;
 		Renderer(const Renderer&) = delete;
@@ -21,17 +24,14 @@ namespace jul
 		void SetVisible(bool visible) { m_Visible = visible; }
 		[[nodiscard]] bool IsVisible() const { return m_Visible; }
 
-		// TODO: Should be protected
-		virtual void Render() const {}
 	protected:
 
+		virtual void Render() const {}
 
 	private:
 
-
 		bool m_Visible;
 		int m_RenderLayer{};
-
 	};
 }
 
