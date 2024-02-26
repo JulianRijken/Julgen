@@ -136,18 +136,19 @@ void jul::Julgen::Run()
 
 void jul::Julgen::RunOneFrame()
 {
+	// Update time
 	GameTime::Update();
-
 	m_Lag += GameTime::GetDeltaTime();
 
-	// Fixed Update
+	// Handle input
 	m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
+
+	// Fixed Update
 	while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
 		SceneManager::GetInstance().FixedUpdate();
 		m_Lag -= GameTime::GetFixedDeltaTime();
 	}
-
 
 	// Update
 	SceneManager::GetInstance().Update();

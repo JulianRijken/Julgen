@@ -40,16 +40,15 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		{
 			const float offset = static_cast<float>(i) / 5.0f;
 
-			GameObject* logo = AddGameObject("Logo", { -20 + offset * 50, 180, 0 });
+			GameObject* logo = AddGameObject("Logo", { -20 + offset * 50, 180 * offset, 0 });
 			logo->AddComponent<SpriteRenderer>("logo.tga", -10);
-			logo->AddComponent<Bounce>(50.0f * offset);
+			logo->AddComponent<Bounce>(50.0f);
 			logo->AddComponent<AutoMove>(glm::vec3{ 100,0,0 });
 		}
 
 		GameObject* fpsCounter = AddGameObject("Fps Counter", {40,40,0});
-		fpsCounter->AddComponent<FpsCounter>();
 		fpsCounter->AddComponent<TextRenderer>("error", font);
-		fpsCounter->AddComponent<Bounce>(30.0f, 0.3f);
+		fpsCounter->AddComponent<FpsCounter>();
 	}
 
 

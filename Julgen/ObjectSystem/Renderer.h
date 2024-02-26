@@ -21,6 +21,7 @@ namespace jul
 		[[nodiscard]] int GetRenderLayer() const { return m_RenderLayer; }
 		void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }
 
+		// TODO: Visible can just be replaced with with enabled of the component
 		void SetVisible(bool visible) { m_Visible = visible; }
 		[[nodiscard]] bool IsVisible() const { return m_Visible; }
 

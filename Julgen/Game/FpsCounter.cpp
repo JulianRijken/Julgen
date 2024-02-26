@@ -4,17 +4,16 @@
 #include "TextRenderer.h"
 #include "GameTime.h"
 
+
+void FpsCounter::Awake()
+{
+    m_TextRenderer = GetGameObject()->GetComponent<jul::TextRenderer>();
+}
+
 void FpsCounter::Update()
 {
-    //TODO: GetComponent is slow, cache the pointer
-    jul::TextRenderer* textRenderer = GetGameObject()->GetComponent<jul::TextRenderer>();
+    if (m_TextRenderer == nullptr)
+        return;
 
-    if(textRenderer == nullptr)
-		return;
-	
-
-    std::stringstream text;
-    text << std::fixed << std::setprecision(1) << std::floor(jul::GameTime::GetSmoothFps() * 10.0) / 10.0 << " FPS";
-
-    textRenderer->SetText(text.str());
+    m_TextRenderer->SetText(std::format("{:.1f}", jul::GameTime::GetSmoothFps()));
 }

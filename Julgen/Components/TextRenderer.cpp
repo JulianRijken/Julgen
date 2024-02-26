@@ -11,8 +11,8 @@
 
 jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, int renderLayer, bool visible, const std::string& name):
 	Renderer(renderLayer, visible, name),
-	m_Text(text),
 	m_TextColor(255,255,255,255),
+	m_Text(text),
 	m_FontSPtr(std::move(font)),
 	m_TextTextureSPtr(nullptr)
 {
@@ -21,8 +21,8 @@ jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> f
 
 jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, SDL_Color m_TextColor, int renderLayer, bool visible, const std::string& name) :
 	Renderer(renderLayer, visible, name),
-	m_Text(text),
 	m_TextColor(m_TextColor),
+	m_Text(text),
 	m_FontSPtr(std::move(font)),
 	m_TextTextureSPtr(nullptr)
 {
@@ -60,7 +60,7 @@ void jul::TextRenderer::UpdateText()
 		}
 
 		SDL_FreeSurface(surf);
-		m_TextTextureSPtr = std::make_shared<Texture2D>(texture);
+		m_TextTextureSPtr = std::make_unique<Texture2D>(texture);
 
 		m_LastDrawnText = m_Text;
 	}

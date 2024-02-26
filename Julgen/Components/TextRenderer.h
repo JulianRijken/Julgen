@@ -30,7 +30,7 @@ namespace jul
 		std::string m_Text;
 		std::string m_LastDrawnText;
 		std::shared_ptr<Font> m_FontSPtr;
-		std::shared_ptr<Texture2D> m_TextTextureSPtr;
+		std::unique_ptr<Texture2D> m_TextTextureSPtr;
 
 	};
 }

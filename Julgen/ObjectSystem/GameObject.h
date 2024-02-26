@@ -36,9 +36,9 @@ namespace jul
 
 		// Calls Destroy on the component
 		// Ideally, Destroy() on the component is preferred
-		template <typename ComponentType>
-		requires std::derived_from<ComponentType, Component>
-		void DestroyComponent(ComponentType* component)
+		//template <typename ComponentType>
+		//requires std::derived_from<ComponentType, Component>
+		void DestroyComponent(Component* component)
 		{
 			component->Destroy();
 		}
