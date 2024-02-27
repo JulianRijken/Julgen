@@ -1,9 +1,9 @@
 #pragma once
-#include "Behaviour.h"
+#include "Component.h"
 #include "TextRenderer.h"
 
 
-class FpsCounter final : public jul::Behaviour
+class FpsCounter final : public jul::Component
 {
 	void Awake() override;
 	void Update() override;

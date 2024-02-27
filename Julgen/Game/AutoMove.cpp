@@ -5,7 +5,7 @@
 #include "Transform.h"
 
 AutoMove::AutoMove(glm::vec3  velocity) :
-	Behaviour{"AutoMove"},
+	Component{"AutoMove"},
 	m_Velocity{velocity}
 {}
 

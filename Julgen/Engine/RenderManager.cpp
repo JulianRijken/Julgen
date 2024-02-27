@@ -44,7 +44,7 @@ void jul::RenderManager::Render()
 
 	const auto compareDistance = [](const Renderer* a, const Renderer* b)
 	{
-		return a->Transform().Position().z > b->Transform().Position().z;
+		return a->Transform().WorldPosition().z > b->Transform().WorldPosition().z;
 	};
 
 	const auto compareLayer = [](const Renderer* a, const Renderer* b)
