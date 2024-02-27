@@ -9,7 +9,7 @@
 using namespace glm;
 
 Bounce::Bounce(float offset, float restitution) :
-	Behaviour("Bounce"),
+	Component("Bounce"),
 	m_Offset(offset),
 	m_Restitution(restitution)
 {}
@@ -17,7 +17,7 @@ Bounce::Bounce(float offset, float restitution) :
 
 void Bounce::FixedUpdate()
 {
-	vec3 pos = Transform().Position();
+	vec3 pos = Transform().WorldPosition();
 	pos += m_Velocity * jul::GameTime::GetFixedDeltaTimeF();
 
 
@@ -34,5 +34,5 @@ void Bounce::FixedUpdate()
 
 	m_Velocity.y += jul::GameTime::GetFixedDeltaTimeF() * GRAVITY;
 
-	Transform().SetPosition(pos);
+	Transform().SetLocalPosition(pos);
 }

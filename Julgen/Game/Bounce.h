@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Behaviour.h"
+#include "Component.h"
 #include "glm/vec3.hpp"
 
-class Bounce final : public jul::Behaviour
+class Bounce final : public jul::Component
 {
 public:
 

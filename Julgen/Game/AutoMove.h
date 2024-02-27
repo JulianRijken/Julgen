@@ -1,8 +1,8 @@
 #pragma once
-#include "Behaviour.h"
+#include "Component.h"
 #include "glm/vec3.hpp"
 
-class AutoMove final : public jul::Behaviour
+class AutoMove final : public jul::Component
 {
 public:
 

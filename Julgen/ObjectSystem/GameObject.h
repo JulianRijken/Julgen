@@ -1,19 +1,24 @@
 #pragma once
+#include "Object.h"
 
 #include <list>
 #include <memory>
 
-#include "Component.h"
-#include "Object.h"
+#include "SceneManager.h"
 #include "Transform.h"
+#include "Component.h"
+
 
 namespace jul
 {
 
 	class GameObject final : public Object
 	{
-		friend class SceneManager;
+		friend GameObject* SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const;
+
 		friend class Scene;
+
+
 
 	public:
 

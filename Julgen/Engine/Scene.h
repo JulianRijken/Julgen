@@ -1,5 +1,7 @@
 #pragma once
-#include "SceneManager.h"
+#include <list>
+#include <memory>
+#include <string>
 
 namespace jul
 {
@@ -7,6 +9,7 @@ namespace jul
 
 	class Scene final
 	{
+
 		friend class SceneManager;
 
 		void Update() const;

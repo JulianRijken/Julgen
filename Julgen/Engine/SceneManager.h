@@ -3,13 +3,13 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Julgen.h"
 #include "Singleton.h"
 #include "glm/vec3.hpp"
 
 
 namespace jul
 {
-	class TextRenderer;
 	class Scene;
 	class GameObject;
 
@@ -17,9 +17,9 @@ namespace jul
 	{
 		friend class Singleton;
 
-		// Required to call update and render
-		friend class Julgen;
-		friend class RenderManager;
+		// Required to call update
+		friend void Julgen::RunOneFrame();
+
 
 	public:
 

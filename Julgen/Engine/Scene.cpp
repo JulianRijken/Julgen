@@ -19,7 +19,6 @@ GameObject* Scene::AddGameObjectToScene(std::unique_ptr<GameObject>&& object)
 	return m_GameObjectsInSceneSPtr.back().get();
 }
 
-
 void Scene::Update() const
 {
 	for(const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)

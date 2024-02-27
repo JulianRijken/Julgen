@@ -12,6 +12,6 @@ jul::SpriteRenderer::SpriteRenderer(const std::string& fileName, int renderLayer
 
 void jul::SpriteRenderer::Render() const
 {
-	const glm::vec3& pos = Transform().Position();
+	const glm::vec3& pos = Transform().WorldPosition();
 	RenderManager::GetInstance().RenderTexture(*m_TextureSPtr, pos.x, pos.y);
 }
