@@ -76,6 +76,8 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 		if (worldPositionStays)
 			m_LocalPosition -= m_ParentPtr->WorldPosition();
 	}
+
+	SetPositionDirty();
 }
 
 bool jul::Transform::IsChild(Transform* checkChildPtr) const
