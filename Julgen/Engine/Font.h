@@ -15,7 +15,7 @@ namespace jul
 		explicit Font(const std::string& fullPath, unsigned int size);
 		~Font();
 
-		Font(Font &&) = delete;
+		Font(Font&&) = delete;
 		Font(const Font &) = delete;
 		Font& operator= (Font&&) = delete;
 		Font& operator= (const Font&) = delete;

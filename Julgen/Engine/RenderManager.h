@@ -12,14 +12,15 @@ namespace jul
 
 	class RenderManager final : public Singleton<RenderManager>
 	{
+		friend class Singleton;
 		friend class Renderer;
 
 	public:
 
-		void Init(SDL_Window* window);
+		void Initialize(SDL_Window* window);
 		void Destroy();
 
-		void Render();
+		void Render() const;
 
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;

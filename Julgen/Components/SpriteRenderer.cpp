@@ -2,16 +2,19 @@
 
 #include "RenderManager.h"
 #include "ResourceManager.h"
+#include "Sprite.h"
 #include "Transform.h"
 
-jul::SpriteRenderer::SpriteRenderer(const std::string& fileName, int renderLayer, bool visible, const std::string& name) :
-	Renderer{ renderLayer, visible, name }
-{
-	m_TextureSPtr = ResourceManager::GetInstance().LoadTexture(fileName);
-}
+jul::SpriteRenderer::SpriteRenderer(Sprite* sprite, int renderLayer, bool visible) :
+	Renderer{ renderLayer, visible, "SpriteRenderer" },
+	m_SpritePtr(sprite)
+{}
 
 void jul::SpriteRenderer::Render() const
 {
+	if(m_SpritePtr == nullptr)
+		return;
+
 	const glm::vec3& pos = Transform().WorldPosition();
-	RenderManager::GetInstance().RenderTexture(*m_TextureSPtr, pos.x, pos.y);
+	RenderManager::GetInstance().RenderTexture(*m_SpritePtr->GetTexture(), pos.x, pos.y);
 }

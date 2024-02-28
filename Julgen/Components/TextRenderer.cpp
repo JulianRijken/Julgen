@@ -9,21 +9,21 @@
 #include "Texture2D.h"
 #include "Transform.h"
 
-jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, int renderLayer, bool visible, const std::string& name):
+jul::TextRenderer::TextRenderer(const std::string& text, Font* font, int renderLayer, bool visible, const std::string& name):
 	Renderer(renderLayer, visible, name),
 	m_TextColor({ 255,255,255,255 }),
 	m_Text(text),
-	m_FontSPtr(std::move(font)),
+	m_FontSPtr(font),
 	m_TextTextureSPtr(nullptr)
 {
 	UpdateText();
 }
 
-jul::TextRenderer::TextRenderer(const std::string& text, std::shared_ptr<Font> font, SDL_Color m_TextColor, int renderLayer, bool visible, const std::string& name) :
+jul::TextRenderer::TextRenderer(const std::string& text, Font* font, SDL_Color m_TextColor, int renderLayer, bool visible, const std::string& name) :
 	Renderer(renderLayer, visible, name),
 	m_TextColor(m_TextColor),
 	m_Text(text),
-	m_FontSPtr(std::move(font)),
+	m_FontSPtr(font),
 	m_TextTextureSPtr(nullptr)
 {
 	UpdateText();

@@ -83,21 +83,9 @@ jul::Julgen::Julgen()
 	if (g_window == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
-	RenderManager::GetInstance().Init(g_window);
+	RenderManager::GetInstance().Initialize(g_window);
 
-
-#if __EMSCRIPTEN__
-	fs::path contentLocation = "";
-#else
-	std::filesystem::path contentLocation = "./";
-
-	if (not std::filesystem::exists(contentLocation))
-		contentLocation = "../";
-
-	contentLocation.append(GlobalSettings::CONTENT_PATH);
-#endif
-
-	ResourceManager::GetInstance().Init(contentLocation);
+	ResourceManager::Initialize();
 }
 
 jul::Julgen::~Julgen()
