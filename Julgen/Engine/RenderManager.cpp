@@ -24,7 +24,7 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void jul::RenderManager::Init(SDL_Window* window)
+void jul::RenderManager::Initialize(SDL_Window* window)
 {
 	m_Window = window;
 	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -33,7 +33,7 @@ void jul::RenderManager::Init(SDL_Window* window)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 }
 
-void jul::RenderManager::Render()
+void jul::RenderManager::Render() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);

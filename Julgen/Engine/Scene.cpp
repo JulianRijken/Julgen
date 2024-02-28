@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include <algorithm>
+#include <execution>
 #include <iostream>
 
 #include "GameObject.h"

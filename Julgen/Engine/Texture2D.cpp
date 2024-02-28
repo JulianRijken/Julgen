@@ -3,7 +3,7 @@
 
 jul::Texture2D::~Texture2D()
 {
-	SDL_DestroyTexture(m_texture);
+	SDL_DestroyTexture(m_Texture);
 }
 
 glm::ivec2 jul::Texture2D::GetSize() const
@@ -15,10 +15,10 @@ glm::ivec2 jul::Texture2D::GetSize() const
 
 SDL_Texture* jul::Texture2D::GetSDLTexture() const
 {
-	return m_texture;
+	return m_Texture;
 }
 
 jul::Texture2D::Texture2D(SDL_Texture* texture)
 {
-	m_texture = texture;
+	m_Texture = texture;
 }
