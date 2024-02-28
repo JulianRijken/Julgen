@@ -6,7 +6,6 @@
 #include "Sprite.h"
 #include "Texture2D.h"
 
-
 namespace jul
 {
 
@@ -16,24 +15,29 @@ namespace jul
 	public:
 		static void Initialize();
 
-		//[[nodiscard]] static Font*   CreateFont   (const std::string& assetName, const std::string& filePath, unsigned int size);
-		//[[nodiscard]] static Sprite* CreateSprite (const std::string& assetName, const std::string& filePath,
-		//	float pixelsPerUnit, const glm::vec2& pivotAlpha, int rowCount,
-		//	int colCount, const std::map<std::string, Animation>& animations);
+		[[nodiscard]] static Font* GetFont(const std::string& name);
+		[[nodiscard]] static Sprite* GetSprite(const std::string& name);
+
+		static Font*   LoadFont   (const std::string& assetName, const std::string& filePath, unsigned int size);
+		static Sprite* LoadSprite (const std::string& assetName, const std::string& filePath,
+			int pixelsPerUnit = 100, const glm::vec2& pivotAlpha = {},
+			int rowCount = 1, int colCount = 1, const std::map<std::string, Animation>& animations = {});
 
 	private:
 
-		[[nodiscard]] static Texture2D* LoadTexture(const std::string& filePath);
+		// Textures are currently only used by the sprites, so they are not exposed to the user
+		// In the future when textures are needed for 3D models or other things, this should be changed
+		static Texture2D* LoadTexture(const std::string& filePath);
 
 
 		ResourceManager() = default;
 
-		inline static std::map<std::string, std::unique_ptr<Font>> m_FontUPtrMap;
-		inline static std::map<std::string, std::unique_ptr<Sprite>> m_SpriteUPtrMap;
+		inline static std::map<std::string, std::unique_ptr<Font>> m_FontUPtrMap{};
+		inline static std::map<std::string, std::unique_ptr<Sprite>> m_SpriteUPtrMap{};
 
-		inline static std::vector<std::unique_ptr<Texture2D>> m_LoadedTextureUPtrs;
+		inline static std::vector<std::unique_ptr<Texture2D>> m_LoadedTextureUPtrs{};
 
-		inline static std::filesystem::path m_ContentPath;
+		inline static std::filesystem::path m_ContentPath{};
 	};
 }
 

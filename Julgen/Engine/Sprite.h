@@ -15,7 +15,7 @@ namespace jul
 
 	public:
 
-		Sprite(const Texture2D* texturePtr, float pixelsPerUnit, const glm::vec2& pivotAlpha = {},
+		Sprite(const Texture2D* texturePtr, int pixelsPerUnit = 100, const glm::vec2& pivotAlpha = {},
 		       int rowCount = 1, int colCount = 1,const std::map<std::string, Animation>& animations = {});
 
 		~Sprite() = default;
@@ -33,7 +33,7 @@ namespace jul
 
 		const int ROW_COUNT;
 		const int COL_COUNT;
-		const float PIXELS_PER_UNIT;
+		const int PIXELS_PER_UNIT;
 		const glm::vec2 PIVOT;
 		const glm::ivec2 CELL_SIZE;
 		const Texture2D* TEXTURE_PTR;

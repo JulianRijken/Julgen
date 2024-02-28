@@ -16,8 +16,8 @@ namespace jul
 	{
 	public:
 
-		TextRenderer(const std::string& text, std::shared_ptr<Font> font, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
-		TextRenderer(const std::string& text, std::shared_ptr<Font> font,SDL_Color m_TextColor, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
+		TextRenderer(const std::string& text, Font* font, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
+		TextRenderer(const std::string& text, Font* font,SDL_Color m_TextColor, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
 
 		void SetText(const std::string& text);
 		void SetColor(const SDL_Color& color);
@@ -31,7 +31,7 @@ namespace jul
 		SDL_Color m_LastDrawnColor;
 		std::string m_Text;
 		std::string m_LastDrawnText;
-		std::shared_ptr<Font> m_FontSPtr;
+		Font* m_FontSPtr;
 		std::unique_ptr<Texture2D> m_TextTextureSPtr;
 	};
 }

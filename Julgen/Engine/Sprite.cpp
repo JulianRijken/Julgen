@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 #include "Texture2D.h"
 
-jul::Sprite::Sprite(const Texture2D* texturePtr, float pixelsPerUnit, const glm::vec2& pivotAlpha, int rowCount,
+jul::Sprite::Sprite(const Texture2D* texturePtr, int pixelsPerUnit, const glm::vec2& pivotAlpha, int rowCount,
                     int colCount, const std::map<std::string, Animation>& animations) :
 
 	ROW_COUNT(std::max(1, rowCount)),

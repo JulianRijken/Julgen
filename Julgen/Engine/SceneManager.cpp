@@ -27,55 +27,52 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
-		// TODO: Fonts should be stored in a resource manager and loaded by name
-		//auto font = ResourceManager::CreateFont("Lingua","Lingua.otf", 36);
+		GameObject* background = AddGameObject("Background");
+		background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
 
-		//GameObject* background = AddGameObject("Background");
-		//background->AddComponent<SpriteRenderer>("background.tga",-100);
+		GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
+		assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
 
-		//GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
-		//assignment->AddComponent<TextRenderer>("Programming 4 Scenegraph", font, 100);
-
-		//GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
-		//fpsCounter->AddComponent<TextRenderer>("error", font, 100);
-		//fpsCounter->AddComponent<FpsCounter>();
+		GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
+		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
+		fpsCounter->AddComponent<FpsCounter>();
 
 
 
 
-		//if (bool showChildStructure = true)
-		//{
-		//	GameObject* bubble1 = AddGameObject("Bubble", { 300,250,0 });
-		//	bubble1->AddComponent<SpriteRenderer>("Bubble.png", 10);
-		//	bubble1->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubble1->GetTransform().WorldPosition());
+		if (bool showChildStructure = true)
+		{
+			GameObject* bubble1 = AddGameObject("Bubble", { 300,250,0 });
+			bubble1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+			bubble1->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubble1->GetTransform().WorldPosition());
 
-		//	GameObject* bubble2 = AddGameObject("Bubble", { 300,250,0 });
-		//	bubble2->AddComponent<SpriteRenderer>("Bubble.png", 10);
-		//	bubble2->AddComponent<AutoRotateAround>(70.0f, -3.0f);
-		//	bubble2->GetTransform().SetParent(&bubble1->GetTransform());
+			GameObject* bubble2 = AddGameObject("Bubble", { 300,250,0 });
+			bubble2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+			bubble2->AddComponent<AutoRotateAround>(70.0f, -3.0f);
+			bubble2->GetTransform().SetParent(&bubble1->GetTransform());
 
-		//	GameObject* bubble3 = AddGameObject("Bubble", { 300,250,0 });
-		//	bubble3->AddComponent<SpriteRenderer>("Bubble.png", 10);
-		//	bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
-		//	bubble3->GetTransform().SetParent(&bubble2->GetTransform());
-		//}
+			GameObject* bubble3 = AddGameObject("Bubble", { 300,250,0 });
+			bubble3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+			bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
+			bubble3->GetTransform().SetParent(&bubble2->GetTransform());
+		}
 
-		//if  (bool showDirtyFlag = false)
-		//{
-		//	GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
-		//	bubbleBase->AddComponent<SpriteRenderer>("Dot.png", 10);
+		if  (bool showDirtyFlag = false)
+		{
+			GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
+			bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);
 
-		//	GameObject* lastBubble = bubbleBase;
-		//	for (int i = 0; i < 20000; ++i)
-		//	{
-		//		GameObject* bubble = AddGameObject("Bubble", { 300,250,0 });
-		//		bubble->AddComponent<SpriteRenderer>("Dot.png", 10);
-		//		bubble->AddComponent<AutoRotateAround>(1.0f * (i * 0.05f), 1.0f + (i * 0.005f));
-		//		bubble->GetTransform().SetParent(&lastBubble->GetTransform());
+			GameObject* lastBubble = bubbleBase;
+			for (int i = 0; i < 20000; ++i)
+			{
+				GameObject* bubble = AddGameObject("Bubble", { 300,250,0 });
+				bubble->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);
+				bubble->AddComponent<AutoRotateAround>(1.0f * (i * 0.05f), 1.0f + (i * 0.005f));
+				bubble->GetTransform().SetParent(&lastBubble->GetTransform());
 
-		//		lastBubble = bubble;
-		//	}
-		//}
+				lastBubble = bubble;
+			}
+		}
 
 	}
 
