@@ -57,7 +57,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			bubble3->GetTransform().SetParent(&bubble2->GetTransform());
 		}
 
-		if  (bool showDirtyFlag = false)
+		if  (bool showDirtyFlag = true)
 		{
 			GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
 			bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);

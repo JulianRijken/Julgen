@@ -18,8 +18,6 @@ namespace jul
 
 		friend class Scene;
 
-
-
 	public:
 
 		[[nodiscard]] Transform& GetTransform() { return m_Transform; }

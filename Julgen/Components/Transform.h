@@ -14,6 +14,9 @@ namespace jul
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
 
 		[[nodiscard]] Transform* GetParent() const { return m_ParentPtr; }
+
+		// There is no way to get a child by index because the children are stored in a set
+		// Use GetChildren() and iterate through the set if you need to access children by index
 		[[nodiscard]] int GetChildCount() const { return static_cast<int>(m_ChildPtrs.size()); }
 		[[nodiscard]] const std::unordered_set<Transform*>& GetChildren() const { return m_ChildPtrs; }
 
@@ -34,7 +37,11 @@ namespace jul
 
 		bool m_PositionDirty{true};
 
+
+
 		glm::vec3 m_LocalPosition{};
+
+
 		glm::vec3 m_WorldPosition{};
 
 		Transform* m_ParentPtr{nullptr};

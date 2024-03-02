@@ -31,7 +31,7 @@ jul::Font* jul::ResourceManager::GetFont(const std::string& name)
 	if (m_FontUPtrMap.contains(name))
 		return m_FontUPtrMap.at(name).get();
 
-	std::cerr << "Font not loaded: " << name << std::endl;
+	std::cerr << "Font not loaded: " << name << '\n';
 	return nullptr;
 }
 
@@ -40,7 +40,7 @@ jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
 	if (m_SpriteUPtrMap.contains(name))
 		return m_SpriteUPtrMap.at(name).get();
 
-	std::cerr << "Sprite not loaded: " << name << std::endl;
+	std::cerr << "Sprite not loaded: " << name << '\n';
 	return nullptr;
 }
 
@@ -67,6 +67,7 @@ jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
 
 	if (texture == nullptr)
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+
 
 	return m_LoadedTextureUPtrs.emplace_back(std::make_unique<Texture2D>(texture)).get();
 }
