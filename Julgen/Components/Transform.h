@@ -7,14 +7,12 @@
 
 namespace jul
 {
-	class Transform : public Component
+	class Transform final : public Component
 	{
+
 	public:
-
 		Transform(glm::vec3 position = { 0,0,0 });
-		~Transform();
-
-		void Destroy() override {}
+		~Transform() override;
 
 		[[nodiscard]] const glm::vec3& WorldPosition();
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
@@ -45,6 +43,7 @@ namespace jul
 		bool IsChild(Transform* checkChildPtr) const;
 
 	private:
+
 
 
 		bool m_TransformDirty{true};

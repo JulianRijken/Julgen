@@ -27,63 +27,35 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
-		//GameObject* background = AddGameObject("Background");
-		//background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
+		GameObject* background = AddGameObject("Background");
+		background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
 
-		//GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
-		//assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
+		GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
+		assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
 
-		//GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
-		//fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
-		//fpsCounter->AddComponent<FpsCounter>();
-
-
-
-		GameObject* bubbleDestroy = AddGameObject("Bubble", { 300,250,0 });
-
-		bubbleDestroy->Destroy();
-
-		bubbleDestroy->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-		bubbleDestroy->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubbleDestroy->GetTransform().WorldPosition());
+		GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
+		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
+		fpsCounter->AddComponent<FpsCounter>();
 
 
+		std::cout << "\n\n";
 
 
-
-
-		if (bool showChildStructure = false)
+		if (bool showChildStructure = true)
 		{
-			GameObject* bubble1 = AddGameObject("Bubble", { 300,250,0 });
+			GameObject* bubble1 = AddGameObject("Bubble1", { 300,250,0 });
 			bubble1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
 			bubble1->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubble1->GetTransform().WorldPosition());
 
-			GameObject* bubble2 = AddGameObject("Bubble", { 300,250,0 });
+			GameObject* bubble2 = AddGameObject("Bubble2", { 300,250,0 });
 			bubble2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
 			bubble2->AddComponent<AutoRotateAround>(70.0f, -3.0f);
 			bubble2->GetTransform().SetParent(&bubble1->GetTransform());
 
-			GameObject* bubble3 = AddGameObject("Bubble", { 300,250,0 });
+			GameObject* bubble3 = AddGameObject("Bubble3", { 300,250,0 });
 			bubble3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble3->AddComponent<AutoRotateAround>(40.0f, 0.5f);
+			bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
 			bubble3->GetTransform().SetParent(&bubble2->GetTransform());
-
-			GameObject* bubble4 = AddGameObject("Bubble", { 300,250,0 });
-			bubble4->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble4->AddComponent<AutoRotateAround>(40.0f, 0.5f);
-			bubble4->GetTransform().SetParent(&bubble3->GetTransform());
-
-			// TODO: Bubble 3 is set to destory, this calls destory on all children
-			// Becasue bubble 5 is not a child yet at this moment it does not get destroyed
-			// And simply removed from the parent.
-			// To fix this I have to or create a destroy que and at cleanup call destroy again
-			// Oke I should just redo cleanup and have it check there instead of recursivly call desrtroy then calling Destoy
-			bubble3->Destroy();
-
-			GameObject* bubble5 = AddGameObject("Bubble", { 300,250,0 });
-			bubble5->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble5->AddComponent<AutoRotateAround>(40.0f, 4.5f);
-			bubble5->GetTransform().SetParent(&bubble3->GetTransform());
-
 		}
 
 		if  (bool showDirtyFlag = false)
@@ -91,8 +63,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
 			bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);
 
-			GameObject* lastBubble = bubbleBase;
-			for (int i = 0; i < 20000; ++i)
+			const GameObject* lastBubble = bubbleBase;
+			for (int i = 0; i < 200; ++i)
 			{
 				GameObject* bubble = AddGameObject("Bubble", { 300,250,0 });
 				bubble->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);

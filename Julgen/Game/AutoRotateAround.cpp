@@ -21,6 +21,4 @@ void AutoRotateAround::Update()
 	glm::vec3 targetPosition = m_RotateAroundPoint;
 	targetPosition += glm::vec3{ std::cos(jul::GameTime::GetElapsedTime() * m_Speed) * m_DistanceFromTarget, std::sin(jul::GameTime::GetElapsedTime() * m_Speed) * m_DistanceFromTarget, 0 };
 	Transform().SetLocalPosition(targetPosition);
-
-	std::cout << "AutoRotateAround::Update()" << std::endl;
 } 

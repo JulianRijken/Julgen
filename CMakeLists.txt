@@ -13,7 +13,6 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
-
 # Set the source directory
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 

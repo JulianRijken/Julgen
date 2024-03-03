@@ -41,9 +41,21 @@ void Scene::FixedUpdate() const
 
 void Scene::Cleanup()
 {
-	// Cleanup all components from the game objects
+	// We propagate the destroy !only at the end of the frame!
+	// This is very important:
+	// - If we propagate the destroy immediately, we might end up destroying a game object whos parent has changes after calling the destroy
 	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
-		gameObject->Cleanup();
+	{
+		if(gameObject->IsBeingDestroyed())
+			gameObject->PropagateDestroy();
+	}
+
+	// Clean up individual components from game objects
+	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+	{
+		if (gameObject->IsBeingDestroyed())
+			gameObject->Cleanup();
+	}
 
 	// Remove all game objects that are set to be destroyed
 	for (auto iterator = m_GameObjectsInSceneSPtr.begin(); iterator != m_GameObjectsInSceneSPtr.end();)
