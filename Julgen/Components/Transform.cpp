@@ -11,11 +11,12 @@ jul::Transform::~Transform()
 	SetParent(nullptr);
 
 	// Set parent will try to erase itself from the parent's children
-	// TODO: This is a bit of a hack, but it works, look if there is a better solution
+	// This is NOT done with SetParent(nullptr) because
+	// SetParent() will try to remove itself from m_ChildPtrs
 	for (auto it = m_ChildPtrs.begin(); it != m_ChildPtrs.end();)
 	{
 		Transform* childPtr = *it;
-		it = m_ChildPtrs.erase(it); // Advance the iterator before potentially modifying the set
+		it = m_ChildPtrs.erase(it);
 		childPtr->SetParent(nullptr);
 	}
 }

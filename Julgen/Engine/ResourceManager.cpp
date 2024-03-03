@@ -13,6 +13,7 @@ void jul::ResourceManager::Initialize()
 #if __EMSCRIPTEN__
 	m_ContentPath = "";
 #else
+	// TODO: Optional, Have the program recursively search for the Content folder up to like 5 levels deep
 	m_ContentPath = "./Content/";
 #endif
 

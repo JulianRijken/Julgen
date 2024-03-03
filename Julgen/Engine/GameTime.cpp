@@ -1,4 +1,6 @@
 #include "GameTime.h"
+
+#include <iostream>
 #include <numeric>
 
 
@@ -6,12 +8,11 @@ void jul::GameTime::Update()
 {
 	// Calculate delta time
 	const auto currentTime = std::chrono::high_resolution_clock::now();
-	s_DeltaTime = std::chrono::duration<double>(currentTime - s_LastTime).count();
+	s_DeltaTime = std::min(MAX_DELTA_TIME, std::chrono::duration<double>(currentTime - s_LastTime).count());
 	s_LastTime = currentTime;
 
 	// Update elapsed time
 	s_ElapsedTime += s_DeltaTime;
-
 
 	// Calculate average fps
 	s_FpsDeque.push_front(GetFps());

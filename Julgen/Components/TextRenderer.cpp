@@ -31,17 +31,18 @@ jul::TextRenderer::TextRenderer(const std::string& text, Font* font, SDL_Color m
 
 void jul::TextRenderer::SetText(const std::string& text)
 {
-	m_Text = text;
+	if (text == m_LastDrawnText)
+		return;
 
-	if (m_Text != m_LastDrawnText)
-		UpdateText();
+	m_Text = text;
+	UpdateText();
 }
 
 void jul::TextRenderer::SetColor(const SDL_Color& color)
 {
 	m_TextColor = color;
 
-	if (m_TextColor.r != m_LastDrawnColor.r
+	if (   m_TextColor.r != m_LastDrawnColor.r
 		or m_TextColor.g != m_LastDrawnColor.g
 		or m_TextColor.b != m_LastDrawnColor.b
 		or m_TextColor.a != m_LastDrawnColor.a)

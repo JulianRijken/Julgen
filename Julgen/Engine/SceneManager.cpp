@@ -40,6 +40,13 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 		std::cout << "\n\n";
 
+		/////////////////////////////
+		/// Showing fix delta time clamp
+		/////////////////////////////
+		GameObject* bounce1 = AddGameObject("BubbleBounce", { 10,0,0 });
+		bounce1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+		bounce1->AddComponent<Bounce>(32.0f,0.8f);
+
 
 		/////////////////////////////
 		/// Showing cleanup / destroy
@@ -114,10 +121,10 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
-	// TODO: I want to use make unique here but game has a private constructor
+	// TODO: !!! I want to use make unique here but game has a private constructor
 	auto newGameObject = std::unique_ptr<GameObject>(new GameObject(name, position));
 
-	// TODO: Is it good to move the unique pointer here? or should I just return the unique pointer?
+	// TODO: !!! Is it good to move the unique pointer here? or should I just return the unique pointer?
 	return m_ActiveScene->AddGameObjectToScene(std::move(newGameObject));
 }
 

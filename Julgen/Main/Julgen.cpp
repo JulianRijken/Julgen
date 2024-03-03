@@ -110,7 +110,8 @@ void LoopCallback(void* arg)
 
 void jul::Julgen::Run()
 {
-	SceneManager::GetInstance().LoadScene("Start"); // TODO: Replace this hardcoded start scene
+	// TODO: Replace this hardcoded start scene
+	SceneManager::GetInstance().LoadScene("Start"); 
 
 #ifdef __EMSCRIPTEN__
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);

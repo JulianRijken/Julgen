@@ -4,6 +4,7 @@
 
 #include "GlobalSettings.h"
 
+
 namespace jul
 {
 	class GameTime
@@ -39,5 +40,7 @@ namespace jul
 		inline static std::deque<double> s_FpsDeque{};
 		inline static double s_AverageFps{ 0 };
 		inline static constexpr int AMOUNT_OF_FRAMES_TO_AVERAGE{ 60 };
+		inline static constexpr double MAX_DELTA_TIME{ 1.0 / 30.0 };
 	};
 }
+

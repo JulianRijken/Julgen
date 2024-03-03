@@ -7,7 +7,6 @@
 #include <memory>
 
 #include "Transform.h"
-#include "Component.h"
 
 
 namespace jul
@@ -15,7 +14,9 @@ namespace jul
 
 	class GameObject final : public Object
 	{
-		// TODO: Using friend class instead of friend function to avoid include of SceneManager.h, is this better than the include?
+		// TODO: I really want to avoid these friend classes.
+		// The only solution I see is friend void, but this will cause a include loop...
+		// How do I go about this?
 		friend class Scene;
 		friend class SceneManager;
 
@@ -85,7 +86,6 @@ namespace jul
 		void LateUpdate() const;
 		void FixedUpdate() const;
 
-	private:
 		Transform* m_TransformPtr;
 		std::list<std::unique_ptr<Component>> m_Components{};
 	};

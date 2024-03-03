@@ -9,7 +9,6 @@ namespace jul
 
 	class Scene final
 	{
-
 		friend class SceneManager;
 
 		void Update() const;
