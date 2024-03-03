@@ -2,13 +2,16 @@
 #include <unordered_set>
 #include <glm/glm.hpp>
 
+#include "Component.h"
 
 namespace jul
 {
-	class Transform final
+	class Transform final : public Component
 	{
+
 	public:
-		Transform(glm::vec3 position = {0,0,0});
+		Transform(glm::vec3 position = { 0,0,0 });
+		~Transform() override;
 
 		[[nodiscard]] const glm::vec3& WorldPosition();
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
@@ -35,19 +38,14 @@ namespace jul
 
 	private:
 
-		bool m_PositionDirty{true};
-
-
-
+		bool m_TransformDirty{true};
 		glm::vec3 m_LocalPosition{};
-
-
 		glm::vec3 m_WorldPosition{};
 
 		Transform* m_ParentPtr{nullptr};
 		std::unordered_set<Transform*> m_ChildPtrs{};
 
 		void UpdateWorldPosition();
-		void SetPositionDirty();
+		void SetTransformDirty();
 	};
 }

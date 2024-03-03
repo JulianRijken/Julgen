@@ -12,7 +12,6 @@ public:
 private:
 	void Update() override;
 
-
 	float m_Speed{};
 	float m_DistanceFromTarget{};
 	glm::vec3 m_RotateAroundPoint{};

@@ -38,42 +38,73 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		fpsCounter->AddComponent<FpsCounter>();
 
 
+		std::cout << "\n\n";
 
 
-		if (bool showChildStructure = true)
+		/////////////////////////////
+		/// Showing cleanup / destroy
+		/////////////////////////////
+		GameObject* deleteBubble = AddGameObject("Bubble", { 300,250,0 });
+		deleteBubble->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+
+		GameObject* deleteBubbleChild = AddGameObject("Bubble", { 300,250,0 });
+		deleteBubbleChild->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+
+		// Even though we call destroy before the child is set the child will be destroyed
+		// Propagating children will only happen at the end of the frame
+		deleteBubble->Destroy();
+		deleteBubbleChild->GetTransform().SetParent(&deleteBubble->GetTransform());
+
+
+		////////////////////////
+		/// Showing triple child
+		////////////////////////
+		GameObject* bubble1 = AddGameObject("Bubble1", { 300,250,0 });
+		bubble1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+		bubble1->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubble1->GetTransform().WorldPosition());
+
+		// Changing parent will take effect immediately
+		// But destroying will only happen at the end of the frame so buuble1 will not be destroyed
+		bubble1->GetTransform().SetParent(&deleteBubble->GetTransform());
+		bubble1->GetTransform().SetParent(&deleteBubbleChild->GetTransform());
+		bubble1->GetTransform().SetParent(nullptr);
+
+
+		GameObject* bubble2 = AddGameObject("Bubble2", { 300,250,0 });
+		bubble2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+		bubble2->AddComponent<AutoRotateAround>(70.0f, -3.0f);
+		bubble2->GetTransform().SetParent(&bubble1->GetTransform());
+
+		GameObject* bubble3 = AddGameObject("Bubble3", { 300,250,0 });
+		bubble3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
+		bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
+		bubble3->GetTransform().SetParent(&bubble2->GetTransform());
+
+
+		////////////////////////
+		/// Showing child spiral
+		////////////////////////
+		GameObject* bubbleBase = AddGameObject("Bubble", { 50,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
+		bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 1);
+		bubbleBase->AddComponent<AutoRotateAround>(40.0f, 1.0f);
+
+		bubbleBase->GetTransform().SetParent(&bubble3->GetTransform());
+		const GameObject* lastBubble = bubbleBase;
+		for (int i = 0; i < 500; ++i)
 		{
-			GameObject* bubble1 = AddGameObject("Bubble", { 300,250,0 });
-			bubble1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble1->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubble1->GetTransform().WorldPosition());
+			GameObject* bubble = AddGameObject("Bubble", { 300,250,0 });
+			bubble->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), i);
+			bubble->AddComponent<AutoRotateAround>(1.0f * (i * 0.05f), 1.0f + (i * 0.005f));
+			bubble->GetTransform().SetParent(&lastBubble->GetTransform());
 
-			GameObject* bubble2 = AddGameObject("Bubble", { 300,250,0 });
-			bubble2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble2->AddComponent<AutoRotateAround>(70.0f, -3.0f);
-			bubble2->GetTransform().SetParent(&bubble1->GetTransform());
-
-			GameObject* bubble3 = AddGameObject("Bubble", { 300,250,0 });
-			bubble3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
-			bubble3->GetTransform().SetParent(&bubble2->GetTransform());
-		}
-
-		if  (bool showDirtyFlag = true)
-		{
-			GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
-			bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);
-
-			GameObject* lastBubble = bubbleBase;
-			for (int i = 0; i < 20000; ++i)
-			{
-				GameObject* bubble = AddGameObject("Bubble", { 300,250,0 });
-				bubble->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);
-				bubble->AddComponent<AutoRotateAround>(1.0f * (i * 0.05f), 1.0f + (i * 0.005f));
-				bubble->GetTransform().SetParent(&lastBubble->GetTransform());
-
+			// Destroy every other bubble!
+			// What it does not break!
+			// Yes :) It does not break
+			if (i % 2 == 0)
+				bubble->Destroy();
+			else
 				lastBubble = bubble;
-			}
 		}
-
 	}
 
 

@@ -1,12 +1,10 @@
 #include "AutoRotateAround.h"
-
 #include <complex>
 
 #include "GameTime.h"
 
 #include "SceneManager.h"
 #include "GameObject.h"
-#include "SpriteRenderer.h"
 #include "Transform.h"
 
 AutoRotateAround::AutoRotateAround(float distanceFromTarget, float speed, glm::vec3 rotateAroundPoint) :
