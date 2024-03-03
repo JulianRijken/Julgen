@@ -1,7 +1,5 @@
 #include "AutoRotateAround.h"
-
 #include <complex>
-#include <iostream>
 
 #include "GameTime.h"
 

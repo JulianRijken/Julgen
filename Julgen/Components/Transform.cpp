@@ -40,24 +40,6 @@ void jul::Transform::SetLocalPosition(const glm::vec3& position)
 	SetTransformDirty();
 }
 
-//void jul::Transform::SetLocalRotation(const glm::quat& rotation)
-//{
-//	m_loc = rotation;
-//	SetTransformDirty();
-//}
-//
-//
-//void jul::Transform::SetLocalScale(float x, float y, float z)
-//{
-//	SetLocalScale({ x,y,z });
-//}
-//void jul::Transform::SetLocalScale(const glm::vec3& scale)
-//{
-//	m_LocalScale = scale;
-//	SetTransformDirty();
-//}
-
-
 void jul::Transform::SetWorldPosition(float x, float y, float z)
 {
 	SetWorldPosition({ x,y,z });
@@ -92,7 +74,6 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 	if (m_ParentPtr)
 	{
 		m_ParentPtr->m_ChildPtrs.erase(this);
-
 
 		if (worldPositionStays)
 			m_LocalPosition += m_ParentPtr->WorldPosition();
