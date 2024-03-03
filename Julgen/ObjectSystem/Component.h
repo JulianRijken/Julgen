@@ -35,7 +35,7 @@ namespace jul
 
 	private:
 
-		GameObject* m_ParentGameObjectPtr;
+		GameObject* m_ParentGameObjectPtr{};
 	};
 }
 

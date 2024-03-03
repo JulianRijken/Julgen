@@ -2,12 +2,28 @@
 
 
 jul::Transform::Transform(glm::vec3 position) :
+	Component("Transform"),
 	m_LocalPosition(position)
 {}
 
+jul::Transform::~Transform()
+{
+	SetParent(nullptr);
+
+	// Set parent will try to erase itself from the parent's children
+	// TODO: This is a bit of a hack, but it works, look if there is a better solution
+	for (auto it = m_ChildPtrs.begin(); it != m_ChildPtrs.end();)
+	{
+		Transform* childPtr = *it;
+		it = m_ChildPtrs.erase(it); // Advance the iterator before potentially modifying the set
+		childPtr->SetParent(nullptr);
+	}
+}
+
+
 const glm::vec3& jul::Transform::WorldPosition()
 {
-	if (m_PositionDirty)
+	if (m_TransformDirty)
 		UpdateWorldPosition();
 
 	return m_WorldPosition;
@@ -18,18 +34,34 @@ void jul::Transform::SetLocalPosition(float x, float y, float z)
 {
 	SetLocalPosition({ x,y,z });
 }
-
 void jul::Transform::SetLocalPosition(const glm::vec3& position)
 {
 	m_LocalPosition = position;
-	SetPositionDirty();
+	SetTransformDirty();
 }
+
+//void jul::Transform::SetLocalRotation(const glm::quat& rotation)
+//{
+//	m_loc = rotation;
+//	SetTransformDirty();
+//}
+//
+//
+//void jul::Transform::SetLocalScale(float x, float y, float z)
+//{
+//	SetLocalScale({ x,y,z });
+//}
+//void jul::Transform::SetLocalScale(const glm::vec3& scale)
+//{
+//	m_LocalScale = scale;
+//	SetTransformDirty();
+//}
+
 
 void jul::Transform::SetWorldPosition(float x, float y, float z)
 {
 	SetWorldPosition({ x,y,z });
 }
-
 void jul::Transform::SetWorldPosition(const glm::vec3& position)
 {
 	if (m_ParentPtr == nullptr)
@@ -37,7 +69,6 @@ void jul::Transform::SetWorldPosition(const glm::vec3& position)
 	else
 		SetLocalPosition(position - m_ParentPtr->WorldPosition());
 }
-
 
 
 void jul::Transform::Translate(float x, float y, float z)
@@ -62,6 +93,7 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 	{
 		m_ParentPtr->m_ChildPtrs.erase(this);
 
+
 		if (worldPositionStays)
 			m_LocalPosition += m_ParentPtr->WorldPosition();
 	}
@@ -77,7 +109,7 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 			m_LocalPosition -= m_ParentPtr->WorldPosition();
 	}
 
-	SetPositionDirty();
+	SetTransformDirty();
 }
 
 bool jul::Transform::IsChild(Transform* checkChildPtr) const
@@ -94,6 +126,7 @@ bool jul::Transform::IsChild(Transform* checkChildPtr) const
 	return false;
 }
 
+
 void jul::Transform::UpdateWorldPosition()
 {
 	if(m_ParentPtr == nullptr)
@@ -101,15 +134,15 @@ void jul::Transform::UpdateWorldPosition()
 	else
 		m_WorldPosition = m_LocalPosition + m_ParentPtr->WorldPosition();
 
-	m_PositionDirty = false;
+	m_TransformDirty = false;
 }
 
-void jul::Transform::SetPositionDirty()
+void jul::Transform::SetTransformDirty()
 {
-	m_PositionDirty = true;
+	m_TransformDirty = true;
 
 	for (Transform* childPtr : m_ChildPtrs)
-		if(not childPtr->m_PositionDirty)
-			childPtr->SetPositionDirty();
+		if(not childPtr->m_TransformDirty)
+			childPtr->SetTransformDirty();
 }
 

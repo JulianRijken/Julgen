@@ -27,20 +27,31 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
-		GameObject* background = AddGameObject("Background");
-		background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
+		//GameObject* background = AddGameObject("Background");
+		//background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
 
-		GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
-		assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
+		//GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
+		//assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
 
-		GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
-		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
-		fpsCounter->AddComponent<FpsCounter>();
-
-
+		//GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
+		//fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
+		//fpsCounter->AddComponent<FpsCounter>();
 
 
-		if (bool showChildStructure = true)
+
+		GameObject* bubbleDestroy = AddGameObject("Bubble", { 300,250,0 });
+
+		bubbleDestroy->Destroy();
+
+		bubbleDestroy->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+		bubbleDestroy->AddComponent<AutoRotateAround>(30.0f, 3.0f, bubbleDestroy->GetTransform().WorldPosition());
+
+
+
+
+
+
+		if (bool showChildStructure = false)
 		{
 			GameObject* bubble1 = AddGameObject("Bubble", { 300,250,0 });
 			bubble1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
@@ -53,11 +64,29 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 			GameObject* bubble3 = AddGameObject("Bubble", { 300,250,0 });
 			bubble3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
-			bubble3->AddComponent<AutoRotateAround>(40.0f, 2.0f);
+			bubble3->AddComponent<AutoRotateAround>(40.0f, 0.5f);
 			bubble3->GetTransform().SetParent(&bubble2->GetTransform());
+
+			GameObject* bubble4 = AddGameObject("Bubble", { 300,250,0 });
+			bubble4->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+			bubble4->AddComponent<AutoRotateAround>(40.0f, 0.5f);
+			bubble4->GetTransform().SetParent(&bubble3->GetTransform());
+
+			// TODO: Bubble 3 is set to destory, this calls destory on all children
+			// Becasue bubble 5 is not a child yet at this moment it does not get destroyed
+			// And simply removed from the parent.
+			// To fix this I have to or create a destroy que and at cleanup call destroy again
+			// Oke I should just redo cleanup and have it check there instead of recursivly call desrtroy then calling Destoy
+			bubble3->Destroy();
+
+			GameObject* bubble5 = AddGameObject("Bubble", { 300,250,0 });
+			bubble5->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10);
+			bubble5->AddComponent<AutoRotateAround>(40.0f, 4.5f);
+			bubble5->GetTransform().SetParent(&bubble3->GetTransform());
+
 		}
 
-		if  (bool showDirtyFlag = true)
+		if  (bool showDirtyFlag = false)
 		{
 			GameObject* bubbleBase = AddGameObject("Bubble", { GlobalSettings::WINDOW_WIDTH / 2.0f,GlobalSettings::WINDOW_HEIGHT / 2.0f,0 });
 			bubbleBase->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Dot"), 10);

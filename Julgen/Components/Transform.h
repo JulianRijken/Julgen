@@ -2,13 +2,19 @@
 #include <unordered_set>
 #include <glm/glm.hpp>
 
+#include "Component.h"
+//#include <glm/gtx/quaternion.hpp>
 
 namespace jul
 {
-	class Transform final
+	class Transform : public Component
 	{
 	public:
-		Transform(glm::vec3 position = {0,0,0});
+
+		Transform(glm::vec3 position = { 0,0,0 });
+		~Transform();
+
+		void Destroy() override {}
 
 		[[nodiscard]] const glm::vec3& WorldPosition();
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
@@ -23,6 +29,11 @@ namespace jul
 		void SetLocalPosition(float x, float y, float z);
 		void SetLocalPosition(const glm::vec3& position);
 
+		//void SetLocalRotation(const glm::quat& rotation);
+
+		//void SetLocalScale(float x, float y, float z);
+		//void SetLocalScale(const glm::vec3& scale);
+
 		void SetWorldPosition(float x, float y, float z);
 		void SetWorldPosition(const glm::vec3& position);
 
@@ -35,19 +46,25 @@ namespace jul
 
 	private:
 
-		bool m_PositionDirty{true};
+
+		bool m_TransformDirty{true};
 
 
 
 		glm::vec3 m_LocalPosition{};
+		//glm::quat m_LocalRotation{};
+		//glm::vec3 m_LocalScale{};
 
 
 		glm::vec3 m_WorldPosition{};
+
 
 		Transform* m_ParentPtr{nullptr};
 		std::unordered_set<Transform*> m_ChildPtrs{};
 
 		void UpdateWorldPosition();
-		void SetPositionDirty();
+		void SetTransformDirty();
+
+		
 	};
 }

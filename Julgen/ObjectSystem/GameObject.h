@@ -34,6 +34,9 @@ namespace jul
 			addedComponent->m_ParentGameObjectPtr = this;
 			addedComponent->Awake();
 
+			if(IsBeingDestroyed())
+				addedComponent->Destroy();
+
 			return reinterpret_cast<ComponentType*>(addedComponent.get());
 		}
 
@@ -70,6 +73,8 @@ namespace jul
 
 	private:
 
+		GameObject(const std::string& name, const glm::vec3& position);
+
 		void Cleanup();
 
 		void Update() const;
@@ -79,6 +84,5 @@ namespace jul
 		Transform m_Transform;
 		std::list<std::unique_ptr<Component>> m_Components{};
 
-		GameObject(const std::string& name, const glm::vec3& position);
 	};
 }

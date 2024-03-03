@@ -8,15 +8,22 @@
 jul::GameObject::GameObject(const std::string& name, const glm::vec3& position) :
 	Object(name),
 	m_Transform(position)
-{}
+{
+	m_Transform.m_ParentGameObjectPtr = this;
+}
 
 
 void jul::GameObject::Destroy()
 {
 	Object::Destroy();
-	 
-	for (const auto& component : m_Components)
+
+	// Destroy components
+	for (const std::unique_ptr<Component>& component : m_Components)
 		component->Destroy();
+
+	// Destroy children
+	for (const Transform* childTransform : m_Transform.GetChildren())
+		childTransform->GetGameObject()->Destroy();
 }
 
 
