@@ -5,6 +5,11 @@
 #include "GameTime.h"
 
 
+FpsCounter::FpsCounter(jul::GameObject* parent) : 
+	Component(parent,"FpsCounter")
+{
+}
+
 void FpsCounter::Awake()
 {
     m_TextRenderer = GetGameObject()->GetComponent<jul::TextRenderer>();

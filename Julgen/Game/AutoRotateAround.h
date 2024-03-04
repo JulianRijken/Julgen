@@ -3,11 +3,12 @@
 
 #include "glm/vec3.hpp"
 
+
 class AutoRotateAround : public jul::Component
 {
 public:
-	AutoRotateAround(float distanceFromTarget, float speed = 1.0f, glm::vec3 rotateAroundPoint = {});
 
+	AutoRotateAround(jul::GameObject* parent,float distanceFromTarget, float speed = 1.0f, glm::vec3 rotateAroundPoint = glm::vec3{0,0,0});
 
 private:
 	void Update() override;

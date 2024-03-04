@@ -3,7 +3,6 @@
 #include <iostream>
 #include <ranges>
 
-#include "AutoMove.h"
 #include "Bounce.h"
 #include "ResourceManager.h"
 #include "Scene.h"
@@ -22,9 +21,12 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	m_LoadedScenes.clear();
 
 	// Add scenes to loaded scenes
-	m_LoadedScenes[name] = std::make_unique<Scene>(name);
+
 	// Set new loaded scene as active
-	m_ActiveScenePtr = m_LoadedScenes[name].get();
+	auto newSceneUPtr = std::make_unique<Scene>(name);
+	m_ActiveScenePtr = newSceneUPtr.get();
+	m_LoadedScenes[name] = std::move(newSceneUPtr);
+
 
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")

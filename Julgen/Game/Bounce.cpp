@@ -1,15 +1,12 @@
 #include "Bounce.h"
 
-#include <iostream>
-
-#include "GameObject.h"
 #include "GameTime.h"
 #include "Transform.h"
 
 using namespace glm;
 
-Bounce::Bounce(float offset, float restitution) :
-	Component("Bounce"),
+Bounce::Bounce(jul::GameObject* parent, float offset, float restitution) :
+	Component(parent,"Bounce"),
 	m_Offset(offset),
 	m_Restitution(restitution)
 {}

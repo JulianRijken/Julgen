@@ -18,8 +18,8 @@ namespace jul
 		void SetFramesPerSecond(float framesPerSecond);
 
 	private:
-		float m_FramesPerSecond;
 
+		float m_FramesPerSecond;
 		const std::vector<glm::ivec2> CELL_FRAMES{};
 		const int FRAME_COUNT{};
 	};

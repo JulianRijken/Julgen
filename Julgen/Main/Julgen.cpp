@@ -1,27 +1,25 @@
+#include "Julgen.h"
+
 #include <stdexcept>
 #include <sstream>
+#include <thread>
 #include <iostream>
-
-#if WIN32
-#define WIN32_LEAN_AND_MEAN 
-#include <windows.h>
-#endif
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include "Julgen.h"
-
-#include <thread>
-
-#include "SceneManager.h"
+#include "GameTime.h"
+#include "GlobalSettings.h"
+#include "InputManager.h"
 #include "RenderManager.h"
 #include "ResourceManager.h"
-#include "InputManager.h"
+#include "SceneManager.h"
 
-#include "GlobalSettings.h"
-#include "GameTime.h"
+#if WIN32
+#define WIN32_LEAN_AND_MEAN 
+#include <windows.h>
+#endif
 
 
 SDL_Window* g_window{};

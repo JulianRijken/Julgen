@@ -1,34 +1,35 @@
 #pragma once
 #include <iostream>
-
-#include "Object.h"
-
 #include <list>
 #include <memory>
 
+#include "Object.h"
 #include "Transform.h"
 
 
 namespace jul
 {
-
 	class GameObject final : public Object
 	{
-		// TODO: I really want to avoid these friend classes.
-		// The only solution I see is friend void, but this will cause a include loop...
-		// How do I go about this?
-		friend class Scene;
-		friend class SceneManager;
-
 	public:
 
-		void Destroy() override;
+		GameObject(const std::string& name, const glm::vec3& position);
 
 		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
+		void Destroy() override;
+		void PropagateDestroy() const;
+
+		void Update() const;
+		void LateUpdate() const;
+		void FixedUpdate() const;
+
+		void Cleanup();
+
+
 		template <typename ComponentType, typename... Args>
 		requires std::derived_from<ComponentType, Component>
-		ComponentType* AddComponent(Args&&... args) 		
+		ComponentType* AddComponent(Args&&... args)
 		{
 			// Avoid Transform from being added twice
 			if constexpr (std::is_same_v<ComponentType, Transform>)
@@ -37,8 +38,7 @@ namespace jul
 				return reinterpret_cast<ComponentType*>(m_TransformPtr);
 			}
 
-			auto& addedComponent = m_Components.emplace_back(std::make_unique<ComponentType>(args...));
-			addedComponent->m_ParentGameObjectPtr = this;
+			auto& addedComponent = m_Components.emplace_back(std::make_unique<ComponentType>(this,args...));
 			addedComponent->Awake();
 
 			return reinterpret_cast<ComponentType*>(addedComponent.get());
@@ -46,8 +46,6 @@ namespace jul
 
 		// Calls Destroy on the component
 		// Ideally, Destroy() on the component is preferred
-		//template <typename ComponentType>
-		//requires std::derived_from<ComponentType, Component>
 		void DestroyComponent(Component* component)
 		{
 			component->Destroy();
@@ -76,15 +74,6 @@ namespace jul
 		}
 
 	private:
-
-		GameObject(const std::string& name, const glm::vec3& position);
-
-		void PropagateDestroy() const;
-		void Cleanup();
-
-		void Update() const;
-		void LateUpdate() const;
-		void FixedUpdate() const;
 
 		Transform* m_TransformPtr;
 		std::list<std::unique_ptr<Component>> m_Components{};

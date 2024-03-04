@@ -16,10 +16,10 @@ namespace jul
 	{
 	public:
 
-		TextRenderer(const std::string& text, Font* font, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
-		TextRenderer(const std::string& text, Font* font,SDL_Color m_TextColor, int renderLayer = 0, bool visible = true, const std::string& name = "TextRenderer");
+		TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer = 0);
+		TextRenderer(GameObject* parent, const std::string& text, Font* font,SDL_Color m_TextColor, int renderLayer = 0);
 
-		void SetText(const std::string& text);
+		void SetText(const std::string& text); 
 		void SetColor(const SDL_Color& color);
 
 	private:

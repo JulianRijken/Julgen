@@ -5,8 +5,8 @@
 #include "Sprite.h"
 #include "Transform.h"
 
-jul::SpriteRenderer::SpriteRenderer(Sprite* sprite, int renderLayer, bool visible) :
-	Renderer{ renderLayer, visible, "SpriteRenderer" },
+jul::SpriteRenderer::SpriteRenderer(GameObject* parent, Sprite* sprite, int renderLayer) :
+	Renderer(parent,"SpriteRenderer",renderLayer),
 	m_SpritePtr(sprite)
 {}
 

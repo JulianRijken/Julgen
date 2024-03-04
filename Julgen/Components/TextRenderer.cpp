@@ -1,7 +1,6 @@
 #include "TextRenderer.h"
 
 #include <stdexcept>
-#include <utility>
 
 #include "Font.h"
 #include "RenderManager.h"
@@ -9,8 +8,10 @@
 #include "Texture2D.h"
 #include "Transform.h"
 
-jul::TextRenderer::TextRenderer(const std::string& text, Font* font, int renderLayer, bool visible, const std::string& name):
-	Renderer(renderLayer, visible, name),
+
+
+jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer) :
+	Renderer(parent, "TextRenderer", renderLayer),
 	m_TextColor({ 255,255,255,255 }),
 	m_Text(text),
 	m_FontSPtr(font),
@@ -19,8 +20,8 @@ jul::TextRenderer::TextRenderer(const std::string& text, Font* font, int renderL
 	UpdateText();
 }
 
-jul::TextRenderer::TextRenderer(const std::string& text, Font* font, SDL_Color m_TextColor, int renderLayer, bool visible, const std::string& name) :
-	Renderer(renderLayer, visible, name),
+jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, SDL_Color m_TextColor, int renderLayer) :
+	Renderer(parent, "TextRenderer", renderLayer),
 	m_TextColor(m_TextColor),
 	m_Text(text),
 	m_FontSPtr(font),

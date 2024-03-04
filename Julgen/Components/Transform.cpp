@@ -1,8 +1,8 @@
 #include "Transform.h"
 
 
-jul::Transform::Transform(glm::vec3 position) :
-	Component("Transform"),
+jul::Transform::Transform(GameObject* parent,glm::vec3 position) :
+	Component(parent,"Transform"),
 	m_LocalPosition(position)
 {}
 

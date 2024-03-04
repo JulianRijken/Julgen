@@ -8,7 +8,7 @@ namespace jul
 	class SpriteRenderer final : public Renderer
 	{
 	public:
-		SpriteRenderer(Sprite* sprite = nullptr, int renderLayer = 0, bool visible = true);
+		SpriteRenderer(GameObject* parent, Sprite* sprite = nullptr, int renderLayer = 0);
 
 	private:
 

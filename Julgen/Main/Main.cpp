@@ -1,4 +1,6 @@
 #include <SDL.h>
+#include <SDL_egl.h>
+#include <cstdio>
 
 #if _DEBUG
 	// ReSharper disable once CppUnusedIncludeDirective
@@ -7,11 +9,8 @@
 	#endif
 #endif
 
-#include <cstdio>
-
 #include "GlobalSettings.h"
 #include "Julgen.h"
-#include "SDL_egl.h"
 
 using namespace jul;
 

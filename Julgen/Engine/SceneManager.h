@@ -4,18 +4,20 @@
 #include <unordered_map>
 
 #include "Julgen.h"
+#include "Scene.h"
+#include "GameObject.h"
 #include "Singleton.h"
 #include "glm/vec3.hpp"
 
 
 namespace jul
 {
-	class Scene;
 	class GameObject;
 
 	class SceneManager final : public Singleton<SceneManager>
 	{
 		friend class Singleton;
+		friend class Scene;
 
 		// Required to call update
 		friend void Julgen::RunOneFrame();

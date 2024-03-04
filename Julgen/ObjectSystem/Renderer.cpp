@@ -3,10 +3,9 @@
 #include "RenderManager.h"
 
 
-jul::Renderer::Renderer(int renderLayer, bool visible, const std::string& name) :
-	Component{ name },
-	m_Visible{ visible },
-	m_RenderLayer{ renderLayer }
+jul::Renderer::Renderer(GameObject* parent, const std::string& name, int renderLayer) :
+	Component( parent, name ),
+	m_RenderLayer( renderLayer )
 {
 	 RenderManager::s_GlobalRendererPtrs.insert(this);
 }
