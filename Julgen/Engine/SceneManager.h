@@ -38,10 +38,10 @@ namespace jul
 
 		SceneManager() = default;
 
-		std::shared_ptr<Scene> m_ActiveScene{};
+	    Scene* m_ActiveScenePtr{};
 
 		// TODO: Scenes are now stored with their name, but this might be redundant as the scene class also stores the name
-		std::unordered_map<std::string, std::shared_ptr<Scene>> m_LoadedScenes{};
+		std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
 	};
 
 }
