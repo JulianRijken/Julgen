@@ -10,12 +10,7 @@
 
 void jul::ResourceManager::Initialize()
 {
-#if __EMSCRIPTEN__
-	m_ContentPath = "";
-#else
-	// TODO: Optional, Have the program recursively search for the Content folder up to like 5 levels deep
-	m_ContentPath = "./Content/";
-#endif
+	ConfigurePath();
 
 	if (TTF_Init() != 0)
 		throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
@@ -71,6 +66,27 @@ jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
 
 
 	return m_LoadedTextureUPtrs.emplace_back(std::make_unique<Texture2D>(texture)).get();
+}
+
+void jul::ResourceManager::ConfigurePath()
+{
+#if __EMSCRIPTEN__
+	m_ContentPath = "";
+#else
+	m_ContentPath = "./Content/";
+
+	// Check if the Content folder is in the parent directory
+	if (not std::filesystem::exists(m_ContentPath))
+		m_ContentPath = "../Content/";
+#endif
+
+	if (not std::filesystem::exists(m_ContentPath))
+	{
+		std::cerr << "Content folder not found in directory: " << m_ContentPath << "\n"
+			<< "Absolute Path: " << absolute(m_ContentPath) << '\n'
+			<< "Current Program Path: " << std::filesystem::current_path() << '\n';
+		throw std::runtime_error("Content folder not found in directory");
+	}
 }
 
 

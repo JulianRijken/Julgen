@@ -20,17 +20,23 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// Unload all loaded scenes
 	m_LoadedScenes.clear();
 
-	// Add scenes to loaded scenes
 
 	// Set new loaded scene as active
 	auto newSceneUPtr = std::make_unique<Scene>(name);
 	m_ActiveScenePtr = newSceneUPtr.get();
 	m_LoadedScenes[name] = std::move(newSceneUPtr);
 
-
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
 	{
+
+		// TODO: This is not the correct wat to create game objects and components
+		// This is still possible tho. Look in to this :)
+		//[[maybe_unused]] GameObject* wrongGameObject = new GameObject("Test", glm::vec3(1, 1, 1));
+		//[[maybe_unused]] FpsCounter* wrongFpsCounter = new FpsCounter(wrongGameObject);
+
+
+
 		GameObject* background = AddGameObject("Background");
 		background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"),-100);
 
@@ -124,11 +130,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
-	// TODO: !!! I want to use make unique here but game has a private constructor
-	auto newGameObject = std::unique_ptr<GameObject>(new GameObject(name, position));
-
-	// TODO: !!! Is it good to move the unique pointer here? or should I just return the unique pointer?
-	return m_ActiveScenePtr->AddGameObjectToScene(std::move(newGameObject));
+	return m_ActiveScenePtr->AddGameObjectToScene(std::make_unique<GameObject>(name, position));
 }
 
 

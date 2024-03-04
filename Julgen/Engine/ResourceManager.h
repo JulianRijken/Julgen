@@ -29,6 +29,7 @@ namespace jul
 		// In the future when textures are needed for 3D models or other things, this should be changed
 		static Texture2D* LoadTexture(const std::string& filePath);
 
+		static void ConfigurePath();
 
 		ResourceManager() = default;
 

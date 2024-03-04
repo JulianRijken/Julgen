@@ -2,17 +2,17 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <glm/vec3.hpp>
+
+#include "Singleton.h"
 
 #include "Julgen.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "Singleton.h"
-#include "glm/vec3.hpp"
 
 
 namespace jul
 {
-	class GameObject;
 
 	class SceneManager final : public Singleton<SceneManager>
 	{
@@ -41,8 +41,6 @@ namespace jul
 		SceneManager() = default;
 
 	    Scene* m_ActiveScenePtr{};
-
-		// TODO: Scenes are now stored with their name, but this might be redundant as the scene class also stores the name
 		std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
 	};
 
