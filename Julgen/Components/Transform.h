@@ -10,8 +10,13 @@ namespace jul
 	{
 
 	public:
-		Transform(glm::vec3 position = { 0,0,0 });
+		Transform(GameObject* parent, glm::vec3 position = { 0,0,0 });
 		~Transform() override;
+
+		Transform(Transform&&) = delete;
+		Transform(const Transform&) = delete;
+		Transform& operator=(Transform&&) = delete;
+		Transform& operator=(const Transform&) = delete;
 
 		[[nodiscard]] const glm::vec3& WorldPosition();
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }

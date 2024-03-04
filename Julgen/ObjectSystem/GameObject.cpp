@@ -5,8 +5,7 @@
 jul::GameObject::GameObject(const std::string& name, const glm::vec3& position) :
 	Object(name)
 {
-	m_TransformPtr = reinterpret_cast<Transform*>(m_Components.emplace_back(std::make_unique<Transform>(position)).get());
-	m_TransformPtr->m_ParentGameObjectPtr = this;
+	m_TransformPtr = reinterpret_cast<Transform*>(m_Components.emplace_back(std::make_unique<Transform>(this,position)).get());
 }
 
 

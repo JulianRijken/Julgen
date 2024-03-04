@@ -4,18 +4,20 @@
 #include <unordered_map>
 
 #include "Julgen.h"
+#include "Scene.h"
+#include "GameObject.h"
 #include "Singleton.h"
 #include "glm/vec3.hpp"
 
 
 namespace jul
 {
-	class Scene;
 	class GameObject;
 
 	class SceneManager final : public Singleton<SceneManager>
 	{
 		friend class Singleton;
+		friend class Scene;
 
 		// Required to call update
 		friend void Julgen::RunOneFrame();
@@ -38,10 +40,10 @@ namespace jul
 
 		SceneManager() = default;
 
-		std::shared_ptr<Scene> m_ActiveScene{};
+	    Scene* m_ActiveScenePtr{};
 
 		// TODO: Scenes are now stored with their name, but this might be redundant as the scene class also stores the name
-		std::unordered_map<std::string, std::shared_ptr<Scene>> m_LoadedScenes{};
+		std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
 	};
 
 }

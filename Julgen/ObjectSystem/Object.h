@@ -21,7 +21,6 @@ protected:
 
 	Object(const std::string& name = "Object");
 
-
 private:
 
 	bool m_BeingDestroyed;

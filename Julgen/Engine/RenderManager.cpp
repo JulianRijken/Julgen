@@ -56,10 +56,8 @@ void jul::RenderManager::Render() const
 	std::ranges::stable_sort(renderers, compareLayer);
 
 	for (const Renderer* renderer : renderers)
-	{
-		if(renderer->IsVisible())
-			renderer->Render();
-	}
+		renderer->Render();
+
 
 	
 	SDL_RenderPresent(m_Renderer);

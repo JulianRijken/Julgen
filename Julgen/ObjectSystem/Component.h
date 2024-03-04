@@ -4,14 +4,14 @@
 
 namespace jul
 {
+	class GameObject;
 	class Transform;
 
 	class Component : public Object
 	{
-		friend class GameObject;
 
 	public:
-
+		explicit Component(GameObject* parent = nullptr, const std::string& name = "Component");
 		~Component() override = default;
 
 		Component(Component&&) = delete;
@@ -21,10 +21,6 @@ namespace jul
 
 		[[nodiscard]] GameObject* GetGameObject() const { return m_ParentGameObjectPtr;  }
 		[[nodiscard]] Transform& Transform() const;
-
-	protected:
-
-		Component(const std::string& name = "Component");
 
 		virtual void Update() {}
 		virtual void LateUpdate() {}

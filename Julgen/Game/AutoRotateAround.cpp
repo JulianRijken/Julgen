@@ -7,12 +7,13 @@
 #include "Transform.h"
 
 
-AutoRotateAround::AutoRotateAround(float distanceFromTarget, float speed, glm::vec3 rotateAroundPoint) :
-	Component("AutoRotateAround"),
+AutoRotateAround::AutoRotateAround(jul::GameObject* parent, float distanceFromTarget, float speed, glm::vec3 rotateAroundPoint) :
+	Component(parent,"AutoRotateAround"),
 	m_Speed(speed),
 	m_DistanceFromTarget(distanceFromTarget),
 	m_RotateAroundPoint(rotateAroundPoint)
 {}
+
 
 void AutoRotateAround::Update()
 {
@@ -23,7 +24,6 @@ void AutoRotateAround::Update()
 		std::sin(jul::GameTime::GetElapsedTime() * m_Speed) * m_DistanceFromTarget,
 		0
 	};
-
 
 	Transform().SetLocalPosition(targetPosition);
 } 

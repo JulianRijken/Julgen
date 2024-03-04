@@ -11,6 +11,12 @@ namespace jul
 	{
 		friend class SceneManager;
 
+	public:
+		Scene(const std::string& name);
+		~Scene() = default;
+
+	private:
+
 		void Update() const;
 		void LateUpdate() const;
 		void FixedUpdate() const;
@@ -19,7 +25,6 @@ namespace jul
 
 		GameObject* AddGameObjectToScene(std::unique_ptr<GameObject>&& object);
 
-		explicit Scene(const std::string& name);
 
 		std::string m_Name;
 		std::list<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};

@@ -6,7 +6,7 @@ class AutoMove final : public jul::Component
 {
 public:
 
-	AutoMove(glm::vec3 velocity = {});
+	AutoMove(jul::GameObject* parent, glm::vec3 velocity = {});
 
 private:
 

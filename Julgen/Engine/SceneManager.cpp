@@ -3,7 +3,6 @@
 #include <iostream>
 #include <ranges>
 
-#include "AutoMove.h"
 #include "Bounce.h"
 #include "ResourceManager.h"
 #include "Scene.h"
@@ -21,8 +20,13 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	// Unload all loaded scenes
 	m_LoadedScenes.clear();
 
+	// Add scenes to loaded scenes
+
 	// Set new loaded scene as active
-	m_ActiveScene = std::shared_ptr<Scene>(new Scene{ name });
+	auto newSceneUPtr = std::make_unique<Scene>(name);
+	m_ActiveScenePtr = newSceneUPtr.get();
+	m_LoadedScenes[name] = std::move(newSceneUPtr);
+
 
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
@@ -115,8 +119,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	}
 
 
-	// Add scenes to loaded scenes
-	m_LoadedScenes[name] = m_ActiveScene;
+
 }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
@@ -125,7 +128,7 @@ jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const
 	auto newGameObject = std::unique_ptr<GameObject>(new GameObject(name, position));
 
 	// TODO: !!! Is it good to move the unique pointer here? or should I just return the unique pointer?
-	return m_ActiveScene->AddGameObjectToScene(std::move(newGameObject));
+	return m_ActiveScenePtr->AddGameObjectToScene(std::move(newGameObject));
 }
 
 

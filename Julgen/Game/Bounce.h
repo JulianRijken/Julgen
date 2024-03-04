@@ -3,11 +3,13 @@
 #include "Component.h"
 #include "glm/vec3.hpp"
 
+class jul::GameObject;
+
 class Bounce final : public jul::Component
 {
 public:
 
-	Bounce(float offset = 0.0f, float restitution = 0.8f);
+	Bounce(jul::GameObject* parent, float offset = 0.0f, float restitution = 0.8f);
 
 private:
 

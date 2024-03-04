@@ -6,11 +6,10 @@ namespace jul
 {
 	class Renderer : public Component
 	{
-
 		friend class RenderManager;
 
 	public:
-		Renderer(int renderLayer = 0, bool visible = true, const std::string& name = "Renderer");
+		Renderer(GameObject* parent, const std::string& name = "Renderer", int renderLayer = 0);
 		~Renderer() override;
 
 		Renderer(Renderer&&) = delete;
@@ -21,9 +20,6 @@ namespace jul
 		[[nodiscard]] int GetRenderLayer() const { return m_RenderLayer; }
 		void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }
 
-		// TODO: Visible can just be replaced with enabled of the component in the future
-		void SetVisible(bool visible) { m_Visible = visible; }
-		[[nodiscard]] bool IsVisible() const { return m_Visible; }
 
 	protected:
 
