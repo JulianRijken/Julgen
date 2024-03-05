@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <cstring>
 #include <algorithm>
-#include <set>
 
 #include "Renderer.h"
 #include "SceneManager.h"
