@@ -9,6 +9,7 @@ namespace jul
 {
 	class GameTime
 	{
+		friend class Julgen;
 
 	public:
 
@@ -26,14 +27,10 @@ namespace jul
 		[[nodiscard]] static float  GetFixedDeltaTimeF()   { return static_cast<float>(GlobalSettings::FIXED_TIME_STEP); }
 
 
-		// TODO: So in this case I also removed friend class to Julgen. Is this really better? Update() AddToFrameCount()
-
-		// Should only be called once per frame by the engine
-		static void Update();
-		// Should only be called once per frame by the engine
-		static void AddToFrameCount() { s_FrameCount++; }
-
 	private:
+
+		static void Update();
+		static void AddToFrameCount() { s_FrameCount++; }
 
 		inline static int s_FrameCount{ 0 };
 		inline static double s_ElapsedTime{ 0 };

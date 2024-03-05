@@ -25,13 +25,14 @@ namespace jul
 
 	private:
 
+		ResourceManager() = default;
+
 		// Textures are currently only used by the sprites, so they are not exposed to the user
 		// In the future when textures are needed for 3D models or other things, this should be changed
 		static Texture2D* LoadTexture(const std::string& filePath);
 
 		static void ConfigurePath();
 
-		ResourceManager() = default;
 
 		inline static std::map<std::string, std::unique_ptr<Font>> m_FontUPtrMap{};
 		inline static std::map<std::string, std::unique_ptr<Sprite>> m_SpriteUPtrMap{};
