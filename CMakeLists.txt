@@ -23,8 +23,24 @@ file(GLOB_RECURSE JULGEN_SOURCE_FILES
     ${JULGEN_SOURCE_DIR}/*.h
 )
 
+set(IMGUI_SOURCE_DIR
+    "external/imgui/imgui.cpp"
+    "external/imgui/imgui_draw.cpp"
+    "external/imgui/imgui_widgets.cpp"
+    "external/imgui/imgui_tables.cpp"
+    "external/imgui/backends/imgui_impl_sdl2.cpp"
+    "external/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+)
+
+
+
 # list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM} ${JULGEN_SOURCE_FILES})
+add_executable(
+    ${TARGET_NAME} 
+    ${TARGET_PARAM}
+    ${IMGUI_SOURCE_DIR}
+    ${JULGEN_SOURCE_FILES}
+)
 
 # Include directories
 target_include_directories(${TARGET_NAME} PRIVATE
@@ -34,6 +50,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
     ${JULGEN_SOURCE_DIR}/Game
+    ${JULGEN_SOURCE_DIR}/external
 )
 
 
@@ -186,6 +203,7 @@ endif()
 
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Julgen/
+  external
   ${glm_SOURCE_DIR}
 )
 
