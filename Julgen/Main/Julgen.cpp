@@ -11,6 +11,7 @@
 
 #include "GameTime.h"
 #include "GlobalSettings.h"
+#include "GUI.h"
 #include "InputManager.h"
 #include "RenderManager.h"
 #include "ResourceManager.h"
@@ -82,14 +83,15 @@ jul::Julgen::Julgen()
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
 	RenderManager::GetInstance().Initialize(g_window);
+	GUI::GetInstance().Initialize(g_window,RenderManager::GetInstance().GetSDLRenderer());
 
 	ResourceManager::Initialize();
 }
 
 jul::Julgen::~Julgen()
 {
+	GUI::GetInstance().Destroy();
 	RenderManager::GetInstance().Destroy();
-
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 
@@ -147,7 +149,7 @@ void jul::Julgen::RunOneFrame()
 	RenderManager::GetInstance().Render();
 
 	// Cleans up all the objects marked for deletion
-	SceneManager::GetInstance().Cleanup();
+	SceneManager::GetInstance().CleanupGameObjects();
 
 	GameTime::AddToFrameCount();
 

@@ -24,12 +24,12 @@ file(GLOB_RECURSE JULGEN_SOURCE_FILES
 )
 
 set(IMGUI_SOURCE_DIR
-    "external/imgui/imgui.cpp"
-    "external/imgui/imgui_draw.cpp"
-    "external/imgui/imgui_widgets.cpp"
-    "external/imgui/imgui_tables.cpp"
-    "external/imgui/backends/imgui_impl_sdl2.cpp"
-    "external/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+    "External/imgui/imgui.cpp"
+    "External/imgui/imgui_draw.cpp"
+    "External/imgui/imgui_widgets.cpp"
+    "External/imgui/imgui_tables.cpp"
+    "External/imgui/backends/imgui_impl_sdl2.cpp"
+    "External/imgui/backends/imgui_impl_sdlrenderer2.cpp"
 )
 
 
@@ -50,7 +50,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
     ${JULGEN_SOURCE_DIR}/Game
-    ${JULGEN_SOURCE_DIR}/external
+    ${JULGEN_SOURCE_DIR}/External
 )
 
 
@@ -203,7 +203,8 @@ endif()
 
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Julgen/
-  external
+  External
+  External/imgui
   ${glm_SOURCE_DIR}
 )
 
@@ -212,12 +213,6 @@ target_compile_options(${TARGET_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
-
-## Set seperatly to avoid subcheck errors :) 
-#target_compile_options(${TARGET_NAME} PRIVATE
-#  $<$<CXX_COMPILER_ID:MSVC>:/O2>
-#  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-O2>
-#)
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")

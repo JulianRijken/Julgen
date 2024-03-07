@@ -154,9 +154,9 @@ void jul::SceneManager::FixedUpdate()
 		scene->FixedUpdate();
 }
 
-void jul::SceneManager::Cleanup()
+void jul::SceneManager::CleanupGameObjects()
 {
 	for (const auto& scene : m_LoadedScenes | std::views::values)
-		scene->Cleanup();
+		scene->CleanupGameObjects();
 }
 

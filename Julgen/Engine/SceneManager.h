@@ -16,7 +16,6 @@ namespace jul
 
 	class SceneManager final : public Singleton<SceneManager>
 	{
-		friend class Singleton;
 		friend class Scene;
 
 		// Required to call update
@@ -36,9 +35,7 @@ namespace jul
 		void LateUpdate();
 		void FixedUpdate();
 
-		void Cleanup();
-
-		SceneManager() = default;
+		void CleanupGameObjects();
 
 	    Scene* m_ActiveScenePtr{};
 		std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
