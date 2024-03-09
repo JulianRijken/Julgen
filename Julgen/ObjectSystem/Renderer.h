@@ -24,10 +24,11 @@ namespace jul
 	protected:
 
 		virtual void Render() const {}
+		virtual void UpdateGUI() {}
 
 	private:
 
-		bool m_Visible;
+		bool m_Visible{true};
 		int m_RenderLayer{};
 	};
 }

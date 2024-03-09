@@ -37,19 +37,16 @@ void jul::RenderManager::Initialize(SDL_Window* window)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 }
 
-void jul::RenderManager::Render()
+void jul::RenderManager::Render() const
 {
-	GUI::GetInstance().NewFrame();
-
-	const auto& color = GetBackgroundColor();
+	const SDL_Color& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
+	GUI::GetInstance().NewFrame();
 
-	RenderGUI();
 	RenderObjects();
 
 	GUI::GetInstance().EndFrame();
-	
 	SDL_RenderPresent(m_Renderer);
 }
 
@@ -100,35 +97,7 @@ void jul::RenderManager::RenderObjects() const
 
 	for (const Renderer* renderer : renderers)
 		renderer->Render();
-}
 
-void jul::RenderManager::RenderGUI()
-{
-	// Create a window called "My First Tool", with a menu bar.
-	ImGui::Begin("My First Tool", &my_tool_active, ImGuiWindowFlags_MenuBar);
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-			if (ImGui::MenuItem("Close", "Ctrl+W")) { my_tool_active = false; }
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
-	}
-
-	// Generate samples and plot them
-	float samples[100];
-	for (int n = 0; n < 100; n++)
-		samples[n] = sinf((float)n * 0.2f + (float)ImGui::GetTime() * 1.5f);
-	ImGui::PlotLines("Samples", samples, 100);
-
-	// Display contents in a scrolling region
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
-	ImGui::BeginChild("Scrolling");
-	for (int n = 0; n < 50; n++)
-		ImGui::Text("%04d: Some text", n);
-	ImGui::EndChild();
-	ImGui::End();
+	for (Renderer* renderer : renderers)
+		renderer->UpdateGUI();
 }

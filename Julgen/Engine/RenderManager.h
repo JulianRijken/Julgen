@@ -20,7 +20,7 @@ namespace jul
 		void Initialize(SDL_Window* window);
 		void Destroy();
 
-		void Render();
+		void Render() const;
 
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
@@ -32,14 +32,11 @@ namespace jul
 
 	private:
 
-		void RenderObjects() const ;
-		void RenderGUI() ;
+		void RenderObjects() const;
 
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};
 		SDL_Color m_ClearColor{};
-
-		bool my_tool_active{};
 
 		inline static std::unordered_set<Renderer*> s_GlobalRendererPtrs{};
 	};

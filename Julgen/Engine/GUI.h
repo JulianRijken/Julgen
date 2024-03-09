@@ -1,6 +1,14 @@
 #pragma once
 
+#include <unordered_set>
+#include <vector>
+
 #include "Singleton.h"
+
+namespace jul
+{
+	class Component;
+}
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -14,9 +22,9 @@ namespace jul
     {
     public:
         void Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
+        void Destroy();
         void NewFrame() const;
         void EndFrame() const;
-        void Destroy();
     };
 }
 
