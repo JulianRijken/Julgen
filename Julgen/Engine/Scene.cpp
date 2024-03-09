@@ -39,7 +39,7 @@ void Scene::FixedUpdate() const
 		gameObject->FixedUpdate();
 }
 
-void Scene::Cleanup()
+void Scene::CleanupGameObjects()
 {
 	// We propagate the destroy !only at the end of the frame!
 	// This is very important:
@@ -54,7 +54,7 @@ void Scene::Cleanup()
 	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
 	{
 		if (gameObject->IsBeingDestroyed())
-			gameObject->Cleanup();
+			gameObject->CleanupComponents();
 	}
 
 	// Remove all game objects that are set to be destroyed

@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <unordered_set>
 
+#include "imgui.h"
 #include "Singleton.h"
 
 namespace jul
@@ -12,7 +13,6 @@ namespace jul
 
 	class RenderManager final : public Singleton<RenderManager>
 	{
-		friend class Singleton;
 		friend class Renderer;
 
 	public:
@@ -31,6 +31,8 @@ namespace jul
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 	private:
+
+		void RenderObjects() const;
 
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};

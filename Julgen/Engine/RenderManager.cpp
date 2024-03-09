@@ -3,12 +3,16 @@
 #include <stdexcept>
 #include <cstring>
 #include <algorithm>
-#include <set>
+
+#include "GUI.h"
+#include "imgui.h"
 
 #include "Renderer.h"
 #include "SceneManager.h"
+
 #include "Texture2D.h"
 #include "Transform.h"
+
 
 int GetOpenGLDriverIndex()
 {
@@ -35,31 +39,14 @@ void jul::RenderManager::Initialize(SDL_Window* window)
 
 void jul::RenderManager::Render() const
 {
-	const auto& color = GetBackgroundColor();
+	const SDL_Color& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
+	GUI::GetInstance().NewFrame();
 
+	RenderObjects();
 
-	auto renderers = std::vector(s_GlobalRendererPtrs.begin(), s_GlobalRendererPtrs.end());
-
-	const auto compareDistance = [](const Renderer* a, const Renderer* b)
-	{
-		return a->Transform().WorldPosition().z > b->Transform().WorldPosition().z;
-	};
-
-	const auto compareLayer = [](const Renderer* a, const Renderer* b)
-		{
-			return a->GetRenderLayer() < b->GetRenderLayer();
-		};
-
-	std::ranges::sort(renderers, compareDistance);
-	std::ranges::stable_sort(renderers, compareLayer);
-
-	for (const Renderer* renderer : renderers)
-		renderer->Render();
-
-
-	
+	GUI::GetInstance().EndFrame();
 	SDL_RenderPresent(m_Renderer);
 }
 
@@ -89,4 +76,28 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+}
+
+void jul::RenderManager::RenderObjects() const
+{
+	auto renderers = std::vector(s_GlobalRendererPtrs.begin(), s_GlobalRendererPtrs.end());
+
+	const auto compareDistance = [](const Renderer* a, const Renderer* b)
+		{
+			return a->Transform().WorldPosition().z > b->Transform().WorldPosition().z;
+		};
+
+	const auto compareLayer = [](const Renderer* a, const Renderer* b)
+		{
+			return a->GetRenderLayer() < b->GetRenderLayer();
+		};
+
+	std::ranges::sort(renderers, compareDistance);
+	std::ranges::stable_sort(renderers, compareLayer);
+
+	for (const Renderer* renderer : renderers)
+		renderer->Render();
+
+	for (Renderer* renderer : renderers)
+		renderer->UpdateGUI();
 }

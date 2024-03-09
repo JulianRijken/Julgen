@@ -24,7 +24,7 @@ namespace jul
 		void LateUpdate() const;
 		void FixedUpdate() const;
 
-		void Cleanup();
+		void CleanupComponents();
 
 
 		template <typename ComponentType, typename... Args>

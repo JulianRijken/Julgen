@@ -10,6 +10,7 @@ jul::Component::Component(GameObject* parent, const std::string& name) :
 }
 
 
+
 jul::Transform& jul::Component::Transform() const
 {
 	return m_ParentGameObjectPtr->GetTransform();

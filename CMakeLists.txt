@@ -23,8 +23,31 @@ file(GLOB_RECURSE JULGEN_SOURCE_FILES
     ${JULGEN_SOURCE_DIR}/*.h
 )
 
+set(IMGUI_SOURCE_DIR
+    #https://github.com/epezent/implot
+    "External/imgui/implot.cpp" 
+    "External/imgui/implot_demo.cpp" 
+    "External/imgui/implot_items.cpp" 
+
+    "External/imgui/imgui_demo.cpp"
+
+    "External/imgui/imgui.cpp"
+    "External/imgui/imgui_draw.cpp"
+    "External/imgui/imgui_widgets.cpp"
+    "External/imgui/imgui_tables.cpp"
+    "External/imgui/backends/imgui_impl_sdl2.cpp"
+    "External/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+)
+
+
+
 # list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM} ${JULGEN_SOURCE_FILES})
+add_executable(
+    ${TARGET_NAME} 
+    ${TARGET_PARAM}
+    ${IMGUI_SOURCE_DIR}
+    ${JULGEN_SOURCE_FILES}
+)
 
 # Include directories
 target_include_directories(${TARGET_NAME} PRIVATE
@@ -34,6 +57,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
     ${JULGEN_SOURCE_DIR}/Game
+    ${JULGEN_SOURCE_DIR}/External
 )
 
 
@@ -44,6 +68,7 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
+
 # add glm
 FetchContent_Declare(
   glm
@@ -142,7 +167,6 @@ if (WIN32)
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
   )
-
 elseif(NOT EMSCRIPTEN)
 
   FetchContent_Declare(
@@ -179,13 +203,15 @@ elseif(NOT EMSCRIPTEN)
     ${sdl2_image_SOURCE_DIR}/include
     ${sdl2_ttf_SOURCE_DIR}
   )
-  target_link_libraries("${TARGET_NAME}" PUBLIC 
+  target_link_libraries(${TARGET_NAME} PUBLIC 
     SDL2::SDL2main SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf
   )
 endif()
 
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Julgen/
+  External
+  External/imgui
   ${glm_SOURCE_DIR}
 )
 
@@ -195,11 +221,12 @@ target_compile_options(${TARGET_NAME} PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
-## Set seperatly to avoid subcheck errors :) 
-#target_compile_options(${TARGET_NAME} PRIVATE
-#  $<$<CXX_COMPILER_ID:MSVC>:/O2>
-#  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-O2>
-#)
+# compile at max warning level + treat warnings as errors
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+)
+
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
@@ -238,3 +265,6 @@ elseif(WIN32)
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Content" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Content"
   )
 endif()
+
+
+

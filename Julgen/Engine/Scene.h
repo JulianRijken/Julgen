@@ -21,7 +21,7 @@ namespace jul
 		void LateUpdate() const;
 		void FixedUpdate() const;
 
-		void Cleanup();
+		void CleanupGameObjects();
 
 		GameObject* AddGameObjectToScene(std::unique_ptr<GameObject>&& object);
 
