@@ -2,9 +2,9 @@ name: CMake
 
 on:
   push:
-    branches: [ "feature/cmake" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "feature/cmake" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         BUILD_TYPE: [Release, Debug]
-
+        BUILD_PLATFORM: [x64, x86]
     steps:
     - uses: actions/checkout@v3
 
