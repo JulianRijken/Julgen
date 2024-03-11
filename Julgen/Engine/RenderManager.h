@@ -2,7 +2,6 @@
 #include <SDL.h>
 #include <unordered_set>
 
-#include "imgui.h"
 #include "Singleton.h"
 
 namespace jul

@@ -27,6 +27,10 @@ set(IMGUI_SOURCE_DIR
     "External/imgui/implot.cpp" 
     "External/imgui/implot_demo.cpp" 
     "External/imgui/implot_items.cpp" 
+    "External/imgui/implot_items.cpp" 
+
+    "External/imgui/backends/imgui_impl_sdl2" 
+    "External/imgui/backends/imgui_impl_sdlrenderer2" 
 
     "External/imgui/imgui_demo.cpp"
 
@@ -211,6 +215,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Julgen/
   External
   External/imgui
+  External/imgui/backends
   ${glm_SOURCE_DIR}
 )
 

@@ -1,15 +1,13 @@
 #include "GUI.h"
 
-#include <iostream>
 #include <SDL_render.h>
-#include <imgui/backends/imgui_impl_sdl2.h>
-#include <imgui/backends/imgui_impl_sdlrenderer2.h>
 
-#include <imgui/imgui.h>
-#include <imgui/implot.h>
 
-#include "SceneManager.h"
+#include <imgui.h>
+#include <implot.h>
 
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdlrenderer2.h>
 
 void jul::GUI::Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 {
