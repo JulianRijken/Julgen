@@ -12,7 +12,7 @@
 #include "GameTime.h"
 #include "GlobalSettings.h"
 #include "GUI.h"
-#include "InputManager.h"
+#include "Input.h"
 #include "RenderManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
@@ -130,7 +130,7 @@ void jul::Julgen::RunOneFrame()
 	m_Lag += GameTime::GetDeltaTime();
 
 	// Handle input
-	m_IsApplicationQuitting = !InputManager::GetInstance().ProcessInput();
+	m_IsApplicationQuitting = !Input::GetInstance().ProcessInput();
 
 	// Fixed Update,
 	while (m_Lag >= GameTime::GetFixedDeltaTime())
