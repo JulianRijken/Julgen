@@ -8,5 +8,4 @@ namespace jul
 	public:
 		bool ProcessInput();
 	};
-
 }

@@ -47,19 +47,22 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
 		fpsCounter->AddComponent<FpsCounter>();
 
+		GameObject* inputInfoText = AddGameObject("Fps Counter", { 20,60,0 });
+		inputInfoText->AddComponent<TextRenderer>("Use the D-Pad to move Bubble\nUseWASD to move Bubble2", ResourceManager::GetFont("Lingua"), 100);
 
 
-		GameObject* plotExample = AddGameObject("Plot", { 20,20,0 });
-		plotExample->AddComponent<Examples::PlotExample> ();
+		GameObject* bubbleCharacter1 = AddGameObject("Bubble", { 300,250,0 });
+		bubbleCharacter1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+
+		GameObject* bubbleCharacter2 = AddGameObject("Bubble", { 350,250,0 });
+		bubbleCharacter2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+
 
 
 
 
 		if constexpr (constexpr bool showSceneGraph = false)
 		{
-
-
-
 			std::cout << "\n\n";
 
 			/////////////////////////////
@@ -136,9 +139,6 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			}
 		}
 	}
-
-
-
 }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
