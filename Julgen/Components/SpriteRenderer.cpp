@@ -1,7 +1,6 @@
 #include "SpriteRenderer.h"
 
 #include "RenderManager.h"
-#include "ResourceManager.h"
 #include "Sprite.h"
 #include "Transform.h"
 

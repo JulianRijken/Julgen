@@ -24,16 +24,16 @@ namespace jul
 		GameObject* m_GameObject;
 	};
 
-	class Move : public BaseCommand
-	{
-	public:
-		GameObjectCommand(GameObject* gameObject);
+    // class Move : public BaseCommand
+    // {
+    // public:
+    // 	GameObjectCommand(GameObject* gameObject);
 
-	protected:
-		GameObject* GetGameObject() const { return m_GameObject; }
+    // protected:
+    // 	GameObject* GetGameObject() const { return m_GameObject; }
 
-	private:
-		GameObject* m_GameObject;
-	};
+    // private:
+    // 	GameObject* m_GameObject;
+    // };
 
 }

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <ranges>
 
-#include "Bounce.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "TextRenderer.h"
@@ -13,7 +12,7 @@
 #include "AutoRotateAround.h"
 #include "GameObject.h"
 #include "GlobalSettings.h"
-#include "PlotExample.h"
+#include "Bounce.h"
 
 
 void jul::SceneManager::LoadScene(const std::string& name)
@@ -70,7 +69,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			/////////////////////////////
 			GameObject* bounce1 = AddGameObject("BubbleBounce", { 10,0,0 });
 			bounce1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
-			bounce1->AddComponent<Bounce>(32.0f, 0.8f);
+            bounce1->AddComponent<Bounce>(32.0f, 0.8f);
 
 
 			/////////////////////////////

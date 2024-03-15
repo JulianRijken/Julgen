@@ -15,13 +15,8 @@ endif()
 
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
-# Gather all source files under Julgen/ directory
-file(GLOB_RECURSE JULGEN_SOURCE_FILES
-    ${JULGEN_SOURCE_DIR}/*.hpp
-    ${JULGEN_SOURCE_DIR}/*.cpp
-)
 
-set(IMGUI_SOURCE_DIR
+set(IMGUI_SOURCE_FILES
     #https://github.com/epezent/implot
     "External/imgui/implot.cpp" 
     "External/imgui/implot_demo.cpp" 
@@ -42,12 +37,48 @@ set(IMGUI_SOURCE_DIR
 )
 
 
+set(JULGEN_SOURCE_FILES
+    "Julgen/Components/SpriteRenderer.cpp"
+    "Julgen/Components/TextRenderer.cpp"
+    "Julgen/Components/Transform.cpp"
+
+    "Julgen/Engine/GlobalSettings.h" #HEADER
+    "Julgen/Engine/Singleton.h" #HEADER
+
+    "Julgen/Engine/Animation.cpp"
+    "Julgen/Engine/Command.cpp"
+    "Julgen/Engine/Font.cpp"
+    "Julgen/Engine/GameTime.cpp"
+    "Julgen/Engine/GUI.cpp"
+    "Julgen/Engine/Input.cpp"
+    "Julgen/Engine/RenderManager.cpp"
+    "Julgen/Engine/ResourceManager.cpp"
+    "Julgen/Engine/Scene.cpp"
+    "Julgen/Engine/SceneManager.cpp"
+    "Julgen/Engine/Sprite.cpp"
+    "Julgen/Engine/Texture2D.cpp"
+
+    "Julgen/Game/AutoMove.cpp"
+    "Julgen/Game/AutoRotateAround.cpp"
+    "Julgen/Game/Bounce.cpp"
+    "Julgen/Game/FpsCounter.cpp"
+    "Julgen/Game/PlotExample.cpp"
+
+    "Julgen/Main/Main.cpp"
+    "Julgen/Main/Julgen.cpp"
+
+    "Julgen/ObjectSystem/Component.cpp"
+    "Julgen/ObjectSystem/GameObject.cpp"
+    "Julgen/ObjectSystem/Object.cpp"
+    "Julgen/ObjectSystem/Renderer.cpp"
+)
+
 
 # list source files here
 add_executable(
     ${TARGET_NAME} 
     ${TARGET_PARAM}
-    ${IMGUI_SOURCE_DIR}
+    ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
 )
 
@@ -59,17 +90,26 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
     ${JULGEN_SOURCE_DIR}/Game
-    ${JULGEN_SOURCE_DIR}/External
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/External
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui/backends
 )
-
-
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
+
+# compile at max warning level + treat warnings as errors
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /MP>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 # set julgen as the default startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
+
 
 # add glm
 FetchContent_Declare(
@@ -83,6 +123,12 @@ FetchContent_GetProperties(glm)
 if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
 endif()
+
+target_include_directories(${TARGET_NAME} PRIVATE
+  ${glm_SOURCE_DIR}
+)
+
+
 
 # add SDL2
 if (WIN32)
@@ -166,7 +212,7 @@ if (WIN32)
   target_link_libraries(${TARGET_NAME} PUBLIC
     ${SDL2_LIBRARIES} 
     ${SDL2_IMAGE_LIBRARIES} 
-    ${SDL2_TTF_LIBRARIES} 
+    ${SDL2_TTF_LIBRARIES}
     ${VLD_LIBRARY}
   )
 elseif(NOT EMSCRIPTEN)
@@ -210,19 +256,6 @@ elseif(NOT EMSCRIPTEN)
   )
 endif()
 
-target_include_directories(${TARGET_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/Julgen/
-  External
-  External/imgui
-  External/imgui/backends
-  ${glm_SOURCE_DIR}
-)
-
-# compile at max warning level + treat warnings as errors
-target_compile_options(${TARGET_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-)
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")

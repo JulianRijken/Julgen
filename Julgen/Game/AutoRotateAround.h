@@ -1,7 +1,7 @@
 #pragma once
-#include "Component.h"
+#include <glm/vec3.hpp>
 
-#include "glm/vec3.hpp"
+#include "Component.h"
 
 
 class AutoRotateAround : public jul::Component
