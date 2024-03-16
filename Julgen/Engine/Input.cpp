@@ -4,43 +4,24 @@
 #include <imgui_impl_sdl2.h>
 
 
-SDL_GameController* FindController()
-{
-    for (int i = 0; i < SDL_NumJoysticks(); i++)
-    {
-        if (SDL_IsGameController(i))
-            return SDL_GameControllerOpen(i);
-    }
-
-    return nullptr;
-}
-
 
 bool jul::Input::ProcessInput()
 {
-
-    if(m_ControllerPtr == nullptr)
-        m_ControllerPtr = FindController();
-
-
     auto keyboardState = SDL_GetKeyboardState(nullptr);
     for (auto&& bind : m_Binds)
     {
         for (auto&& keyboardKey : bind.acton.keyboardButtons)
         {
-            if(bind.buttonState != ButtonState::Held and keyboardState[keyboardKey])
-                continue;
-
-               bind.command->Execute();
-        }
-
-        for (auto&& controllerButton : bind.acton.controllerButtons)
-        {
-            if(bind.buttonState == ButtonState::Held and SDL_GameControllerGetButton(m_ControllerPtr,controllerButton))
+            if(bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
+            {
                 bind.command->Execute();
+                break;
+            }
         }
     }
 
+
+    HandleController();
 
 
     SDL_Event event;
@@ -81,7 +62,7 @@ bool jul::Input::ProcessInput()
                 if(bind.buttonState != ButtonState::Down)
                     continue;
 
-                if(bind.acton.HasControllerButton(event.cbutton.button))
+                if(bind.acton.HasControllerButton(static_cast<SDL_GameControllerButton>(event.cbutton.button)))
                     bind.command->Execute();
             }
             break;
@@ -92,7 +73,7 @@ bool jul::Input::ProcessInput()
                 if(bind.buttonState != ButtonState::Up)
                     continue;
 
-                if(bind.acton.HasControllerButton(event.cbutton.button))
+                if(bind.acton.HasControllerButton(static_cast<SDL_GameControllerButton>(event.cbutton.button)))
                     bind.command->Execute();
             }
             break;
@@ -102,5 +83,5 @@ bool jul::Input::ProcessInput()
         ImGui_ImplSDL2_ProcessEvent(&event);
     }
 
-	return true;
+    return true;
 }

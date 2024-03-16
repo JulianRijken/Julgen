@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Singleton.h"
@@ -19,9 +20,9 @@ namespace jul
             return std::ranges::count(keyboardButtons,compareKey) > 0;
         }
 
-        bool HasControllerButton(Uint8 compareButton)
+        bool HasControllerButton(SDL_GameControllerButton compareButton)
         {
-            return std::ranges::count(controllerButtons,(SDL_GameControllerButton)compareButton) > 0;
+            return std::ranges::count(controllerButtons,compareButton) > 0;
         }
 
         std::vector<SDL_Scancode> keyboardButtons;
@@ -64,8 +65,11 @@ namespace jul
     class Input final : public Singleton<Input>
 	{
     public:
-        bool ProcessInput();
 
+        Input();
+        ~Input();
+
+        bool ProcessInput();
 
         template <typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
@@ -74,17 +78,14 @@ namespace jul
             m_Binds.emplace_back(std::make_unique<CommandType>(args...),INPUT_ACTION.at(actionName),buttonState);
         }
 
-
-        // template <typename CommandType, typename... Args>
-        //     requires std::derived_from<CommandType, BaseCommand>
-        // void RegisterCommand(SDL_Scancode button, ButtonState buttonState, Args&&... args)
-        // {
-        //     m_Binds.emplace_back(std::make_unique<CommandType>(args...),button,buttonState);
-        // }
-
-
 	private:
+
+        class InputImpl;
+        friend class InputImpl;
+        std::unique_ptr<InputImpl> m_ImplUPtr;
+
+        void HandleController();
+
         std::vector<InputBinding> m_Binds;
-        SDL_GameController* m_ControllerPtr = nullptr;
 	};
 }

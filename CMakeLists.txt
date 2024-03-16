@@ -18,59 +18,62 @@ set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
 set(IMGUI_SOURCE_FILES
     #https://github.com/epezent/implot
-    "External/imgui/implot.cpp" 
-    "External/imgui/implot_demo.cpp" 
-    "External/imgui/implot_items.cpp" 
-    "External/imgui/implot_items.cpp" 
+    External/imgui/implot.cpp
+    External/imgui/implot_demo.cpp
+    External/imgui/implot_items.cpp
+    External/imgui/implot_items.cpp
 
-    "External/imgui/backends/imgui_impl_sdl2" 
-    "External/imgui/backends/imgui_impl_sdlrenderer2" 
+    External/imgui/backends/imgui_impl_sdl2
+    External/imgui/backends/imgui_impl_sdlrenderer2
 
-    "External/imgui/imgui_demo.cpp"
+    External/imgui/imgui_demo.cpp
 
-    "External/imgui/imgui.cpp"
-    "External/imgui/imgui_draw.cpp"
-    "External/imgui/imgui_widgets.cpp"
-    "External/imgui/imgui_tables.cpp"
-    "External/imgui/backends/imgui_impl_sdl2.cpp"
-    "External/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+    External/imgui/imgui.cpp
+    External/imgui/imgui_draw.cpp
+    External/imgui/imgui_widgets.cpp
+    External/imgui/imgui_tables.cpp
+    External/imgui/backends/imgui_impl_sdl2.cpp
+    External/imgui/backends/imgui_impl_sdlrenderer2.cpp
 )
 
 
 set(JULGEN_SOURCE_FILES
-    "Julgen/Components/SpriteRenderer.cpp"
-    "Julgen/Components/TextRenderer.cpp"
-    "Julgen/Components/Transform.cpp"
+    Julgen/Components/SpriteRenderer.cpp
+    Julgen/Components/TextRenderer.cpp
+    Julgen/Components/Transform.cpp
 
-    "Julgen/Engine/GlobalSettings.h" #HEADER
-    "Julgen/Engine/Singleton.h" #HEADER
+    Julgen/Engine/GlobalSettings.h #HEADER
+    Julgen/Engine/Singleton.h #HEADER
 
-    "Julgen/Engine/Animation.cpp"
-    "Julgen/Engine/Command.cpp"
-    "Julgen/Engine/Font.cpp"
-    "Julgen/Engine/GameTime.cpp"
-    "Julgen/Engine/GUI.cpp"
-    "Julgen/Engine/Input.cpp"
-    "Julgen/Engine/RenderManager.cpp"
-    "Julgen/Engine/ResourceManager.cpp"
-    "Julgen/Engine/Scene.cpp"
-    "Julgen/Engine/SceneManager.cpp"
-    "Julgen/Engine/Sprite.cpp"
-    "Julgen/Engine/Texture2D.cpp"
+    Julgen/Engine/Animation.cpp
+    Julgen/Engine/Command.cpp
+    Julgen/Engine/Font.cpp
+    Julgen/Engine/GameTime.cpp
+    Julgen/Engine/GUI.cpp
+    Julgen/Engine/Input.cpp
+    Julgen/Engine/RenderManager.cpp
+    Julgen/Engine/ResourceManager.cpp
+    Julgen/Engine/Scene.cpp
+    Julgen/Engine/SceneManager.cpp
+    Julgen/Engine/Sprite.cpp
+    Julgen/Engine/Texture2D.cpp
 
-    "Julgen/Game/AutoMove.cpp"
-    "Julgen/Game/AutoRotateAround.cpp"
-    "Julgen/Game/Bounce.cpp"
-    "Julgen/Game/FpsCounter.cpp"
-    "Julgen/Game/PlotExample.cpp"
+    Julgen/Engine/InputImplSDL.cpp
 
-    "Julgen/Main/Main.cpp"
-    "Julgen/Main/Julgen.cpp"
 
-    "Julgen/ObjectSystem/Component.cpp"
-    "Julgen/ObjectSystem/GameObject.cpp"
-    "Julgen/ObjectSystem/Object.cpp"
-    "Julgen/ObjectSystem/Renderer.cpp"
+    Julgen/Game/AutoMove.cpp
+    Julgen/Game/AutoRotateAround.cpp
+    Julgen/Game/Bounce.cpp
+    Julgen/Game/FpsCounter.cpp
+    Julgen/Game/PlotExample.cpp
+
+    Julgen/Main/Main.cpp
+    Julgen/Main/Julgen.cpp
+
+    Julgen/ObjectSystem/Component.cpp
+    Julgen/ObjectSystem/GameObject.cpp
+    Julgen/ObjectSystem/Object.cpp
+    Julgen/ObjectSystem/Renderer.cpp
 )
 
 
