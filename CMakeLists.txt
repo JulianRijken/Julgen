@@ -13,6 +13,8 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
+option(USE_XINPUT "Switches between SDL and XInput" FALSE)
+
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
 
@@ -58,9 +60,6 @@ set(JULGEN_SOURCE_FILES
     Julgen/Engine/Sprite.cpp
     Julgen/Engine/Texture2D.cpp
 
-    Julgen/Engine/InputImplSDL.cpp
-
-
     Julgen/Game/AutoMove.cpp
     Julgen/Game/AutoRotateAround.cpp
     Julgen/Game/Bounce.cpp
@@ -77,9 +76,23 @@ set(JULGEN_SOURCE_FILES
 )
 
 
+
+if(USE_XINPUT)
+    message("InputImplXInput is enabled")
+    list(APPEND JULGEN_SOURCE_FILES
+        Julgen/Engine/InputImplXInput.cpp
+    )
+else()
+    message("InputImplSDL is enabled")
+    list(APPEND JULGEN_SOURCE_FILES
+        Julgen/Engine/InputImplSDL.cpp
+    )
+endif()
+
+
 # list source files here
 add_executable(
-    ${TARGET_NAME} 
+    ${TARGET_NAME}
     ${TARGET_PARAM}
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
@@ -98,6 +111,13 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui
     ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui/backends
 )
+
+
+
+if(USE_XINPUT)
+    target_link_libraries(${TARGET_NAME} PUBLIC xinput)
+endif()
+
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
