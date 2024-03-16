@@ -1,9 +1,9 @@
 #include "SceneManager.h"
 
+#include <Input.h>
 #include <iostream>
 #include <ranges>
 
-#include "Bounce.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "TextRenderer.h"
@@ -13,7 +13,7 @@
 #include "AutoRotateAround.h"
 #include "GameObject.h"
 #include "GlobalSettings.h"
-#include "PlotExample.h"
+#include "Bounce.h"
 
 
 void jul::SceneManager::LoadScene(const std::string& name)
@@ -47,19 +47,38 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
 		fpsCounter->AddComponent<FpsCounter>();
 
+		GameObject* inputInfoText1 = AddGameObject("Input Text 1", { 20,60,0 });
+		inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad to move Bubble", ResourceManager::GetFont("Lingua"), 100);
+
+		GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,90,0 });
+		inputInfoText2->AddComponent<TextRenderer>("UseWASD to move Bubble2", ResourceManager::GetFont("Lingua"), 100);
 
 
-		GameObject* plotExample = AddGameObject("Plot", { 20,20,0 });
-		plotExample->AddComponent<Examples::PlotExample> ();
 
 
+
+		GameObject* bubbleCharacter1 = AddGameObject("Bubble", { 300,250,0 });
+		bubbleCharacter1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+
+		GameObject* bubbleCharacter2 = AddGameObject("Bubble", { 350,250,0 });
+		bubbleCharacter2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+
+
+        // TODO: This should idealy not be setup in the scene manager but it's here as a demonstation
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveLeftController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveRightController",ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0,-1, 0});
+
+
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardLeft"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardRight"  ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardDown"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardUp"     ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0,-1, 0});
 
 
 		if constexpr (constexpr bool showSceneGraph = false)
 		{
-
-
-
 			std::cout << "\n\n";
 
 			/////////////////////////////
@@ -67,7 +86,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			/////////////////////////////
 			GameObject* bounce1 = AddGameObject("BubbleBounce", { 10,0,0 });
 			bounce1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 10000);
-			bounce1->AddComponent<Bounce>(32.0f, 0.8f);
+            bounce1->AddComponent<Bounce>(32.0f, 0.8f);
 
 
 			/////////////////////////////
@@ -136,9 +155,6 @@ void jul::SceneManager::LoadScene(const std::string& name)
 			}
 		}
 	}
-
-
-
 }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const

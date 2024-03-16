@@ -1,9 +1,6 @@
 #include "AutoRotateAround.h"
-#include <complex>
 
 #include "GameTime.h"
-
-#include "SceneManager.h"
 #include "Transform.h"
 
 

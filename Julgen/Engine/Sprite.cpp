@@ -1,6 +1,5 @@
 #include "Sprite.h"
 
-#include "ResourceManager.h"
 #include "Texture2D.h"
 
 jul::Sprite::Sprite(const Texture2D* texturePtr, int pixelsPerUnit, const glm::vec2& pivotAlpha, int rowCount,

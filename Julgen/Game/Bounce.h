@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "glm/vec3.hpp"
 
-class jul::GameObject;
+#include <glm/vec3.hpp>
 
 class Bounce final : public jul::Component
 {

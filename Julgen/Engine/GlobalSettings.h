@@ -7,8 +7,8 @@ namespace jul
 	public:
 
 		inline static constexpr char WINDOW_TITLE[] = "Julgen - Custom Engine By Julian Rijken";
-		inline static constexpr int RENDER_WIDTH{ 1280 };
-		inline static constexpr int RENDER_HEIGHT{ 720 };
+		inline static constexpr int RENDER_WIDTH{ 640 };
+		inline static constexpr int RENDER_HEIGHT{ 480 };
 
 		inline static constexpr int WINDOW_WIDTH{ RENDER_WIDTH };
 		inline static constexpr int WINDOW_HEIGHT{ RENDER_HEIGHT };

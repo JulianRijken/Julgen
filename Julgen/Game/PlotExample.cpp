@@ -1,7 +1,6 @@
 #include "PlotExample.h"
 
-#include <chrono>
-
+#include <fmt/core.h>
 #include <imgui.h>
 #include <implot.h>
 
@@ -15,10 +14,10 @@ Examples::PlotExample::PlotExample(jul::GameObject* parent, int renderLayer) :
 
 void Examples::PlotExample::UpdateGUI()
 {
-	ImGui::Begin("Exercise 2");
-    
-	ImGui::Text(std::format("Buffer Size {}", BUFFER_SIZE).c_str());
-	ImGui::InputInt("Sample Size", &m_SampleCount);
+    ImGui::Begin("Exercise 2");
+
+    ImGui::Text("%s", fmt::format("Buffer Size {}", BUFFER_SIZE).c_str());
+    ImGui::InputInt("Sample Size", &m_SampleCount);
 
 
 	if (ImGui::Button("Trash the cache with GameObject3D"))
@@ -84,7 +83,6 @@ void Examples::PlotExample::UpdateGUI()
 	}
 
 	ImGui::End();
-
 }
 
 

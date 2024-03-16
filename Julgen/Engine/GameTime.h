@@ -36,7 +36,7 @@ namespace jul
 		inline static double s_ElapsedTime{ 0 };
 		inline static double s_DeltaTime{ 0.0 };
 		inline static double s_TimeScale{ 1.0 };
-		inline static std::chrono::time_point<std::chrono::steady_clock> s_LastTime{ std::chrono::high_resolution_clock::now() };
+        inline static std::chrono::time_point<std::chrono::high_resolution_clock> s_LastTime{ std::chrono::high_resolution_clock::now() };
 
 		inline static std::deque<double> s_FpsDeque{};
 		inline static double s_AverageFps{ 0 };

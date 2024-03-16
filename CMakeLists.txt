@@ -13,42 +13,88 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
+option(USE_XINPUT "Switches between SDL and XInput" FALSE)
+
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
-# Gather all source files under Julgen/ directory
-file(GLOB_RECURSE JULGEN_SOURCE_FILES
-    ${JULGEN_SOURCE_DIR}/*.hpp
-    ${JULGEN_SOURCE_DIR}/*.cpp
-    ${JULGEN_SOURCE_DIR}/*.h
-)
 
-set(IMGUI_SOURCE_DIR
+set(IMGUI_SOURCE_FILES
     #https://github.com/epezent/implot
-    "External/imgui/implot.cpp" 
-    "External/imgui/implot_demo.cpp" 
-    "External/imgui/implot_items.cpp" 
-    "External/imgui/implot_items.cpp" 
+    External/imgui/implot.cpp
+    External/imgui/implot_demo.cpp
+    External/imgui/implot_items.cpp
+    External/imgui/implot_items.cpp
 
-    "External/imgui/backends/imgui_impl_sdl2" 
-    "External/imgui/backends/imgui_impl_sdlrenderer2" 
+    External/imgui/backends/imgui_impl_sdl2
+    External/imgui/backends/imgui_impl_sdlrenderer2
 
-    "External/imgui/imgui_demo.cpp"
+    External/imgui/imgui_demo.cpp
 
-    "External/imgui/imgui.cpp"
-    "External/imgui/imgui_draw.cpp"
-    "External/imgui/imgui_widgets.cpp"
-    "External/imgui/imgui_tables.cpp"
-    "External/imgui/backends/imgui_impl_sdl2.cpp"
-    "External/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+    External/imgui/imgui.cpp
+    External/imgui/imgui_draw.cpp
+    External/imgui/imgui_widgets.cpp
+    External/imgui/imgui_tables.cpp
+    External/imgui/backends/imgui_impl_sdl2.cpp
+    External/imgui/backends/imgui_impl_sdlrenderer2.cpp
 )
 
+
+set(JULGEN_SOURCE_FILES
+    Julgen/Components/SpriteRenderer.cpp
+    Julgen/Components/TextRenderer.cpp
+    Julgen/Components/Transform.cpp
+
+    Julgen/Engine/GlobalSettings.h #HEADER
+    Julgen/Engine/Singleton.h #HEADER
+
+    Julgen/Engine/Animation.cpp
+    Julgen/Engine/Command.cpp
+    Julgen/Engine/Font.cpp
+    Julgen/Engine/GameTime.cpp
+    Julgen/Engine/GUI.cpp
+    Julgen/Engine/Input.cpp
+    Julgen/Engine/RenderManager.cpp
+    Julgen/Engine/ResourceManager.cpp
+    Julgen/Engine/Scene.cpp
+    Julgen/Engine/SceneManager.cpp
+    Julgen/Engine/Sprite.cpp
+    Julgen/Engine/Texture2D.cpp
+
+    Julgen/Game/AutoMove.cpp
+    Julgen/Game/AutoRotateAround.cpp
+    Julgen/Game/Bounce.cpp
+    Julgen/Game/FpsCounter.cpp
+    Julgen/Game/PlotExample.cpp
+
+    Julgen/Main/Main.cpp
+    Julgen/Main/Julgen.cpp
+
+    Julgen/ObjectSystem/Component.cpp
+    Julgen/ObjectSystem/GameObject.cpp
+    Julgen/ObjectSystem/Object.cpp
+    Julgen/ObjectSystem/Renderer.cpp
+)
+
+
+
+if(USE_XINPUT)
+    message("InputImplXInput is enabled")
+    list(APPEND JULGEN_SOURCE_FILES
+        Julgen/Engine/InputImplXInput.cpp
+    )
+else()
+    message("InputImplSDL is enabled")
+    list(APPEND JULGEN_SOURCE_FILES
+        Julgen/Engine/InputImplSDL.cpp
+    )
+endif()
 
 
 # list source files here
 add_executable(
-    ${TARGET_NAME} 
+    ${TARGET_NAME}
     ${TARGET_PARAM}
-    ${IMGUI_SOURCE_DIR}
+    ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
 )
 
@@ -60,30 +106,62 @@ target_include_directories(${TARGET_NAME} PRIVATE
     ${JULGEN_SOURCE_DIR}/Engine
     ${JULGEN_SOURCE_DIR}/ObjectSystem
     ${JULGEN_SOURCE_DIR}/Game
-    ${JULGEN_SOURCE_DIR}/External
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/External
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui/backends
 )
 
 
 
+if(USE_XINPUT)
+    target_link_libraries(${TARGET_NAME} PUBLIC xinput)
+endif()
+
+
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
+
+set_property(TARGET ${TARGET_NAME} PROPERTY
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED TRUE
+    CXX_EXTENSIONS FALSE
+)
+
+
+# compile at max warning level + treat warnings as errors
+target_compile_options(${TARGET_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /MP>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 # set julgen as the default startup project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
 
+
+# add fmt
+FetchContent_Declare(fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+  GIT_TAG 10.2.1
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(fmt)
+target_link_libraries(${TARGET_NAME} PUBLIC fmt::fmt)
+
+
 # add glm
 FetchContent_Declare(
   glm
-  URL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip
-  DOWNLOAD_NO_PROGRESS ON
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  GIT_TAG 1.0.1
+  GIT_SHALLOW TRUE
 )
+FetchContent_MakeAvailable(glm)
+target_link_libraries(${TARGET_NAME} PUBLIC glm::glm)
 
-FetchContent_GetProperties(glm)
-if(NOT glm_POPULATED)
-  FetchContent_Populate(glm)
-endif()
+
 
 # add SDL2
 if (WIN32)
@@ -98,10 +176,10 @@ if (WIN32)
     FetchContent_Populate(SDL2)
     set(SDL2_INCLUDE_DIR ${sdl2_SOURCE_DIR}/include)
   if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x64/SDL2.lib;${sdl2_SOURCE_DIR}/lib/x64/SDL2main.lib")
+    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x64/SDL2main.lib;${sdl2_SOURCE_DIR}/lib/x64/SDL2.lib")
     set(SDL2_LIBRARY_DLL "${sdl2_SOURCE_DIR}/lib/x64/SDL2.dll")
   else()
-    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x86/SDL2.lib;${sdl2_SOURCE_DIR}/lib/x86/SDL2main.lib")
+    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x86/SDL2main.lib;${sdl2_SOURCE_DIR}/lib/x86/SDL2.lib")
     set(SDL2_LIBRARY_DLL "${sdl2_SOURCE_DIR}/lib/x86/SDL2.dll")
   endif()
   endif()
@@ -165,9 +243,9 @@ if (WIN32)
   
   # set libraries to link with
   target_link_libraries(${TARGET_NAME} PUBLIC
-    ${SDL2_LIBRARIES} 
+    ${SDL2_LIBRARIES}
     ${SDL2_IMAGE_LIBRARIES} 
-    ${SDL2_TTF_LIBRARIES} 
+    ${SDL2_TTF_LIBRARIES}
     ${VLD_LIBRARY}
   )
 elseif(NOT EMSCRIPTEN)
@@ -211,19 +289,6 @@ elseif(NOT EMSCRIPTEN)
   )
 endif()
 
-target_include_directories(${TARGET_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/Julgen/
-  External
-  External/imgui
-  External/imgui/backends
-  ${glm_SOURCE_DIR}
-)
-
-# compile at max warning level + treat warnings as errors
-target_compile_options(${TARGET_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-)
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")

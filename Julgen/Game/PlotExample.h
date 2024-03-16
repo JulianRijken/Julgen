@@ -1,5 +1,4 @@
 #pragma once
-#include <valarray>
 #include <vector>
 #include <chrono>
 
@@ -59,14 +58,10 @@ namespace Examples
                     for (int i = 0; i < BUFFER_SIZE; i += stepSize)
                         buffer[i].ID *= 2;
 
-                    // We discard the first and the last :)
-                    if (testIndex == 0 or testIndex == m_SampleCount - 1)
-                        continue;
-
                     durationAverage += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count();;
                 }
 
-                durationAverage /= (m_SampleCount - 2);
+                durationAverage /= (m_SampleCount);
 
                 samples.push_back(static_cast<float>(durationAverage));
             }

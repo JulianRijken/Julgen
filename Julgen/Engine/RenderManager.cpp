@@ -3,16 +3,12 @@
 #include <stdexcept>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 
 #include "GUI.h"
-#include "imgui.h"
-
 #include "Renderer.h"
-#include "SceneManager.h"
-
 #include "Texture2D.h"
 #include "Transform.h"
-
 
 int GetOpenGLDriverIndex()
 {

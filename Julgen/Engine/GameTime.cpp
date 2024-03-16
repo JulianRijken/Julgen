@@ -1,6 +1,5 @@
 #include "GameTime.h"
 
-#include <iostream>
 #include <numeric>
 
 
