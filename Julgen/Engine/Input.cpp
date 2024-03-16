@@ -3,36 +3,104 @@
 #include <SDL.h>
 #include <imgui_impl_sdl2.h>
 
-#include "Command.h"
+
+SDL_GameController* FindController()
+{
+    for (int i = 0; i < SDL_NumJoysticks(); i++)
+    {
+        if (SDL_IsGameController(i))
+            return SDL_GameControllerOpen(i);
+    }
+
+    return nullptr;
+}
 
 
 bool jul::Input::ProcessInput()
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) 
-	{
-		if (event.type == SDL_QUIT) 
-			return false;
 
-		
-		if (event.type == SDL_KEYDOWN) 
-		{
-			
-		}
-		if (event.type == SDL_MOUSEBUTTONDOWN) 
-		{
-			
-		}
-		if (event.type == SDL_MOUSEBUTTONDOWN)
-		{
-
-		}
+    if(m_ControllerPtr == nullptr)
+        m_ControllerPtr = FindController();
 
 
+    auto keyboardState = SDL_GetKeyboardState(nullptr);
+    for (auto&& bind : m_Binds)
+    {
+        for (auto&& keyboardKey : bind.acton.keyboardButtons)
+        {
+            if(bind.buttonState != ButtonState::Held and keyboardState[keyboardKey])
+                continue;
+
+               bind.command->Execute();
+        }
+
+        for (auto&& controllerButton : bind.acton.controllerButtons)
+        {
+            if(bind.buttonState == ButtonState::Held and SDL_GameControllerGetButton(m_ControllerPtr,controllerButton))
+                bind.command->Execute();
+        }
+    }
 
 
-		ImGui_ImplSDL2_ProcessEvent(&event);
-	}
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+
+        switch (event.type)
+        {
+
+        case SDL_QUIT:
+            return false;
+
+        case SDL_KEYDOWN:
+            for (auto&& bind : m_Binds)
+            {
+                if(bind.buttonState != ButtonState::Down)
+                    continue;
+
+                if(bind.acton.HasKeyboardKey(event.key.keysym.scancode))
+                    bind.command->Execute();
+            }
+            break;
+        case SDL_KEYUP:
+            for (auto&& bind : m_Binds)
+            {
+                if(bind.buttonState != ButtonState::Up)
+                    continue;
+
+                if(bind.acton.HasKeyboardKey(event.key.keysym.scancode))
+                    bind.command->Execute();
+            }
+            break;
+
+
+        case SDL_CONTROLLERBUTTONDOWN:
+            for (auto&& bind : m_Binds)
+            {
+                if(bind.buttonState != ButtonState::Down)
+                    continue;
+
+                if(bind.acton.HasControllerButton(event.cbutton.button))
+                    bind.command->Execute();
+            }
+            break;
+
+        case SDL_CONTROLLERBUTTONUP:
+            for (auto&& bind : m_Binds)
+            {
+                if(bind.buttonState != ButtonState::Up)
+                    continue;
+
+                if(bind.acton.HasControllerButton(event.cbutton.button))
+                    bind.command->Execute();
+            }
+            break;
+        }
+
+
+        ImGui_ImplSDL2_ProcessEvent(&event);
+    }
 
 	return true;
 }

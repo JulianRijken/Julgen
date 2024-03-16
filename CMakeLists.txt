@@ -99,6 +99,13 @@ target_include_directories(${TARGET_NAME} PRIVATE
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 
+set_property(TARGET ${TARGET_NAME} PROPERTY
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED TRUE
+    CXX_EXTENSIONS FALSE
+)
+
+
 # compile at max warning level + treat warnings as errors
 target_compile_options(${TARGET_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /MP>
@@ -111,22 +118,25 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT $
 include(FetchContent)
 
 
+# add fmt
+FetchContent_Declare(fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+  GIT_TAG 10.2.1
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(fmt)
+target_link_libraries(${TARGET_NAME} PUBLIC fmt::fmt)
+
+
 # add glm
 FetchContent_Declare(
   glm
-  URL https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip
-  DOWNLOAD_NO_PROGRESS ON
-  DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  GIT_TAG 1.0.1
+  GIT_SHALLOW TRUE
 )
-
-FetchContent_GetProperties(glm)
-if(NOT glm_POPULATED)
-  FetchContent_Populate(glm)
-endif()
-
-target_include_directories(${TARGET_NAME} PRIVATE
-  ${glm_SOURCE_DIR}
-)
+FetchContent_MakeAvailable(glm)
+target_link_libraries(${TARGET_NAME} PUBLIC glm::glm)
 
 
 
@@ -143,10 +153,10 @@ if (WIN32)
     FetchContent_Populate(SDL2)
     set(SDL2_INCLUDE_DIR ${sdl2_SOURCE_DIR}/include)
   if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x64/SDL2.lib;${sdl2_SOURCE_DIR}/lib/x64/SDL2main.lib")
+    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x64/SDL2main.lib;${sdl2_SOURCE_DIR}/lib/x64/SDL2.lib")
     set(SDL2_LIBRARY_DLL "${sdl2_SOURCE_DIR}/lib/x64/SDL2.dll")
   else()
-    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x86/SDL2.lib;${sdl2_SOURCE_DIR}/lib/x86/SDL2main.lib")
+    set(SDL2_LIBRARIES "${sdl2_SOURCE_DIR}/lib/x86/SDL2main.lib;${sdl2_SOURCE_DIR}/lib/x86/SDL2.lib")
     set(SDL2_LIBRARY_DLL "${sdl2_SOURCE_DIR}/lib/x86/SDL2.dll")
   endif()
   endif()
@@ -210,7 +220,7 @@ if (WIN32)
   
   # set libraries to link with
   target_link_libraries(${TARGET_NAME} PUBLIC
-    ${SDL2_LIBRARIES} 
+    ${SDL2_LIBRARIES}
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES}
     ${VLD_LIBRARY}

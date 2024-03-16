@@ -1,10 +1,8 @@
 #pragma once
 #include <map>
-#include <memory>
 #include <string>
 
 #include "Animation.h"
-#include "glm/vec2.hpp"
 
 namespace jul
 {

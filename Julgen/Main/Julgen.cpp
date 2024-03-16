@@ -66,7 +66,7 @@ jul::Julgen::Julgen()
 {
 	PrintSDLVersion();
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
 
@@ -130,7 +130,7 @@ void jul::Julgen::RunOneFrame()
 	m_Lag += GameTime::GetDeltaTime();
 
 	// Handle input
-	m_IsApplicationQuitting = !Input::GetInstance().ProcessInput();
+	m_IsApplicationQuitting = not Input::GetInstance().ProcessInput();
 
 	// Fixed Update,
 	while (m_Lag >= GameTime::GetFixedDeltaTime())

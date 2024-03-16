@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 
+#include <Input.h>
 #include <iostream>
 #include <ranges>
 
@@ -46,8 +47,14 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
 		fpsCounter->AddComponent<FpsCounter>();
 
-		GameObject* inputInfoText = AddGameObject("Fps Counter", { 20,60,0 });
-		inputInfoText->AddComponent<TextRenderer>("Use the D-Pad to move Bubble\nUseWASD to move Bubble2", ResourceManager::GetFont("Lingua"), 100);
+		GameObject* inputInfoText1 = AddGameObject("Input Text 1", { 20,60,0 });
+		inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad to move Bubble", ResourceManager::GetFont("Lingua"), 100);
+
+		GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,90,0 });
+		inputInfoText2->AddComponent<TextRenderer>("UseWASD to move Bubble2", ResourceManager::GetFont("Lingua"), 100);
+
+
+
 
 
 		GameObject* bubbleCharacter1 = AddGameObject("Bubble", { 300,250,0 });
@@ -57,7 +64,17 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		bubbleCharacter2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
 
 
+        // TODO: This should idealy not be setup in the scene manager but it's here as a demonstation
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveLeftController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveRightController",ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0,-1, 0});
 
+
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardLeft"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardRight"  ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardDown"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardUp"     ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0,-1, 0});
 
 
 		if constexpr (constexpr bool showSceneGraph = false)

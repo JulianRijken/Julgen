@@ -1,5 +1,6 @@
 #include "PlotExample.h"
 
+#include <fmt/core.h>
 #include <imgui.h>
 #include <implot.h>
 
@@ -15,7 +16,7 @@ void Examples::PlotExample::UpdateGUI()
 {
     ImGui::Begin("Exercise 2");
 
-    ImGui::Text("%s", std::format("Buffer Size {}", BUFFER_SIZE).c_str());
+    ImGui::Text("%s", fmt::format("Buffer Size {}", BUFFER_SIZE).c_str());
     ImGui::InputInt("Sample Size", &m_SampleCount);
 
 
