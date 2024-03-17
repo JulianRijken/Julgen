@@ -18,12 +18,12 @@ namespace jul
         std::vector<SDL_Scancode> keyboardButtons;
         std::vector<SDL_GameControllerButton> controllerButtons;
 
-        bool HasKeyboardKey(SDL_Scancode compareKey)
+        bool HasKeyboardKey(SDL_Scancode compareKey) const
         {
             return std::ranges::count(keyboardButtons,compareKey) > 0;
         }
 
-        bool HasControllerButton(SDL_GameControllerButton compareButton)
+        bool HasControllerButton(SDL_GameControllerButton compareButton) const
         {
             return std::ranges::count(controllerButtons,compareButton) > 0;
         }
@@ -49,6 +49,7 @@ namespace jul
         {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{}}},
         {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{}}},
 
+        {"jump",   {{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_A}}},
         {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A}}},
         {"jumpKeyboard",   {{SDL_SCANCODE_SPACE},{}}}
     };
@@ -67,7 +68,7 @@ namespace jul
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
-        bool TryExcecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton)
+        bool TryExcecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const
         {
             if(buttonState != checkButtonState)
                 return false;
@@ -82,7 +83,7 @@ namespace jul
             return true;
         }
 
-        bool TryExcecuteKeyboard(ButtonState checkButtonState,SDL_Scancode compareKey)
+        bool TryExcecuteKeyboard(ButtonState checkButtonState,SDL_Scancode compareKey) const
         {
             if(buttonState != checkButtonState)
                 return false;
@@ -102,7 +103,7 @@ namespace jul
         Input();
         ~Input();
 
-        bool ProcessInput();
+        void ProcessInput(bool& shouldQuit);
 
         template <typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
@@ -123,14 +124,15 @@ namespace jul
 	private:
 
         class ControllerInputImpl;
-        friend class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
 
         void HandleKeyboardContinually();
-        void HandleControllerContinually(); // Used by impl
+        // Defined by ControllerInputImpl
+        void HandleControllerContinually(const std::vector<InputBinding>& binds);
 
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event);
-        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event); // Used by impl
+        // Defined by ControllerInputImpl
+        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event, const std::vector<InputBinding>& binds);
 
         std::vector<InputBinding> m_Binds;
 	};

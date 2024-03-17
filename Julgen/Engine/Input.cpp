@@ -4,22 +4,25 @@
 #include <imgui_impl_sdl2.h>
 
 
-
-bool jul::Input::ProcessInput()
+// TODO: Maybe not handle shouldQuit via a refrence
+void jul::Input::ProcessInput(bool& shouldQuit)
 {
     HandleKeyboardContinually();
-    HandleControllerContinually();
+    HandleControllerContinually(m_Binds);
 
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
         if(event.type == SDL_QUIT)
-            return false;
+        {
+            shouldQuit = true;
+            continue;
+        }
 
         if(HandleKeyboardEvent(event))
             continue;
 
-        if(HandleControllerEvent(event))
+        if(HandleControllerEvent(event,m_Binds))
             continue;
 
         // TODO: Should be before the other input
@@ -29,7 +32,6 @@ bool jul::Input::ProcessInput()
             continue;
     }
 
-    return true;
 }
 
 void jul::Input::HandleKeyboardContinually()

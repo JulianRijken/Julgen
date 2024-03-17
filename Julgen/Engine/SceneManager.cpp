@@ -50,9 +50,11 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		GameObject* inputInfoText1 = AddGameObject("Input Text 1", { 20,60,0 });
         inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad or WASD to move Bubble", ResourceManager::GetFont("LinguaSmall"), 100);
 
-        GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,90,0 });
+        GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,85,0 });
         inputInfoText2->AddComponent<TextRenderer>("Use the A button or SPACE to jump Bubble", ResourceManager::GetFont("LinguaSmall"), 100);
 
+        GameObject* inputInfoText3 = AddGameObject("Input Text 2", { 20,110,0 });
+        inputInfoText3->AddComponent<TextRenderer>("P1 = Keyboard, P2 = Gamepad1, P3 = Gamepad2", ResourceManager::GetFont("LinguaSmall"), 100);
 
 
 
@@ -100,6 +102,9 @@ void jul::SceneManager::LoadScene(const std::string& name)
         Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,1,bubbleCharacter3,200.0f,glm::vec3{ 0,-1, 0});
         Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Down,1,bubbleCharacter3,       glm::vec3{ 0,-1, 0});
         Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Up,  1,bubbleCharacter3,       glm::vec3{ 0, 1, 0});
+
+
+
 
 
 
