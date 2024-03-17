@@ -4,7 +4,7 @@
 #include <imgui_impl_sdl2.h>
 
 
-// TODO: Maybe not handle shouldQuit via a refrence
+// TODO: Maybe not handle shouldQuit via a reference
 void jul::Input::ProcessInput(bool& shouldQuit)
 {
     HandleKeyboardContinually();
@@ -34,7 +34,7 @@ void jul::Input::ProcessInput(bool& shouldQuit)
 
 }
 
-void jul::Input::HandleKeyboardContinually()
+void jul::Input::HandleKeyboardContinually() const
 {
     auto keyboardState = SDL_GetKeyboardState(nullptr);
     for (auto&& bind : m_Binds)
@@ -50,21 +50,21 @@ void jul::Input::HandleKeyboardContinually()
     }
 }
 
-bool jul::Input::HandleKeyboardEvent(const SDL_Event& event)
+bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
 {
     switch (event.type)
     {
     case SDL_KEYDOWN:
 
         for (auto&& bind : m_Binds)
-            bind.TryExcecuteKeyboard(ButtonState::Down,event.key.keysym.scancode);
+            bind.TryExecuteKeyboard(ButtonState::Down,event.key.keysym.scancode);
 
         return true;
 
     case SDL_KEYUP:
 
         for (auto&& bind : m_Binds)
-             bind.TryExcecuteKeyboard(ButtonState::Up,event.key.keysym.scancode);
+             bind.TryExecuteKeyboard(ButtonState::Up,event.key.keysym.scancode);
 
         return true;
     }

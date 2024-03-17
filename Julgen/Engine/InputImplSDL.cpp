@@ -34,13 +34,12 @@ class Input::ControllerInputImpl
             switch (event.type)
             {
             case SDL_CONTROLLERBUTTONDOWN:
-                for (auto&& bind : binds)
-                    bind.TryExcecuteController(ButtonState::Down,event.cbutton.which,static_cast<SDL_GameControllerButton>(event.cbutton.button));
-                return true;
-
             case SDL_CONTROLLERBUTTONUP:
+	            const ButtonState buttonState = event.type == SDL_CONTROLLERBUTTONDOWN ? ButtonState::Down : ButtonState::Up;
+
                 for (auto&& bind : binds)
-                    bind.TryExcecuteController(ButtonState::Up,event.cbutton.which,static_cast<SDL_GameControllerButton>(event.cbutton.button));
+                    bind.TryExecuteController(buttonState,event.cbutton.which,static_cast<SDL_GameControllerButton>(event.cbutton.button));
+
                 return true;
             }
 

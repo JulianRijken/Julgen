@@ -24,7 +24,7 @@ class Input::ControllerInputImpl
                     if(bind.buttonState == ButtonState::Held and IsHeld(SDLButtonToXInput(controllerButton),bind.controllerIndex))
                     {
                         bind.command->Execute();
-                        break; // We break for the hold to avoid excecuting twice
+                        break; // We break for the hold to avoid executing twice
                     }
                     else
                     if(bind.buttonState == ButtonState::Down and IsDownThisFrame(SDLButtonToXInput(controllerButton),bind.controllerIndex))
@@ -68,7 +68,7 @@ class Input::ControllerInputImpl
             {
                 XINPUT_GAMEPAD_STATE& gamepadState = m_ControllerStates[controllerIndex];
 
-                // Set privious state
+                // Set previous state
                 gamepadState.priviousControllerState = gamepadState.currentControllerState;
 
                 // Set new flags;
@@ -84,7 +84,7 @@ class Input::ControllerInputImpl
 
 
         // As our engine always uses SDL we use a SDL to XInput mapper to keep the interface for the user the same and our code simple :)
-        // Alos XInput might get removed from the engine in the futuer so this keeps it fully seperated
+        // Also XInput might get removed from the engine in the future so this keeps it fully separated
         WORD SDLButtonToXInput(SDL_GameControllerButton sdlButton)
         {
             switch (sdlButton) {
@@ -103,7 +103,7 @@ class Input::ControllerInputImpl
             case SDL_CONTROLLER_BUTTON_DPAD_LEFT:    return XINPUT_GAMEPAD_DPAD_LEFT;
             case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:   return XINPUT_GAMEPAD_DPAD_RIGHT;
             default:
-                std::cerr << "No equivalent XInput mapping for the given SDL controller button." << std::endl;
+                std::cerr << "No equivalent XInput mapping for the given SDL controller button" << std::endl;
                 return 0;
             }
         }

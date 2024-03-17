@@ -29,9 +29,9 @@ namespace jul
         }
     };
 
-    // TODO: This is currenty hardcoded but should idealy be a interface,
+    // TODO: This is currently hardcoded but should ideally be an interface,
     // Or the user of the engine should be able to set dynamically
-    inline static const std::map<std::string, InputAction> INPUT_ACTION
+    inline static const std::map<std::string, InputAction> INPUT_ACTIONS
     {
         {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT}}},
         {"moveRight",{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT}}},
@@ -68,7 +68,7 @@ namespace jul
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
-        bool TryExcecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const
+        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const
         {
             if(buttonState != checkButtonState)
                 return false;
@@ -83,7 +83,7 @@ namespace jul
             return true;
         }
 
-        bool TryExcecuteKeyboard(ButtonState checkButtonState,SDL_Scancode compareKey) const
+        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const
         {
             if(buttonState != checkButtonState)
                 return false;
@@ -109,7 +109,7 @@ namespace jul
             requires std::derived_from<CommandType, BaseCommand>
         void RegisterCommand(std::string actionName, ButtonState buttonState,int controllerIndex, Args&&... args)
         {
-            m_Binds.emplace_back(buttonState,controllerIndex,INPUT_ACTION.at(actionName),std::make_unique<CommandType>(args...));
+            m_Binds.emplace_back(buttonState,controllerIndex,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
         }
 
 
@@ -117,7 +117,7 @@ namespace jul
             requires std::derived_from<CommandType, BaseCommand>
         void RegisterCommand(std::string actionName, ButtonState buttonState, Args&&... args)
         {
-            m_Binds.emplace_back(buttonState,0,INPUT_ACTION.at(actionName),std::make_unique<CommandType>(args...));
+            m_Binds.emplace_back(buttonState,0,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
         }
 
 
@@ -126,11 +126,11 @@ namespace jul
         class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
 
-        void HandleKeyboardContinually();
+        void HandleKeyboardContinually() const;
         // Defined by ControllerInputImpl
         void HandleControllerContinually(const std::vector<InputBinding>& binds);
 
-        [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event);
+        [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
         // Defined by ControllerInputImpl
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event, const std::vector<InputBinding>& binds);
 
