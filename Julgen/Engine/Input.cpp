@@ -20,7 +20,6 @@ bool jul::Input::ProcessInput()
         }
     }
 
-
     HandleController();
 
 

@@ -13,7 +13,7 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
-option(USE_XINPUT "Switches between SDL and XInput" FALSE)
+option(USE_XINPUT "Switches between SDL and XInput" TRUE)
 
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 

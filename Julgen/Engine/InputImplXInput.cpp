@@ -14,26 +14,15 @@ namespace jul
 
     public:
 
-        SDL_GameController* FindController()
-        {
-            for (int i = 0; i < SDL_NumJoysticks(); i++)
-            {
-                if (SDL_IsGameController(i))
-                    return SDL_GameControllerOpen(i);
-            }
-
-            return nullptr;
-        }
-
         void HandleController()
         {
-            currentState = {};
-            XInputGetState(controllerIndex, &currentState);
-
             for (auto&& bind : Input::GetInstance().m_Binds)
             {
                 if(bind.buttonState == ButtonState::Held )
                 {
+                    currentState = {};
+                    XInputGetState(bind.controllerIndex, &currentState);
+
                     for (auto&& controllerButton : bind.acton.controllerButtons)
                     {
                         if(currentState.Gamepad.wButtons == SDLButtonToXInput(controllerButton))
@@ -48,11 +37,11 @@ namespace jul
     private:
 
         XINPUT_STATE currentState{};
-        int controllerIndex{};
 
         // As our engine always uses SDL we use a SDL to XInput mapper to keep the interface for the user the same and our code simple :)
         // Alos XInput might get removed from the engine in the futuer so this keeps it seperate
-        WORD SDLButtonToXInput(SDL_GameControllerButton sdlButton) {
+        WORD SDLButtonToXInput(SDL_GameControllerButton sdlButton) 
+        {
             switch (sdlButton) {
             case SDL_CONTROLLER_BUTTON_A:            return XINPUT_GAMEPAD_A;
             case SDL_CONTROLLER_BUTTON_B:            return XINPUT_GAMEPAD_B;

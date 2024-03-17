@@ -7,30 +7,51 @@ namespace jul
 
     public:
 
-        SDL_GameController* FindController()
+        void UpdateControllers()
         {
-            for (int i = 0; i < SDL_NumJoysticks(); i++)
-            {
-                if (SDL_IsGameController(i))
-                    return SDL_GameControllerOpen(i);
-            }
+            int jystickCount = SDL_NumJoysticks();
 
-            return nullptr;
+            if (static_cast<int>(m_Controllers.size()) < jystickCount)
+                m_Controllers.resize(jystickCount,nullptr);
+
+            for (int i = 0; i < jystickCount; i++)
+            {
+                if (not SDL_IsGameController(i))
+                    m_Controllers[i] = nullptr;
+
+                if(m_Controllers[i] != nullptr)
+                    continue;
+
+                m_Controllers[i] = SDL_GameControllerOpen(i);
+            }
         }
+
+        SDL_GameController* GetController(int controllerIndex)
+        {
+            // Check if controller is out of bounds
+            if(controllerIndex >= static_cast<int>(m_Controllers.size()))
+                return nullptr;
+
+            return m_Controllers[controllerIndex];
+        }
+
 
         void HandleController()
         {
-            if(m_ControllerPtr == nullptr)
-                m_ControllerPtr = FindController();
+            UpdateControllers();
 
-            for (auto&& bind :   Input::GetInstance().m_Binds)
+            for (auto&& bind : Input::GetInstance().m_Binds)
             {
-                for (auto&& controllerButton : bind.acton.controllerButtons)
+                // Get the controller and check if it exists
+                if (SDL_GameController* controller = GetController(bind.controllerIndex))
                 {
-                    if(bind.buttonState == ButtonState::Held and SDL_GameControllerGetButton(m_ControllerPtr,controllerButton))
+                    for (auto&& controllerButton : bind.acton.controllerButtons)
                     {
-                        bind.command->Execute();
-                        break;
+                        if (bind.buttonState == ButtonState::Held and SDL_GameControllerGetButton(controller,controllerButton))
+                        {
+                            bind.command->Execute();
+                            break;
+                        }
                     }
                 }
             }
@@ -38,8 +59,7 @@ namespace jul
 
     private:
 
-        SDL_GameController* m_ControllerPtr = nullptr;
-
+        std::vector<SDL_GameController*> m_Controllers;
     };
 }
 

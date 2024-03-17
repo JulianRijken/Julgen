@@ -29,6 +29,8 @@ namespace jul
         std::vector<SDL_GameControllerButton> controllerButtons;
     };
 
+    // TODO: This is currenty hardcoded but should idealy be a interface,
+    // Or the user of the engine should be able to set dynamically
     inline static const std::map<std::string, InputAction> INPUT_ACTION
     {
         {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT}}},
@@ -57,9 +59,10 @@ namespace jul
 
     struct InputBinding
     {
-        std::unique_ptr<BaseCommand> command;
-        InputAction acton;
         ButtonState buttonState;
+        int controllerIndex;
+        InputAction acton;
+        std::unique_ptr<BaseCommand> command;
     };
 
     class Input final : public Singleton<Input>
@@ -73,10 +76,19 @@ namespace jul
 
         template <typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
+        void RegisterCommand(std::string actionName, ButtonState buttonState,int controllerIndex, Args&&... args)
+        {
+            m_Binds.emplace_back(buttonState,controllerIndex,INPUT_ACTION.at(actionName),std::make_unique<CommandType>(args...));
+        }
+
+
+        template <typename CommandType, typename... Args>
+            requires std::derived_from<CommandType, BaseCommand>
         void RegisterCommand(std::string actionName, ButtonState buttonState, Args&&... args)
         {
-            m_Binds.emplace_back(std::make_unique<CommandType>(args...),INPUT_ACTION.at(actionName),buttonState);
+            m_Binds.emplace_back(buttonState,0,INPUT_ACTION.at(actionName),std::make_unique<CommandType>(args...));
         }
+
 
 	private:
 
