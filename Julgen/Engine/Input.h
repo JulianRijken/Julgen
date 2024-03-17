@@ -15,6 +15,9 @@ namespace jul
 
     struct InputAction
     {
+        std::vector<SDL_Scancode> keyboardButtons;
+        std::vector<SDL_GameControllerButton> controllerButtons;
+
         bool HasKeyboardKey(SDL_Scancode compareKey)
         {
             return std::ranges::count(keyboardButtons,compareKey) > 0;
@@ -24,9 +27,6 @@ namespace jul
         {
             return std::ranges::count(controllerButtons,compareButton) > 0;
         }
-
-        std::vector<SDL_Scancode> keyboardButtons;
-        std::vector<SDL_GameControllerButton> controllerButtons;
     };
 
     // TODO: This is currenty hardcoded but should idealy be a interface,
@@ -47,7 +47,10 @@ namespace jul
         {"moveKeyboardLeft", {{SDL_SCANCODE_A,SDL_SCANCODE_LEFT},{}}},
         {"moveKeyboardRight",{{SDL_SCANCODE_D,SDL_SCANCODE_RIGHT},{}}},
         {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{}}},
-        {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{}}}
+        {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{}}},
+
+        {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A}}},
+        {"jumpKeyboard",   {{SDL_SCANCODE_SPACE},{}}}
     };
 
     enum class ButtonState
@@ -63,6 +66,33 @@ namespace jul
         int controllerIndex;
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
+
+        bool TryExcecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton)
+        {
+            if(buttonState != checkButtonState)
+                return false;
+
+            if(controllerIndex != checkControllerIndex)
+                return false;
+
+            if(not acton.HasControllerButton(compareButton))
+                return false;
+
+            command->Execute();
+            return true;
+        }
+
+        bool TryExcecuteKeyboard(ButtonState checkButtonState,SDL_Scancode compareKey)
+        {
+            if(buttonState != checkButtonState)
+                return false;
+
+            if(not acton.HasKeyboardKey(compareKey))
+                return false;
+
+            command->Execute();
+            return true;
+        }
     };
 
     class Input final : public Singleton<Input>
@@ -92,11 +122,15 @@ namespace jul
 
 	private:
 
-        class InputImpl;
-        friend class InputImpl;
-        std::unique_ptr<InputImpl> m_ImplUPtr;
+        class ControllerInputImpl;
+        friend class ControllerInputImpl;
+        std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
 
-        void HandleController();
+        void HandleKeyboardContinually();
+        void HandleControllerContinually(); // Used by impl
+
+        [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event);
+        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event); // Used by impl
 
         std::vector<InputBinding> m_Binds;
 	};

@@ -2,7 +2,7 @@
 
 namespace jul
 {
-    class Input::InputImpl
+class Input::ControllerInputImpl
     {
 
     public:
@@ -26,6 +26,7 @@ namespace jul
             }
         }
 
+
         SDL_GameController* GetController(int controllerIndex)
         {
             // Check if controller is out of bounds
@@ -36,7 +37,7 @@ namespace jul
         }
 
 
-        void HandleController()
+        void HandleControllerContinually()
         {
             UpdateControllers();
 
@@ -57,19 +58,43 @@ namespace jul
             }
         }
 
+
+        bool HandleControllerEvent(const SDL_Event& event)
+        {
+            switch (event.type)
+            {
+            case SDL_CONTROLLERBUTTONDOWN:
+                for (auto&& bind : Input::GetInstance().m_Binds)
+                    bind.TryExcecuteController(ButtonState::Down,event.cbutton.which,static_cast<SDL_GameControllerButton>(event.cbutton.button));
+                return true;
+
+            case SDL_CONTROLLERBUTTONUP:
+                for (auto&& bind : Input::GetInstance().m_Binds)
+                    bind.TryExcecuteController(ButtonState::Up,event.cbutton.which,static_cast<SDL_GameControllerButton>(event.cbutton.button));
+                return true;
+            }
+
+            return false;
+        }
+
     private:
 
         std::vector<SDL_GameController*> m_Controllers;
     };
 }
 
-void jul::Input::HandleController()
+void jul::Input::HandleControllerContinually()
 {
-    m_ImplUPtr->HandleController();
+    m_ImplUPtr->HandleControllerContinually();
+}
+
+bool jul::Input::HandleControllerEvent(const SDL_Event& event)
+{
+    return m_ImplUPtr->HandleControllerEvent(event);
 }
 
 jul::Input::Input() :
-      m_ImplUPtr(std::make_unique<InputImpl>())
+      m_ImplUPtr(std::make_unique<ControllerInputImpl>())
 {};
 
 jul::Input::~Input() = default;

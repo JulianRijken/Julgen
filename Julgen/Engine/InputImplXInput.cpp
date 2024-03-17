@@ -9,12 +9,12 @@
 
 namespace jul
 {
-    class Input::InputImpl
+class Input::ControllerInputImpl
     {
 
     public:
 
-        void HandleController()
+        void HandleControllerContinually()
         {
             for (auto&& bind : Input::GetInstance().m_Binds)
             {
@@ -25,7 +25,8 @@ namespace jul
 
                     for (auto&& controllerButton : bind.acton.controllerButtons)
                     {
-                        if(currentState.Gamepad.wButtons == SDLButtonToXInput(controllerButton))
+                        if(currentState.Gamepad.wButtons != SDLButtonToXInput(controllerButton))
+                            continue;
 
                         bind.command->Execute();
                         break;
@@ -39,7 +40,7 @@ namespace jul
         XINPUT_STATE currentState{};
 
         // As our engine always uses SDL we use a SDL to XInput mapper to keep the interface for the user the same and our code simple :)
-        // Alos XInput might get removed from the engine in the futuer so this keeps it seperate
+        // Alos XInput might get removed from the engine in the futuer so this keeps it fully seperated
         WORD SDLButtonToXInput(SDL_GameControllerButton sdlButton) 
         {
             switch (sdlButton) {
@@ -62,19 +63,25 @@ namespace jul
                 return 0;
             }
         }
-
     };
 }
 
-void jul::Input::HandleController()
+void jul::Input::HandleControllerContinually()
 {
-    m_ImplUPtr->HandleController();
+    m_ImplUPtr->HandleControllerContinually();
 }
 
-jul::Input::Input() :
-      m_ImplUPtr(std::make_unique<InputImpl>())
+// XInput does not use events but requires to check the key state every frame
+// in order to detect changes in input (simulating events)
+bool jul::Input::HandleControllerEvent(const SDL_Event& )
 {
-};
+    return false;
+}
+
+
+jul::Input::Input() :
+      m_ImplUPtr(std::make_unique<ControllerInputImpl>())
+{};
 
 jul::Input::~Input() = default;
 

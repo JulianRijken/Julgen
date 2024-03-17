@@ -41,44 +41,66 @@ void jul::SceneManager::LoadScene(const std::string& name)
 		background->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("background"), -100);
 
 		GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
-		assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
+        assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
 
 		GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
-		fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
+        fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
 		fpsCounter->AddComponent<FpsCounter>();
 
 		GameObject* inputInfoText1 = AddGameObject("Input Text 1", { 20,60,0 });
-		inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad to move Bubble", ResourceManager::GetFont("Lingua"), 100);
+        inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad or WASD to move Bubble", ResourceManager::GetFont("LinguaSmall"), 100);
 
-		GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,90,0 });
-		inputInfoText2->AddComponent<TextRenderer>("UseWASD to move Bubble2", ResourceManager::GetFont("Lingua"), 100);
-
-
+        GameObject* inputInfoText2 = AddGameObject("Input Text 2", { 20,90,0 });
+        inputInfoText2->AddComponent<TextRenderer>("Use the A button or SPACE to jump Bubble", ResourceManager::GetFont("LinguaSmall"), 100);
 
 
 
-        GameObject* bubbleCharacter1 = AddGameObject("Bubble", { 300,250,0 });
+
+
+        GameObject* bubbleCharacter1 = AddGameObject("Bubble", { 400,250,0 });
         bubbleCharacter1->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+        GameObject* bubbleCharacter1PlayerText = AddGameObject("BubbleText", { 0,-40,0 });
+        bubbleCharacter1PlayerText->GetTransform().SetParent(&bubbleCharacter1->GetTransform(),false);
+        bubbleCharacter1PlayerText->AddComponent<TextRenderer>("P1", ResourceManager::GetFont("LinguaSmall"), 100);
+
 
         GameObject* bubbleCharacter2 = AddGameObject("Bubble", { 350,250,0 });
         bubbleCharacter2->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+        GameObject* bubbleCharacter2PlayerText = AddGameObject("BubbleText", { 0,-40,0 });
+        bubbleCharacter2PlayerText->GetTransform().SetParent(&bubbleCharacter2->GetTransform(),false);
+        bubbleCharacter2PlayerText->AddComponent<TextRenderer>("P2", ResourceManager::GetFont("LinguaSmall"), 100);
 
 
-        // TODO: This should idealy not be setup in the scene manager but it's here as a demonstation
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveLeftController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{-1, 0, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveRightController",ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 1, 0, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController" ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0, 1, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,bubbleCharacter1,100.0f,glm::vec3{ 0,-1, 0});
+        GameObject* bubbleCharacter3 = AddGameObject("Bubble", { 300,250,0 });
+        bubbleCharacter3->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+        GameObject* bubbleCharacter3PlayerText = AddGameObject("BubbleText", { 0,-40,0 });
+        bubbleCharacter3PlayerText->GetTransform().SetParent(&bubbleCharacter3->GetTransform(),false);
+        bubbleCharacter3PlayerText->AddComponent<TextRenderer>("P3", ResourceManager::GetFont("LinguaSmall"), 100);
 
 
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardLeft"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{-1, 0, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardRight"  ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 1, 0, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardDown"   ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0, 1, 0});
-        // Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardUp"     ,ButtonState::Held,bubbleCharacter2,200.0f,glm::vec3{ 0,-1, 0});
 
+        //TODO: This should idealy not be setup in the scene manager but it's here as a demonstation
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardLeft"   ,ButtonState::Held,bubbleCharacter1,300.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardRight"  ,ButtonState::Held,bubbleCharacter1,300.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardDown"   ,ButtonState::Held,bubbleCharacter1,300.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveKeyboardUp"     ,ButtonState::Held,bubbleCharacter1,300.0f,glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpKeyboard"   ,ButtonState::Down,bubbleCharacter1,       glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpKeyboard"   ,ButtonState::Up,  bubbleCharacter1,       glm::vec3{ 0, 1, 0});
 
-        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController"    ,ButtonState::Held,0,bubbleCharacter1,200.0f,glm::vec3{ 0,-1, 0});
-        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController"    ,ButtonState::Held,1,bubbleCharacter2,200.0f,glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveLeftController" ,ButtonState::Held,0,bubbleCharacter2,100.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveRightController",ButtonState::Held,0,bubbleCharacter2,100.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController" ,ButtonState::Held,0,bubbleCharacter2,100.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,0,bubbleCharacter2,100.0f,glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Down,0,bubbleCharacter2,       glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Up,  0,bubbleCharacter2,       glm::vec3{ 0, 1, 0});
+
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveLeftController" ,ButtonState::Held,1,bubbleCharacter3,200.0f,glm::vec3{-1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveRightController",ButtonState::Held,1,bubbleCharacter3,200.0f,glm::vec3{ 1, 0, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveDownController" ,ButtonState::Held,1,bubbleCharacter3,200.0f,glm::vec3{ 0, 1, 0});
+        Input::GetInstance().RegisterCommand<MoveCommand>("moveUpController"   ,ButtonState::Held,1,bubbleCharacter3,200.0f,glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Down,1,bubbleCharacter3,       glm::vec3{ 0,-1, 0});
+        Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Up,  1,bubbleCharacter3,       glm::vec3{ 0, 1, 0});
+
 
 
 		if constexpr (constexpr bool showSceneGraph = false)

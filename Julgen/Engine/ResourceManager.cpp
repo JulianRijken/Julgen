@@ -17,6 +17,7 @@ void jul::ResourceManager::Initialize()
 
 
 	LoadFont("Lingua", "Lingua.otf", 36);
+    LoadFont("LinguaSmall", "Lingua.otf", 24);
 	LoadSprite("background", "background.tga", 32);
 	LoadSprite("Bubble", "Bubble.png", 32);
 	LoadSprite("Dot", "Dot.png", 32);
