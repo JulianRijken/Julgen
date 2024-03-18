@@ -28,6 +28,8 @@ namespace jul
 
 		GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
 
+        // TODO: REMOVE ME
+        void TestMember(int number);
 
 	private:
 
