@@ -37,7 +37,7 @@ namespace jul
     class MoveCommand : public GameObjectCommand
 	{
 	public:
-        MoveCommand(GameObject* gameObject, float moveSpeed, glm::vec3 moveDirection);
+        MoveCommand(GameObject* gameObject, float moveSpeed, const glm::vec3& moveDirection);
         void Execute(InputContext context) override;
 
     private:
@@ -48,7 +48,7 @@ namespace jul
     class UnitMoveCommand : public GameObjectCommand
     {
     public:
-        UnitMoveCommand(GameObject* gameObject, glm::vec3 moveDirection);
+        UnitMoveCommand(GameObject* gameObject, const glm::vec3& moveDirection);
         void Execute(InputContext context) override;
 
     private:

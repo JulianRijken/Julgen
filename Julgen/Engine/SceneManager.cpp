@@ -19,7 +19,7 @@
 void jul::SceneManager::LoadScene(const std::string& name)
 {
 	// Unload all loaded scenes
-	m_LoadedScenes.clear();
+    m_LoadedScenes.clear();
 
 
 	// Set new loaded scene as active

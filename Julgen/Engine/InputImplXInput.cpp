@@ -19,6 +19,9 @@ class Input::ControllerInputImpl
 
             for (auto&& bind : binds)
             {
+                if(bind.controllerIndex >=  SDL_NumJoysticks())
+                    return;
+
                 // TODO: Axis input currently only works continually
                 if(bind.buttonState == ButtonState::Held)
                 {

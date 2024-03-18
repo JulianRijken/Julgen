@@ -15,6 +15,8 @@ namespace jul
     inline static const float STICK_DEADZONE{0.15f};
     inline static const float TRIGGER_DEADZONE{0.05f};
 
+
+
     struct InputAction
     {
         std::vector<SDL_Scancode> keyboardButtons;
@@ -87,8 +89,8 @@ namespace jul
 	{
     public:
 
-        Input();
         ~Input();
+        Input();
 
         template<typename DataType>
         static float NormalizeAxis(const DataType& rawAxis, float deadzone, std::optional<float> axisLimit = std::nullopt)
@@ -119,9 +121,6 @@ namespace jul
         {
             m_Binds.emplace_back(buttonState,0,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
         }
-
-
-	private:
 
         class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;

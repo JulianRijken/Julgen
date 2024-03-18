@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "GameTime.h"
 
-jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed, glm::vec3 moveDirection) :
+jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm::vec3& moveDirection) :
       GameObjectCommand(gameObject),
       m_MoveSpeed(moveSpeed),
       m_MoveDirection(moveDirection)
@@ -21,7 +21,7 @@ jul::GameObjectCommand::GameObjectCommand(GameObject* gameObject) :
 }
 
 
-jul::UnitMoveCommand::UnitMoveCommand(GameObject* gameObject, glm::vec3 moveDirection) :
+jul::UnitMoveCommand::UnitMoveCommand(GameObject* gameObject,const glm::vec3& moveDirection) :
       GameObjectCommand(gameObject),
       m_MoveDirection(moveDirection)
 {}
@@ -45,3 +45,5 @@ void jul::TriggerTestCommand::Execute(InputContext context)
 }
 
 
+// TODO: Add a bind command that allows a command to be bound to a function pointer
+// This allows for wide usage of the input system

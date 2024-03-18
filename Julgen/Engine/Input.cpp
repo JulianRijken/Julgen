@@ -38,12 +38,12 @@ void jul::Input::HandleKeyboardContinually() const
 {
     const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
 
-    for (auto &&bind : m_Binds)
+    for (auto&& bind : m_Binds)
     {
-        for (auto &&keyboardKey : bind.acton.keyboardButtons)
+        for (auto&& keyboardKey : bind.acton.keyboardButtons)
         {
             if (bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
-            {
+            {    
                 bind.command->Execute();
                 break;
             }
@@ -56,17 +56,15 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
     switch (event.type)
     {
     case SDL_KEYDOWN:
-
-        for (auto&& bind : m_Binds)
-            bind.TryExecuteKeyboard(ButtonState::Down,event.key.keysym.scancode);
-
-        return true;
-
     case SDL_KEYUP:
-
+       const ButtonState buttonState = event.type == SDL_KEYDOWN ? ButtonState::Down : ButtonState::Up;
         for (auto&& bind : m_Binds)
-             bind.TryExecuteKeyboard(ButtonState::Up,event.key.keysym.scancode);
+        {
+            if(event.key.repeat)
+                continue;
 
+            bind.TryExecuteKeyboard(buttonState,event.key.keysym.scancode);
+        }
         return true;
     }
     return false;
