@@ -47,26 +47,35 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 
 
+        // Enemy
         Action<int> testAction{};
+
+
+        // Plauer
+        testAction.AddListener(Test);
+        testAction.AddListener(BIND_MEMBER(SceneManager, TestMember));
+
+        testAction.Invoke(1);
+
+        testAction.RemoveListener(Test);
+        testAction.RemoveListener(BIND_MEMBER(SceneManager, TestMember));
+
+        testAction.Invoke(2);
+
+
+
+
 
         //auto testd = &SceneManager::TestMember;
 
+        // testAction += Test;
+        // ACTION_BIND2(testAction,SceneManager,TestMember);
 
-        // testAction += ACTION_BIND(SceneManager, TestMember);
-
-        testAction.AddListener(ACTION_BIND(SceneManager, TestMember));
-        testAction.AddListener(ACTION_BIND(SceneManager, TestMember2));
-
-        testAction.Invoke(1);
+        // testAction += {this, "TestMember", &SceneManager::TestMember};
+        // testAction += { ACTION_BIND(SceneManager, TestMember) };
+        //testAction.RemoveListener<SceneManager>(this, &SceneManager::TestMember2);
         // testAction.Invoke(2);
 
-        testAction.RemoveListener(ACTION_BIND(SceneManager, TestMember));
-
-        testAction.Invoke(69);
-        testAction.RemoveListener(ACTION_BIND(SceneManager, TestMember2));
-
-        // testAction -= Test;
-        //testAction.RemoveListener<SceneManager>(this, &SceneManager::TestMember2);
 
 
         if constexpr (constexpr bool showInput = false)
@@ -229,11 +238,6 @@ jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const
 void jul::SceneManager::TestMember(int number)
 {
     std::cout << "Member function - Action Triggered: " << number  << std::endl;
-}
-
-void jul::SceneManager::TestMember2(int number)
-{
-    std::cout << "Member function TWOOOOO - Action Triggered: " << number  << std::endl;
 }
 
 

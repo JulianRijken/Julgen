@@ -30,7 +30,6 @@ namespace jul
 
         // TODO: REMOVE ME
         void TestMember(int number);
-        void TestMember2(int number);
 
 	private:
 
