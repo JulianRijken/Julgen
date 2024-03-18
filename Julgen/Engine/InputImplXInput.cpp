@@ -19,6 +19,46 @@ class Input::ControllerInputImpl
 
             for (auto&& bind : binds)
             {
+                // TODO: Axis input currently only works continually
+                if(bind.buttonState == ButtonState::Held)
+                {
+                    const XINPUT_GAMEPAD& gamePadState = m_ControllerStates[bind.controllerIndex].currentControllerState.Gamepad;
+
+                    // Handle right stick
+                    if(bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_RIGHTX) and bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_RIGHTY))
+                    {
+                        bind.command->Execute(glm::vec2{
+                        Input::NormalizeAxis(gamePadState.sThumbRX,STICK_DEADZONE),
+                        Input::NormalizeAxis(gamePadState.sThumbRY,STICK_DEADZONE)});
+                        continue;
+                    }
+
+                    // Handle left stick
+                    if(bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_LEFTX) and bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_LEFTY))
+                    {
+                        bind.command->Execute(glm::vec2{
+                        Input::NormalizeAxis(gamePadState.sThumbLX,STICK_DEADZONE),
+                        Input::NormalizeAxis(gamePadState.sThumbLY,STICK_DEADZONE)});
+                        continue;
+                    }
+
+                    // Handle right trigger
+                    if(bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
+                    {
+                        bind.command->Execute(Input::NormalizeAxis(gamePadState.bRightTrigger,TRIGGER_DEADZONE));
+                        continue;
+                    }
+
+                    // Handle left trigger
+                    if(bind.acton.HasControllerAxis(SDL_CONTROLLER_AXIS_TRIGGERLEFT))
+                    {
+                        bind.command->Execute(Input::NormalizeAxis(gamePadState.bLeftTrigger,TRIGGER_DEADZONE));
+                        continue;
+                    }
+                }
+
+
+                // Handle controller buttons
                 for (auto&& controllerButton : bind.acton.controllerButtons)
                 {
                     if(bind.buttonState == ButtonState::Held and IsHeld(SDLButtonToXInput(controllerButton),bind.controllerIndex))
@@ -87,7 +127,8 @@ class Input::ControllerInputImpl
         // Also XInput might get removed from the engine in the future so this keeps it fully separated
         WORD SDLButtonToXInput(SDL_GameControllerButton sdlButton)
         {
-            switch (sdlButton) {
+            switch (sdlButton)
+            {
             case SDL_CONTROLLER_BUTTON_A:            return XINPUT_GAMEPAD_A;
             case SDL_CONTROLLER_BUTTON_B:            return XINPUT_GAMEPAD_B;
             case SDL_CONTROLLER_BUTTON_X:            return XINPUT_GAMEPAD_X;
@@ -112,14 +153,14 @@ class Input::ControllerInputImpl
     };
 }
 
-void jul::Input::HandleControllerContinually(const std::vector<InputBinding>& binds)
+void jul::Input::HandleControllerContinually()
 {
-    m_ImplUPtr->HandleControllerContinually(binds);
+    m_ImplUPtr->HandleControllerContinually(m_Binds);
 }
 
 // XInput does not use events but requires to check the key state every frame
 // in order to detect changes in input (simulating events)
-bool jul::Input::HandleControllerEvent(const SDL_Event&,const std::vector<InputBinding>&)
+bool jul::Input::HandleControllerEvent(const SDL_Event&)
 {
     return false;
 }

@@ -8,7 +8,7 @@
 void jul::Input::ProcessInput(bool& shouldQuit)
 {
     HandleKeyboardContinually();
-    HandleControllerContinually(m_Binds);
+    HandleControllerContinually();
 
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -22,7 +22,7 @@ void jul::Input::ProcessInput(bool& shouldQuit)
         if(HandleKeyboardEvent(event))
             continue;
 
-        if(HandleControllerEvent(event,m_Binds))
+        if(HandleControllerEvent(event))
             continue;
 
         // TODO: Should be before the other input
@@ -36,12 +36,13 @@ void jul::Input::ProcessInput(bool& shouldQuit)
 
 void jul::Input::HandleKeyboardContinually() const
 {
-    auto keyboardState = SDL_GetKeyboardState(nullptr);
-    for (auto&& bind : m_Binds)
+    const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
+
+    for (auto &&bind : m_Binds)
     {
-        for (auto&& keyboardKey : bind.acton.keyboardButtons)
+        for (auto &&keyboardKey : bind.acton.keyboardButtons)
         {
-            if(bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
+            if (bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
             {
                 bind.command->Execute();
                 break;
@@ -71,3 +72,33 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
     return false;
 }
 
+
+bool jul::InputBinding::TryExecuteController(
+    ButtonState checkButtonState,
+    int checkControllerIndex,
+    SDL_GameControllerButton compareButton) const
+{
+    if(buttonState != checkButtonState)
+        return false;
+
+    if(controllerIndex != checkControllerIndex)
+        return false;
+
+    if(not acton.HasControllerButton(compareButton))
+        return false;
+
+    command->Execute();
+    return true;
+}
+
+bool jul::InputBinding::TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const
+{
+    if(buttonState != checkButtonState)
+        return false;
+
+    if(not acton.HasKeyboardKey(compareKey))
+        return false;
+
+    command->Execute();
+    return true;
+}

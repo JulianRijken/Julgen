@@ -12,11 +12,14 @@
 
 namespace jul
 {
+    inline static const float STICK_DEADZONE{0.15f};
+    inline static const float TRIGGER_DEADZONE{0.05f};
 
     struct InputAction
     {
         std::vector<SDL_Scancode> keyboardButtons;
         std::vector<SDL_GameControllerButton> controllerButtons;
+        std::vector<SDL_GameControllerAxis> controllerAxis;
 
         bool HasKeyboardKey(SDL_Scancode compareKey) const
         {
@@ -27,31 +30,39 @@ namespace jul
         {
             return std::ranges::count(controllerButtons,compareButton) > 0;
         }
+
+        bool HasControllerAxis(SDL_GameControllerAxis compareAxis) const
+        {
+            return std::ranges::count(controllerAxis,compareAxis) > 0;
+        }
     };
 
     // TODO: This is currently hardcoded but should ideally be an interface,
     // Or the user of the engine should be able to set dynamically
     inline static const std::map<std::string, InputAction> INPUT_ACTIONS
     {
-        {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT}}},
-        {"moveRight",{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT}}},
-        {"moveDown",{{SDL_SCANCODE_S},{SDL_CONTROLLER_BUTTON_DPAD_DOWN}}},
-        {"moveUp",{{SDL_SCANCODE_W},{SDL_CONTROLLER_BUTTON_DPAD_UP}}},
+        {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
+        {"moveRight",{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
+        {"moveDown",{{SDL_SCANCODE_S},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
+        {"moveUp",{{SDL_SCANCODE_W},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
 
 
-        {"moveLeftController", {{},{SDL_CONTROLLER_BUTTON_DPAD_LEFT}}},
-        {"moveRightController",{{},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT}}},
-        {"moveDownController", {{},{SDL_CONTROLLER_BUTTON_DPAD_DOWN}}},
-        {"moveUpController",   {{},{SDL_CONTROLLER_BUTTON_DPAD_UP}}},
+        {"moveLeftController", {{},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
+        {"moveRightController",{{},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
+        {"moveDownController", {{},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
+        {"moveUpController",   {{},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
 
-        {"moveKeyboardLeft", {{SDL_SCANCODE_A,SDL_SCANCODE_LEFT},{}}},
-        {"moveKeyboardRight",{{SDL_SCANCODE_D,SDL_SCANCODE_RIGHT},{}}},
-        {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{}}},
-        {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{}}},
+        {"moveKeyboardLeft", {{SDL_SCANCODE_A,SDL_SCANCODE_LEFT},{},{}}},
+        {"moveKeyboardRight",{{SDL_SCANCODE_D,SDL_SCANCODE_RIGHT},{},{}}},
+        {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{},{}}},
+        {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{},{}}},
 
-        {"jump",   {{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_A}}},
-        {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A}}},
-        {"jumpKeyboard",   {{SDL_SCANCODE_SPACE},{}}}
+        {"jump",             {{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_A},{}}},
+        {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A},{}}},
+        {"jumpKeyboard",     {{SDL_SCANCODE_SPACE},{},{}}},
+
+        {"stickExample",   {{},{},{SDL_CONTROLLER_AXIS_RIGHTY,SDL_CONTROLLER_AXIS_RIGHTX}}},
+        {"triggerExample",   {{},{},{SDL_CONTROLLER_AXIS_TRIGGERRIGHT}}}
     };
 
     enum class ButtonState
@@ -68,32 +79,8 @@ namespace jul
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
-        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const
-        {
-            if(buttonState != checkButtonState)
-                return false;
-
-            if(controllerIndex != checkControllerIndex)
-                return false;
-
-            if(not acton.HasControllerButton(compareButton))
-                return false;
-
-            command->Execute();
-            return true;
-        }
-
-        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const
-        {
-            if(buttonState != checkButtonState)
-                return false;
-
-            if(not acton.HasKeyboardKey(compareKey))
-                return false;
-
-            command->Execute();
-            return true;
-        }
+        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const;
+        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
     };
 
     class Input final : public Singleton<Input>
@@ -102,6 +89,19 @@ namespace jul
 
         Input();
         ~Input();
+
+        template<typename DataType>
+        static float NormalizeAxis(const DataType& rawAxis, float deadzone, std::optional<float> axisLimit = std::nullopt)
+        {
+            // Oh my god this axisLimit.value_or is the sickes syntax I have ever seen!
+            float input(static_cast<float>(rawAxis) / static_cast<float>(axisLimit.value_or(std::numeric_limits<DataType>::max())));
+            input = std::clamp(input,-1.0f,1.0f);
+            if(std::abs(input) < deadzone)
+                input = 0;
+
+            return input;
+        }
+
 
         void ProcessInput(bool& shouldQuit);
 
@@ -128,11 +128,11 @@ namespace jul
 
         void HandleKeyboardContinually() const;
         // Defined by ControllerInputImpl
-        void HandleControllerContinually(const std::vector<InputBinding>& binds);
+        void HandleControllerContinually();
 
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
         // Defined by ControllerInputImpl
-        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event, const std::vector<InputBinding>& binds);
+        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
 
         std::vector<InputBinding> m_Binds;
 	};

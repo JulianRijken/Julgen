@@ -104,9 +104,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
         Input::GetInstance().RegisterCommand<UnitMoveCommand>("jumpController" ,ButtonState::Up,  1,bubbleCharacter3,       glm::vec3{ 0, 1, 0});
 
 
-
-
-
+        Input::GetInstance().RegisterCommand<StickTestCommand>("stickExample" ,ButtonState::Held, 0);
+        Input::GetInstance().RegisterCommand<TriggerTestCommand>("triggerExample" ,ButtonState::Held, 0);
 
 		if constexpr (constexpr bool showSceneGraph = false)
 		{

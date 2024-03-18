@@ -1,6 +1,9 @@
 #pragma once
 
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <optional>
+#include <variant>
 
 namespace jul
 {
@@ -9,9 +12,10 @@ namespace jul
 	class BaseCommand
 	{
 	public:
-		virtual ~BaseCommand() = default;
-		virtual void Execute() = 0;
+        typedef std::optional<std::variant<float,glm::vec2>> InputContext;
 
+		virtual ~BaseCommand() = default;
+        virtual void Execute(InputContext context = std::nullopt) = 0;
     protected:
         BaseCommand() = default;
     };
@@ -19,9 +23,6 @@ namespace jul
 
     class GameObjectCommand : public BaseCommand
     {
-    public:
-        void Execute() = 0;
-
     protected:
         // We only use this class to inharit from
         GameObjectCommand(GameObject* gameObject);
@@ -37,7 +38,7 @@ namespace jul
 	{
 	public:
         MoveCommand(GameObject* gameObject, float moveSpeed, glm::vec3 moveDirection);
-        void Execute();
+        void Execute(InputContext context) override;
 
     private:
         float m_MoveSpeed;
@@ -48,9 +49,22 @@ namespace jul
     {
     public:
         UnitMoveCommand(GameObject* gameObject, glm::vec3 moveDirection);
-        void Execute();
+        void Execute(InputContext context) override;
 
     private:
         glm::vec3 m_MoveDirection;
+    };
+
+    class StickTestCommand : public BaseCommand
+    {
+    public:
+        void Execute(InputContext context);
+    };
+
+
+    class TriggerTestCommand : public BaseCommand
+    {
+    public:
+        void Execute(InputContext context);
     };
 }
