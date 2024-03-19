@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#define BIND_MEMBER(classname, func) this, #func, &classname::func
+#define BIND_MEMBER(thisPtr, func) thisPtr, #func, &func
 
 namespace jul
 {
@@ -29,12 +29,13 @@ namespace jul
         Action& operator=(Action&&) = delete;
         Action& operator=(const Action&) = delete;
 
-
+        // static function
         void AddListener(FunctionType listener)
         {
             m_ListenerFunctions.push_back({ std::nullopt, listener });
         }
 
+        // member function
         // If you need more arguments than the 20 this allows,
         // be sure to check out C++ core guideline I.23: Keep the number of function arguments low
         template<typename ThisType>

@@ -46,6 +46,7 @@ set(JULGEN_SOURCE_FILES
 
     Julgen/Engine/GlobalSettings.h #HEADER
     Julgen/Engine/Singleton.h #HEADER
+    Julgen/Engine/Action.h #HEADER
 
     Julgen/Engine/Animation.cpp
     Julgen/Engine/Command.cpp

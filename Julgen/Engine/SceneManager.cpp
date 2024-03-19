@@ -53,29 +53,14 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
         // Plauer
         testAction.AddListener(Test);
-        testAction.AddListener(BIND_MEMBER(SceneManager, TestMember));
+        testAction.AddListener(BIND_MEMBER(this, SceneManager::TestMember));
 
         testAction.Invoke(1);
 
         testAction.RemoveListener(Test);
-        testAction.RemoveListener(BIND_MEMBER(SceneManager, TestMember));
+        testAction.RemoveListener(BIND_MEMBER(this, SceneManager::TestMember));
 
         testAction.Invoke(2);
-
-
-
-
-
-        //auto testd = &SceneManager::TestMember;
-
-        // testAction += Test;
-        // ACTION_BIND2(testAction,SceneManager,TestMember);
-
-        // testAction += {this, "TestMember", &SceneManager::TestMember};
-        // testAction += { ACTION_BIND(SceneManager, TestMember) };
-        //testAction.RemoveListener<SceneManager>(this, &SceneManager::TestMember2);
-        // testAction.Invoke(2);
-
 
 
         if constexpr (constexpr bool showInput = false)
