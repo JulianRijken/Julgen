@@ -1,19 +1,42 @@
 #include "SpriteRenderer.h"
-
-#include "RenderManager.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "RenderManager.h"
 
-jul::SpriteRenderer::SpriteRenderer(GameObject* parent, Sprite* sprite, int renderLayer) :
-	Renderer(parent,"SpriteRenderer",renderLayer),
-	m_SpritePtr(sprite)
-{}
+
+jul::SpriteRenderer::SpriteRenderer(GameObject* parent, Sprite* sprite, int renderLayer,glm::ivec2 drawCell) :
+    Renderer(parent,"SpriteRenderer",renderLayer),
+    m_DrawCell(drawCell)
+{
+    SetSprite(sprite);
+}
+
+void jul::SpriteRenderer::SetDrawCell(glm::ivec2 drawCell)
+{
+    m_DrawCell = drawCell;
+}
+
+void jul::SpriteRenderer::SetSprite(const Sprite* spritePtr)
+{
+    m_SpritePtr = spritePtr;
+}
+
+
+const jul::Sprite* jul::SpriteRenderer::GetSprite()
+{
+    return m_SpritePtr;
+}
 
 void jul::SpriteRenderer::Render() const
 {
 	if(m_SpritePtr == nullptr)
 		return;
 
-	const glm::vec3& pos = Transform().WorldPosition();
-	RenderManager::GetInstance().RenderTexture(*m_SpritePtr->GetTexture(), pos.x, pos.y);
+    const glm::vec2& pos = Transform().WorldPosition();
+    RenderManager::GetInstance().RenderTexture(
+        m_SpritePtr->GetTexture(),
+        pos,
+        {m_SpritePtr->CELL_SIZE.x * float(m_DrawCell.x), m_SpritePtr->CELL_SIZE.y * float(m_DrawCell.y)},
+        m_SpritePtr->CELL_SIZE
+        );
 }

@@ -12,12 +12,14 @@ namespace jul
 
 	public:
 		explicit Component(GameObject* parent = nullptr, const std::string& name = "Component");
-		~Component() override = default;
+        ~Component() override = default;
 
-		Component(Component&&) = delete;
-		Component(const Component&) = delete;
-		Component& operator=(Component&&) = delete;
-		Component& operator=(const Component&) = delete;
+        Component(const Component&) = delete;
+        Component(Component&&) noexcept = delete;
+        Component& operator=(const Component&) = delete;
+        Component& operator=(Component&&) noexcept = delete;
+
+
 
 		[[nodiscard]] GameObject* GetGameObject() const { return m_ParentGameObjectPtr;  }
 		[[nodiscard]] Transform& Transform() const;

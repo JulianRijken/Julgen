@@ -7,10 +7,10 @@ public:
 
 	virtual ~Object() = default;
 
-	Object(Object&&) = delete;
-	Object(const Object&) = delete;
-	Object& operator=(Object&&) = delete;
-	Object& operator=(const Object&) = delete;
+    Object(const Object&) = delete;
+    Object(Object&&) noexcept = delete;
+    Object& operator=(const Object&) = delete;
+    Object& operator=(Object&&) noexcept = delete;
 
 	[[nodiscard]] const std::string& GetName() const { return m_Name; }
 	[[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
@@ -19,7 +19,7 @@ public:
 
 protected:
 
-	Object(const std::string& name = "Object");
+    Object(const std::string& name = "Object");
 
 private:
 

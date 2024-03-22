@@ -40,15 +40,11 @@ set(IMGUI_SOURCE_FILES
 
 
 set(JULGEN_SOURCE_FILES
-    Julgen/Components/SpriteRenderer.cpp
-    Julgen/Components/TextRenderer.cpp
-    Julgen/Components/Transform.cpp
-
     Julgen/Engine/GlobalSettings.h #HEADER
     Julgen/Engine/Singleton.h #HEADER
-    Julgen/Engine/Action.h #HEADER
+    Julgen/Engine/Event.h #HEADER
+    Julgen/Engine/Math.h #HEADER
 
-    Julgen/Engine/Animation.cpp
     Julgen/Engine/Command.cpp
     Julgen/Engine/Font.cpp
     Julgen/Engine/GameTime.cpp
@@ -74,6 +70,12 @@ set(JULGEN_SOURCE_FILES
     Julgen/ObjectSystem/GameObject.cpp
     Julgen/ObjectSystem/Object.cpp
     Julgen/ObjectSystem/Renderer.cpp
+
+    Julgen/Components/SpriteRenderer.cpp
+    Julgen/Components/TextRenderer.cpp
+    Julgen/Components/Transform.cpp
+    Julgen/Components/Animator.cpp
+    Julgen/Components/Animator.cpp
 )
 
 
@@ -293,7 +295,7 @@ endif()
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g")
-  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Content@/\" -sSDL2_IMAGE_FORMATS=['tga','png']")
+  set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Assets@/\" -sSDL2_IMAGE_FORMATS=['tga','png']")
 
   # work around https://github.com/emscripten-core/emscripten/issues/11513
   set(EMSCRIPTEN_LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -fno-stack-protector")
@@ -311,7 +313,7 @@ if(EMSCRIPTEN)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   
 elseif(WIN32)
-  # fixes the working directory for the debugger, this will now find content in the correct directory
+  # fixes the working directory for the debugger, this will now find assets in the correct directory
   set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
 
   # add post build commands
@@ -325,7 +327,7 @@ elseif(WIN32)
       COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
   )
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Content" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Content"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Assets" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Assets"
   )
 endif()
 

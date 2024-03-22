@@ -14,14 +14,14 @@ namespace jul
 	public:
         typedef std::optional<std::variant<float,glm::vec2>> InputContext;
 
-		virtual ~BaseCommand() = default;
+        virtual ~BaseCommand() = default;
         virtual void Execute(InputContext context = std::nullopt) = 0;
     protected:
         BaseCommand() = default;
     };
 
 
-    class GameObjectCommand : public BaseCommand
+    class GameObjectCommand  : public BaseCommand
     {
     protected:
         // We only use this class to inharit from

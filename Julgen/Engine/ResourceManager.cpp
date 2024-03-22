@@ -7,20 +7,12 @@
 #include "RenderManager.h"
 #include "Texture2D.h"
 
-
 void jul::ResourceManager::Initialize()
 {
-	ConfigurePath();
+    ConfigurePath();
 
-	if (TTF_Init() != 0)
-		throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
-
-
-	LoadFont("Lingua", "Lingua.otf", 36);
-    LoadFont("LinguaSmall", "Lingua.otf", 24);
-	LoadSprite("background", "background.tga", 32);
-	LoadSprite("Bubble", "Bubble.png", 32);
-	LoadSprite("Dot", "Dot.png", 32);
+    if (TTF_Init() != 0)
+        throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
 }
 
 jul::Font* jul::ResourceManager::GetFont(const std::string& name)
@@ -49,13 +41,11 @@ jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const st
 
 jul::Sprite* jul::ResourceManager::LoadSprite(const std::string& assetName, const std::string& filePath,
 	int pixelsPerUnit, const glm::vec2& pivotAlpha,
-	int rowCount, int colCount, const std::map<std::string, Animation>& animations)
+                                              int rowCount, int colCount, const std::map<std::string, SpriteAnimation>& animations)
 {
 	const auto fullPath = m_ContentPath / filePath;
-	return m_SpriteUPtrMap.emplace(assetName, std::make_unique<Sprite>(LoadTexture(filePath), pixelsPerUnit, pivotAlpha, rowCount, colCount, animations)).first->second.get();
+    return m_SpriteUPtrMap.emplace(assetName, std::make_unique<Sprite>(LoadTexture(filePath), pixelsPerUnit, pivotAlpha, rowCount, colCount, animations)).first->second.get();
 }
-
-
 
 jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
 {
@@ -74,11 +64,11 @@ void jul::ResourceManager::ConfigurePath()
 #if __EMSCRIPTEN__
 	m_ContentPath = "";
 #else
-	m_ContentPath = "./Content/";
+    m_ContentPath = "./Assets/";
 
 	// Check if the Content folder is in the parent directory
 	if (not std::filesystem::exists(m_ContentPath))
-		m_ContentPath = "../Content/";
+        m_ContentPath = "../Assets/";
 #endif
 
 	if (not std::filesystem::exists(m_ContentPath))

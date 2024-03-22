@@ -85,7 +85,7 @@ jul::Julgen::Julgen()
 	RenderManager::GetInstance().Initialize(g_window);
 	GUI::GetInstance().Initialize(g_window,RenderManager::GetInstance().GetSDLRenderer());
 
-	ResourceManager::Initialize();
+    ResourceManager::Initialize();
 }
 
 jul::Julgen::~Julgen()

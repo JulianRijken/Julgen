@@ -15,6 +15,12 @@ namespace jul
 
 		GameObject(const std::string& name, const glm::vec3& position);
 
+        GameObject(const GameObject&) = delete;
+        GameObject(GameObject&&) noexcept = delete;
+        GameObject& operator=(const GameObject&) = delete;
+        GameObject& operator=(GameObject&&) noexcept = delete;
+
+
 		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
 		void Destroy() override;

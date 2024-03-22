@@ -1,26 +1,22 @@
 #include "SceneManager.h"
 
-#include <Action.h>
+#include <Event.h>
 #include <Input.h>
 #include <iostream>
 #include <ranges>
 
+#include "Animator.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "TextRenderer.h"
-#include "Transform.h"
 #include "FpsCounter.h"
 #include "SpriteRenderer.h"
-#include "AutoRotateAround.h"
 #include "GameObject.h"
-#include "GlobalSettings.h"
-#include "Bounce.h"
-
 
 
 void Test(int number)
 {
-    std::cout << "Action Triggered: " << number  << std::endl;
+    std::cout << "Action Triggered: " << number  << '\n';
 }
 
 
@@ -39,30 +35,62 @@ void jul::SceneManager::LoadScene(const std::string& name)
 	if(name == "Start")
 	{
 
-		// TODO: This is not the correct wat to create game objects and components
+        // TODO: Game objects and components can still be created without adding them to a scene
+        // or having them attached to a game object
 		// This is still possible tho. Look in to this :)
 		//[[maybe_unused]] GameObject* wrongGameObject = new GameObject("Test", glm::vec3(1, 1, 1));
 		//[[maybe_unused]] FpsCounter* wrongFpsCounter = new FpsCounter(wrongGameObject);
 
 
+        // going for https://www.youtube.com/watch?v=VyK_cpp9pT4
+
+        // TODO: Also move this to a different function when the engine become separate
+        ResourceManager::LoadFont("Lingua", "Lingua.otf", 36);
+        ResourceManager::LoadFont("LinguaSmall", "Lingua.otf", 16);
+
+        ResourceManager::LoadSprite("background", "background.tga", 32);
+        ResourceManager::LoadSprite("Dot", "Dot.png", 32);
+        ResourceManager::LoadSprite("LevelTiles", "LevelTiles.png", 32,{0.5f,0.5f}, 25, 5);
+
+        ResourceManager::LoadSprite(
+            "Bubble", "Bubble.png", 32, {0.5f,0.5f}, 1, 10,
+            {
+             {"TestAnimation",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0}},7}}
+            });
 
 
-        // Enemy
-        Action<int> testAction{};
+        GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
+        fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("LinguaSmall"), 100);
+        fpsCounter->AddComponent<FpsCounter>();
+
+        auto* bubbleGameObject = AddGameObject("BubbleCharacter", { 0,0,0 });
+        auto* bubbleSpriteRenderer = bubbleGameObject->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
+
+        // bubbleSpriteRenderer->SetDrawCell({0,0});
+        auto* bubbleAnimator = bubbleGameObject->AddComponent<Animator>(bubbleSpriteRenderer);
+        bubbleAnimator->PlayAnimation("TestAnimation",true);
 
 
-        // Plauer
-        testAction.AddListener(Test);
-        testAction.AddListener(BIND_MEMBER(this, SceneManager::TestMember));
+        {
+        auto* levelTile = AddGameObject("LevelTile", { 0,0,0 });
+        levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
+        }
 
-        testAction.Invoke(1);
+        for (int i = 1; i < 31; ++i)
+        {
+            auto* levelTile = AddGameObject("LevelTile", { i * 8,24 * 8,0 });
+            levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
+        }
 
-        testAction.RemoveListener(Test);
-        testAction.RemoveListener(BIND_MEMBER(this, SceneManager::TestMember));
-
-        testAction.Invoke(2);
 
 
+
+
+
+
+
+
+#ifdef SHOW_INPUT
         if constexpr (constexpr bool showInput = false)
         {
 
@@ -72,9 +100,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
             GameObject* assignment = AddGameObject("AssignmentText", { 135, 20, 0 });
             assignment->AddComponent<TextRenderer>("Programming 4 Scene-graph", ResourceManager::GetFont("Lingua"), 100);
 
-            GameObject* fpsCounter = AddGameObject("Fps Counter", { 20,20,0 });
-            fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("Lingua"), 100);
-            fpsCounter->AddComponent<FpsCounter>();
+
 
             GameObject* inputInfoText1 = AddGameObject("Input Text 1", { 20,60,0 });
             inputInfoText1->AddComponent<TextRenderer>("Use the D-Pad or WASD to move Bubble", ResourceManager::GetFont("LinguaSmall"), 100);
@@ -135,7 +161,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
             Input::GetInstance().RegisterCommand<TriggerTestCommand>("triggerExample" ,ButtonState::Held, 0);
 
         }
-		if constexpr (constexpr bool showSceneGraph = false)
+#endif
+#ifdef SHOW_SCENEGRAPH
 		{
 			std::cout << "\n\n";
 
@@ -212,7 +239,10 @@ void jul::SceneManager::LoadScene(const std::string& name)
 					lastBubble = bubble;
 			}
 		}
+#endif
+
 	}
+
 }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const

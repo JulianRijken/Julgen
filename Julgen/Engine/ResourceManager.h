@@ -21,11 +21,9 @@ namespace jul
 		static Font*   LoadFont   (const std::string& assetName, const std::string& filePath, unsigned int size);
 		static Sprite* LoadSprite (const std::string& assetName, const std::string& filePath,
 			int pixelsPerUnit = 100, const glm::vec2& pivotAlpha = {},
-			int rowCount = 1, int colCount = 1, const std::map<std::string, Animation>& animations = {});
+                                  int rowCount = 1, int colCount = 1, const std::map<std::string, SpriteAnimation>& animations = {});
 
 	private:
-
-		ResourceManager() = default;
 
 		// Textures are currently only used by the sprites, so they are not exposed to the user
 		// In the future when textures are needed for 3D models or other things, this should be changed

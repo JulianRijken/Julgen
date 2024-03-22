@@ -11,12 +11,12 @@ namespace jul
 
 	public:
 		Transform(GameObject* parent, glm::vec3 position = { 0,0,0 });
-		~Transform() override;
+        ~Transform() override;
 
-		Transform(Transform&&) = delete;
-		Transform(const Transform&) = delete;
-		Transform& operator=(Transform&&) = delete;
-		Transform& operator=(const Transform&) = delete;
+        Transform(const Transform&) = delete;
+        Transform(Transform&&) noexcept = delete;
+        Transform& operator=(const Transform&) = delete;
+        Transform& operator=(Transform&&) noexcept = delete;
 
 		[[nodiscard]] const glm::vec3& WorldPosition();
 		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
