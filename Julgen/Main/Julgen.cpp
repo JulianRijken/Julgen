@@ -83,14 +83,14 @@ jul::Julgen::Julgen()
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
 	RenderManager::GetInstance().Initialize(g_window);
-	GUI::GetInstance().Initialize(g_window,RenderManager::GetInstance().GetSDLRenderer());
+    EngineGUI::GetInstance().Initialize(g_window,RenderManager::GetInstance().GetSDLRenderer());
 
     ResourceManager::Initialize();
 }
 
 jul::Julgen::~Julgen()
 {
-	GUI::GetInstance().Destroy();
+    EngineGUI::GetInstance().Destroy();
 	RenderManager::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;

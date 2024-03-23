@@ -1,23 +1,18 @@
 #include "SceneManager.h"
 
-#include <Event.h>
-#include <Input.h>
-#include <iostream>
+
 #include <ranges>
 
 #include "Animator.h"
 #include "ResourceManager.h"
 #include "Scene.h"
+#include "PlayerHUD.h"
 #include "TextRenderer.h"
 #include "FpsCounter.h"
 #include "SpriteRenderer.h"
 #include "GameObject.h"
-
-
-void Test(int number)
-{
-    std::cout << "Action Triggered: " << number  << '\n';
-}
+#include "MathExtensions.h"
+#include "Input.h"
 
 
 void jul::SceneManager::LoadScene(const std::string& name)
@@ -47,15 +42,31 @@ void jul::SceneManager::LoadScene(const std::string& name)
         // TODO: Also move this to a different function when the engine become separate
         ResourceManager::LoadFont("Lingua", "Lingua.otf", 36);
         ResourceManager::LoadFont("LinguaSmall", "Lingua.otf", 16);
+        ResourceManager::LoadFont("NES", "NES_Font.ttf", 36);
+
 
         ResourceManager::LoadSprite("background", "background.tga", 32);
         ResourceManager::LoadSprite("Dot", "Dot.png", 32);
-        ResourceManager::LoadSprite("LevelTiles", "LevelTiles.png", 32,{0.5f,0.5f}, 25, 5);
+
+        ResourceManager::LoadSprite("LevelTiles", "LevelTiles.png", 8,{0,0}, 25, 5);
+
+
+        // TODO: as you can see animations around bound to a sprite
+        //       in this senario you can see how that's not optimal
+        ResourceManager::LoadSprite(
+            "BubbleCharacter", "BubbleCharacter.png", 8, {0.5f,0.5f}, 4, 6,
+            {
+                {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
+                {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}}
+            });
 
         ResourceManager::LoadSprite(
-            "Bubble", "Bubble.png", 32, {0.5f,0.5f}, 1, 10,
+            "BobbleCharacter", "BobbleCharacter.png", 8, {0.5f,0.5f}, 4, 6,
             {
-             {"TestAnimation",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0}},7}}
+                {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
+                {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}}
             });
 
 
@@ -63,23 +74,94 @@ void jul::SceneManager::LoadScene(const std::string& name)
         fpsCounter->AddComponent<TextRenderer>("error", ResourceManager::GetFont("LinguaSmall"), 100);
         fpsCounter->AddComponent<FpsCounter>();
 
-        auto* bubbleGameObject = AddGameObject("BubbleCharacter", { 0,0,0 });
-        auto* bubbleSpriteRenderer = bubbleGameObject->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("Bubble"), 0);
-
-        // bubbleSpriteRenderer->SetDrawCell({0,0});
-        auto* bubbleAnimator = bubbleGameObject->AddComponent<Animator>(bubbleSpriteRenderer);
-        bubbleAnimator->PlayAnimation("TestAnimation",true);
+        auto* player1GameObject = AddGameObject("BubbleCharacter", { -2,0,0 });
+        player1GameObject->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("BubbleCharacter"), 0);
+        player1GameObject->AddComponent<Animator>();
+        auto* player1 = player1GameObject->AddComponent<bb::Player>();
 
 
+        auto* player2GameObject = AddGameObject("BobbleCharacter", { 2,0,0 });
+        player2GameObject->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("BobbleCharacter"), 0);
+        player2GameObject->AddComponent<Animator>();
+        auto* player2 = player2GameObject->AddComponent<bb::Player>();
+
+
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestLivesButton,ButtonState::Down,0,false,player1,&bb::Player::OnTestLivesInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestScoreButton,ButtonState::Down,0,false,player1,&bb::Player::OnTestScoreInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveLeft ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveLeftInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveRight ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveRightInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveStick ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveStickInput);
+
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestLivesButton,ButtonState::Down,1,true,player2,&bb::Player::OnTestLivesInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestScoreButton,ButtonState::Down,1,true,player2,&bb::Player::OnTestScoreInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveLeft  ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveLeftInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveRight ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveRightInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveStick ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveStickInput);
+
+
+
+        GameObject* player1Hud = AddGameObject("HUD", { 30,50,0 });
         {
-        auto* levelTile = AddGameObject("LevelTile", { 0,0,0 });
-        levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
+            auto* livesGameObject = AddGameObject("LivesText", { 0,0,0 });
+            auto* livesText = livesGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
+
+            auto* scoreGameObject = AddGameObject("ScoreText", { 0,50,0 });
+            auto* scoreText = scoreGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
+
+            scoreGameObject->GetTransform().SetParent(&player1Hud->GetTransform(),false);
+            livesGameObject->GetTransform().SetParent(&player1Hud->GetTransform(),false);
+            player1Hud->AddComponent<bb::PlayerHUD>(player1,scoreText,livesText);
         }
 
-        for (int i = 1; i < 31; ++i)
+        GameObject* player2Hud = AddGameObject("HUD", { 30,200,0 });
         {
-            auto* levelTile = AddGameObject("LevelTile", { i * 8,24 * 8,0 });
-            levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
+            auto* livesGameObject = AddGameObject("LivesText", { 0,0,0 });
+            auto* livesText = livesGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
+
+            auto* scoreGameObject = AddGameObject("ScoreText", { 0,50,0 });
+            auto* scoreText = scoreGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
+
+            scoreGameObject->GetTransform().SetParent(&player2Hud->GetTransform(),false);
+            livesGameObject->GetTransform().SetParent(&player2Hud->GetTransform(),false);
+            player2Hud->AddComponent<bb::PlayerHUD>(player2,scoreText,livesText);
+        }
+
+
+
+
+
+        for (int i = -5; i < 5; ++i)
+        {
+            {
+            auto* levelTile = AddGameObject("LevelTile", { i,-1,0 });
+            levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -50,glm::ivec2{0,0});
+            }
+            {
+            auto* levelTile = AddGameObject("LevelTile", { i,-2,0 });
+            levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -50,glm::ivec2{0,0});
+            }
+        }
+
+        for (int x = -16; x < 16; ++x)
+        {
+            for (int y = -13; y < 13; ++y)
+            {
+                if(math::RandomValue<float>() > 0.95f)
+                {
+                    auto* levelTile = AddGameObject("LevelTile", { x,y,0 });
+                    levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -100,glm::ivec2{4,14});
+                }
+                // if((x+y)%2 == 0)
+                // {
+                //     auto* levelTile = AddGameObject("LevelTile", { x,y,0 });
+                //     levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -100,glm::ivec2{1,21});
+                // }
+                // else
+                // {
+                //     auto* levelTile = AddGameObject("LevelTile", { x,y,0 });
+                //     levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -100,glm::ivec2{1,22});
+                // }
+            }
         }
 
 
@@ -249,12 +331,6 @@ jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const
 {
     return m_ActiveScenePtr->AddGameObjectToScene(std::make_unique<GameObject>(name, position));
 }
-
-void jul::SceneManager::TestMember(int number)
-{
-    std::cout << "Member function - Action Triggered: " << number  << std::endl;
-}
-
 
 
 void jul::SceneManager::Update()

@@ -10,7 +10,7 @@ jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm:
 
 void jul::MoveCommand::Execute(InputContext)
 {
-    glm::vec3 velocity = glm::normalize(m_MoveDirection) * m_MoveSpeed;
+	const glm::vec3 velocity = normalize(m_MoveDirection) * m_MoveSpeed;
     GetGameObject()->GetTransform().Translate(velocity * GameTime::GetDeltaTimeF());
 }
 
@@ -33,17 +33,20 @@ void jul::UnitMoveCommand::Execute(InputContext)
 
 void jul::StickTestCommand::Execute(InputContext context)
 {
-    auto input = std::get<glm::vec2>(context.value());
+	const auto input = std::get<glm::vec2>(context.value());
     std::cout <<  "Stick Input X: " << input.x << std::endl;
     std::cout <<  "Stick Input Y: " << input.y << std::endl;
 }
 
 void jul::TriggerTestCommand::Execute(InputContext context)
 {
-    auto input = std::get<float>(context.value());
+	const auto input = std::get<float>(context.value());
     std::cout << "Trigger Input: " << input << std::endl;
 }
 
 
-// TODO: Add a bind command that allows a command to be bound to a function pointer
-// This allows for wide usage of the input system
+
+void jul::FunctionCommand::Execute(InputContext context)
+{
+    m_Function(context);
+}

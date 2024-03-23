@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "Renderer.h"
+#include "RenderComponent.h"
 #include "SDL_pixels.h"
 
 namespace jul
@@ -11,8 +11,8 @@ namespace jul
 
 	class Font;
 	class Texture;
-
-	class TextRenderer final : public Renderer
+    
+    class TextRenderer final : public RenderComponent
 	{
 	public:
 

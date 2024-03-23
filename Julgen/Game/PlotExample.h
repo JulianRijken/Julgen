@@ -2,7 +2,7 @@
 #include <vector>
 #include <chrono>
 
-#include "Renderer.h"
+#include "RenderComponent.h"
 
 namespace Examples
 {
@@ -34,7 +34,7 @@ namespace Examples
 	///	In the future I would want to not have the renderer component exposed to the user
 	///	and have it be a engine feature so that the user should use text renderer or sprite renderer
 	///	For now I use it to make a quick example for plot rendering
-	class PlotExample final : public jul::Renderer
+    class PlotExample final : public jul::RenderComponent
 	{
 	public:
 		PlotExample(jul::GameObject* parent, int renderLayer = 0);

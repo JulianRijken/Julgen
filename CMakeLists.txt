@@ -43,7 +43,7 @@ set(JULGEN_SOURCE_FILES
     Julgen/Engine/GlobalSettings.h #HEADER
     Julgen/Engine/Singleton.h #HEADER
     Julgen/Engine/Event.h #HEADER
-    Julgen/Engine/Math.h #HEADER
+    Julgen/Engine/MathExtensions.h #HEADER
 
     Julgen/Engine/Command.cpp
     Julgen/Engine/Font.cpp
@@ -62,6 +62,9 @@ set(JULGEN_SOURCE_FILES
     Julgen/Game/Bounce.cpp
     Julgen/Game/FpsCounter.cpp
     Julgen/Game/PlotExample.cpp
+    Julgen/Game/Player.cpp
+    Julgen/Game/Character.cpp
+    Julgen/Game/PlayerHUD.cpp
 
     Julgen/Main/Main.cpp
     Julgen/Main/Julgen.cpp
@@ -69,13 +72,14 @@ set(JULGEN_SOURCE_FILES
     Julgen/ObjectSystem/Component.cpp
     Julgen/ObjectSystem/GameObject.cpp
     Julgen/ObjectSystem/Object.cpp
-    Julgen/ObjectSystem/Renderer.cpp
+    Julgen/ObjectSystem/RenderComponent.cpp
 
     Julgen/Components/SpriteRenderer.cpp
     Julgen/Components/TextRenderer.cpp
     Julgen/Components/Transform.cpp
     Julgen/Components/Animator.cpp
     Julgen/Components/Animator.cpp
+
 )
 
 

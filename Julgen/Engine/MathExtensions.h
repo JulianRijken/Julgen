@@ -6,11 +6,17 @@
 namespace jul::math
 {
     template<typename Type>
+    requires std::floating_point<Type>
+    constexpr const Type RandomValue()
+    {
+        return rand() % RAND_MAX / float(RAND_MAX);
+    };
+
+    template<typename Type>
     constexpr const Type& Clamp01(const Type& value)
     {
         return std::clamp(value, static_cast<Type>(0), static_cast<Type>(1));
     };
-
 
     template<typename Type>
     requires std::integral<Type> || std::floating_point<Type>
@@ -21,7 +27,7 @@ namespace jul::math
 
         if (min > max)
         {
-            const int tempMax = max;
+            const Type tempMax = max;
             max = min;
             min = tempMax;
         }

@@ -11,11 +11,13 @@ namespace jul
     {
     public:
 
-        Animator(GameObject* parent, SpriteRenderer* spriteRendererPtr);
+        Animator(GameObject* parent, SpriteRenderer* spriteRendererPtr = nullptr);
 
         void PlayAnimation(const std::string& name, bool looping = false, float startFrameTime = 0, float speedMultiplier = 1);
 
-        [[nodiscard]] bool GetIsPlaying() const { return m_IsPlaying; }
+        // TODO: Also, here we use string comparison for playing, this should be addressed
+        [[nodiscard]] bool  IsPlaying() const { return m_IsPlaying; }
+        [[nodiscard]] bool  IsActiveAnimation(const std::string& name) const {return m_ActiveAnimationName == name;}
         [[nodiscard]] float GetFrameTime() const { return m_FrameTime; }
 
         void SetLooping(bool isLooping);
@@ -26,6 +28,7 @@ namespace jul
         void Update() override;
 
         bool m_IsPlaying = false;
+        std::string m_ActiveAnimationName;
         bool m_IsLooping = true;
         float m_FrameTime = 0;
         float m_SpeedMultiplier = 1;

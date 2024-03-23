@@ -19,8 +19,6 @@ namespace jul
         Component& operator=(const Component&) = delete;
         Component& operator=(Component&&) noexcept = delete;
 
-
-
 		[[nodiscard]] GameObject* GetGameObject() const { return m_ParentGameObjectPtr;  }
 		[[nodiscard]] Transform& Transform() const;
 
