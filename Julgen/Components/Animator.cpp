@@ -1,14 +1,17 @@
 #include "Animator.h"
 #include "GameObject.h"
-#include "Math.h"
+#include "MathExtensions.h"
 #include "Sprite.h"
 
 #include <GameTime.h>
 
-jul::Animator::Animator(GameObject* parent, SpriteRenderer* spriteRendererPtr) :
-    Component{parent,"Animator"},
+jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr) :
+    Component{parentPtr,"Animator"},
     m_SpriteRendererPtr{spriteRendererPtr}
-{}
+{
+    if(m_SpriteRendererPtr == nullptr)
+        m_SpriteRendererPtr = parentPtr->GetComponent<SpriteRenderer>();
+}
 
 void jul::Animator::PlayAnimation(const std::string& name, bool looping, float startFrameTime, float speedMultiplier)
 {
@@ -16,6 +19,7 @@ void jul::Animator::PlayAnimation(const std::string& name, bool looping, float s
 	m_IsLooping = looping;
 	m_SpeedMultiplier = speedMultiplier;
 	m_FrameTime = startFrameTime;
+    m_ActiveAnimationName = name;
 
     m_ActiveAnimation = m_SpriteRendererPtr->GetSprite()->GetAnimation(name);
 }

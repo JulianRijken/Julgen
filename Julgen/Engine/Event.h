@@ -12,10 +12,6 @@ namespace jul
     public:
         Event() = default;
 
-        ~Event()
-        {
-            m_ListenerFunctions.clear();
-        }
 
         Event(Event&&) = delete;
         Event(const Event&) = delete;
@@ -30,7 +26,7 @@ namespace jul
         template<typename ObjectType>
         void AddListener(ObjectType* object,  void(ObjectType::* memberFunction)(EventArgs...))
         {
-            m_ListenerFunctions.emplace_back([&](EventArgs... args) {
+            m_ListenerFunctions.emplace_back([=](EventArgs... args) {
                 (object->*memberFunction)(args...);
             });
         }
@@ -42,8 +38,12 @@ namespace jul
                 listenerFunction(args...);
         }
 
-    private:
+        // HINT: RemoveListener() not implemented, out of scope for project
+        //       Implementation is delayed as it requires a way to compare member functions,
+        //       this is not trivial and requirements a token system of some sorts
+        //       this is also left out as Tom recommend to not overcomplicate the project when not needed
 
+    private:
         std::vector<FunctionType> m_ListenerFunctions{};
     };
 }

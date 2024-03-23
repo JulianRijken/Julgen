@@ -40,6 +40,9 @@ void jul::Input::HandleKeyboardContinually() const
 
     for (auto&& bind : m_Binds)
     {
+        if(not bind.allowKeyboard)
+            continue;
+
         for (auto&& keyboardKey : bind.acton.keyboardButtons)
         {
             if (bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
@@ -60,6 +63,9 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
        const ButtonState buttonState = event.type == SDL_KEYDOWN ? ButtonState::Down : ButtonState::Up;
         for (auto&& bind : m_Binds)
         {
+            if(not bind.allowKeyboard)
+               continue;
+
             if(event.key.repeat)
                 continue;
 

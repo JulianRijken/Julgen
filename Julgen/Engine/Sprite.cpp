@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include <algorithm>
 #include "Texture2D.h"
 
 jul::SpriteAnimation::SpriteAnimation(const std::vector<glm::ivec2>& cellFrames, const float framesPerSecond)

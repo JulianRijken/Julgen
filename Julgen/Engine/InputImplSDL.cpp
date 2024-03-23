@@ -36,7 +36,7 @@ class Input::ControllerInputImpl
                     {
                         bind.command->Execute(glm::vec2{
                         Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX),STICK_DEADZONE,AXIS_LIMIT),
-                        Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY),STICK_DEADZONE,AXIS_LIMIT)});
+                        -Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY),STICK_DEADZONE,AXIS_LIMIT)});
                         continue;
                     }
 
@@ -45,7 +45,7 @@ class Input::ControllerInputImpl
                     {
                         bind.command->Execute(glm::vec2{
                         Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX),STICK_DEADZONE,AXIS_LIMIT),
-                        Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY),STICK_DEADZONE,AXIS_LIMIT)});
+                        -Input::NormalizeAxis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY),STICK_DEADZONE,AXIS_LIMIT)});
                         continue;
                     }
 

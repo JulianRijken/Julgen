@@ -39,6 +39,7 @@ void jul::RenderManager::Initialize(SDL_Window* window)
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 
+    SDL_RenderSetLogicalSize(m_RendererPtr,GlobalSettings::RENDER_WIDTH,GlobalSettings::RENDER_HEIGHT);
 }
 
 
@@ -66,8 +67,8 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     clipSpacePos /= clipSpacePos.w;
 
     // Convert to clip screen space
-    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GlobalSettings::WINDOW_WIDTH;
-    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GlobalSettings::WINDOW_HEIGHT;
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GlobalSettings::RENDER_WIDTH;
+    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GlobalSettings::RENDER_HEIGHT;
 
     return glm::vec3(x_screen, y_screen, clipSpacePos.z);
 }
@@ -79,18 +80,15 @@ void jul::RenderManager::Render() const
 	const SDL_Color& color = GetBackgroundColor();
     SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a);
     SDL_RenderClear(m_RendererPtr);
-	GUI::GetInstance().NewFrame();
+    EngineGUI::GetInstance().NewFrame();
 
-
-    SDL_SetRenderDrawColor(m_RendererPtr, 255, 255, 255, 255);
-
-    SDL_RenderDrawLine(m_RendererPtr,0,0,GlobalSettings::WINDOW_WIDTH,GlobalSettings::WINDOW_HEIGHT);
-    SDL_RenderDrawLine(m_RendererPtr,0,GlobalSettings::WINDOW_HEIGHT,GlobalSettings::WINDOW_WIDTH,0);
-
+    // SDL_SetRenderDrawColor(m_RendererPtr, 255, 255, 255, 255)
+    // SDL_RenderDrawLine(m_RendererPtr,0,0,GlobalSettings::WINDOW_WIDTH,GlobalSettings::WINDOW_HEIGHT);
+    // SDL_RenderDrawLine(m_RendererPtr,0,GlobalSettings::WINDOW_HEIGHT,GlobalSettings::WINDOW_WIDTH,0);
 
 	RenderObjects();
-
-	GUI::GetInstance().EndFrame();
+    
+    EngineGUI::GetInstance().EndFrame();
     SDL_RenderPresent(m_RendererPtr);
 }
 
@@ -141,26 +139,42 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
     SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void jul::RenderManager::RenderTexture(const Texture2D& texture,[[maybe_unused]] const glm::vec2 drawLocation, [[maybe_unused]]const glm::vec2 srcLocation, [[maybe_unused]] const glm::ivec2 cellSize) const
+void jul::RenderManager::RenderTexture(
+    const Texture2D& texture,
+    [[maybe_unused]] const glm::vec2 drawLocation,
+    [[maybe_unused]] const glm::vec2 srcLocation,
+    [[maybe_unused]] const glm::ivec2 cellSize,
+    int pixelsPerUnit,
+    glm::vec2 pivot,
+    bool flipX,
+    bool flipY) const
 {
 
     glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f), m_OrthoSize);
-
-    glm::vec2 cellSizeWorld = {cellSize.x / 8.0f, -(cellSize.y / 8.0f)};
-
-    glm::vec3 bottomRight = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
-
+    glm::vec2 cellSizeWorld = {cellSize.x / static_cast<float>(pixelsPerUnit), -(cellSize.y / static_cast<float>(pixelsPerUnit))};
+    glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
 
     SDL_Rect dstRect{};
-    dstRect.x = static_cast<int>(topLeft.x);
-    dstRect.y = static_cast<int>(topLeft.y);
-    dstRect.w = static_cast<int>(bottomRight.x);
-    dstRect.h = static_cast<int>(bottomRight.y);
+    dstRect.x = static_cast<int>(topLeft.x - rectSize.x * pivot.x);
+    dstRect.y = static_cast<int>(topLeft.y - rectSize.y * pivot.y);
+    dstRect.w = static_cast<int>(rectSize.x);
+    dstRect.h = static_cast<int>(rectSize.y);
 
     SDL_Rect srcRect{};
     srcRect.x = static_cast<int>(srcLocation.x);
     srcRect.y = static_cast<int>(srcLocation.y);
     srcRect.w = static_cast<int>(cellSize.x);
     srcRect.h = static_cast<int>(cellSize.y);
-    SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect);
+
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (flipX and flipY)
+        flip = static_cast<SDL_RendererFlip>(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+     else if (flipX)
+        flip = SDL_FLIP_HORIZONTAL;
+     else if (flipY)
+        flip = SDL_FLIP_VERTICAL;
+
+
+    SDL_Point center{}; // Not needed
+    SDL_RenderCopyEx(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect,0.0f,&center,flip);
 }

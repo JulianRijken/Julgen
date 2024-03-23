@@ -16,7 +16,6 @@ namespace jul
     inline static const float TRIGGER_DEADZONE{0.05f};
 
 
-
     struct InputAction
     {
         std::vector<SDL_Scancode> keyboardButtons;
@@ -39,32 +38,50 @@ namespace jul
         }
     };
 
-    // TODO: This is currently hardcoded but should ideally be an interface,
-    // Or the user of the engine should be able to set dynamically
-    inline static const std::map<std::string, InputAction> INPUT_ACTIONS
+
+    enum class InputBind
     {
-        {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
-        {"moveRight",{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
-        {"moveDown",{{SDL_SCANCODE_S},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
-        {"moveUp",{{SDL_SCANCODE_W},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
+        TestLivesButton,
+        TestScoreButton,
+        Jump,
+        MoveLeft,
+        MoveRight,
+        MoveStick,
+        Attack,
+    };
+
+    inline static const std::map<InputBind, InputAction> INPUT_ACTIONS
+    {
+        // {"moveLeft",{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
+        // {"moveRight",{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
+        // {"moveDown",{{SDL_SCANCODE_S},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
+        // {"moveUp",{{SDL_SCANCODE_W},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
 
 
-        {"moveLeftController", {{},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
-        {"moveRightController",{{},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
-        {"moveDownController", {{},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
-        {"moveUpController",   {{},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
+        // {"moveLeftController", {{},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
+        // {"moveRightController",{{},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
+        // {"moveDownController", {{},{SDL_CONTROLLER_BUTTON_DPAD_DOWN},{}}},
+        // {"moveUpController",   {{},{SDL_CONTROLLER_BUTTON_DPAD_UP},{}}},
 
-        {"moveKeyboardLeft", {{SDL_SCANCODE_A,SDL_SCANCODE_LEFT},{},{}}},
-        {"moveKeyboardRight",{{SDL_SCANCODE_D,SDL_SCANCODE_RIGHT},{},{}}},
-        {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{},{}}},
-        {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{},{}}},
+        // {"moveKeyboardLeft", {{SDL_SCANCODE_A,SDL_SCANCODE_LEFT},{},{}}},
+        // {"moveKeyboardRight",{{SDL_SCANCODE_D,SDL_SCANCODE_RIGHT},{},{}}},
+        // {"moveKeyboardDown", {{SDL_SCANCODE_S,SDL_SCANCODE_DOWN},{},{}}},
+        // {"moveKeyboardUp",   {{SDL_SCANCODE_W,SDL_SCANCODE_UP},{},{}}},
 
-        {"jump",             {{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_A},{}}},
-        {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A},{}}},
-        {"jumpKeyboard",     {{SDL_SCANCODE_SPACE},{},{}}},
+        // {"jump",             {{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_A},{}}},
+        // {"jumpController",   {{},{SDL_CONTROLLER_BUTTON_A},{}}},
+        // {"jumpKeyboard",     {{SDL_SCANCODE_SPACE},{},{}}},
 
-        {"stickExample",   {{},{},{SDL_CONTROLLER_AXIS_RIGHTY,SDL_CONTROLLER_AXIS_RIGHTX}}},
-        {"triggerExample",   {{},{},{SDL_CONTROLLER_AXIS_TRIGGERRIGHT}}}
+        // {"stickExample",   {{},{},{SDL_CONTROLLER_AXIS_RIGHTY,SDL_CONTROLLER_AXIS_RIGHTX}}},
+        // {"triggerExample",   {{},{},{SDL_CONTROLLER_AXIS_TRIGGERRIGHT}}},
+
+        {InputBind::TestScoreButton,{{SDL_SCANCODE_Z},{SDL_CONTROLLER_BUTTON_A},{}}},
+        {InputBind::TestLivesButton,{{SDL_SCANCODE_X},{SDL_CONTROLLER_BUTTON_B},{}}},
+        {InputBind::Jump,{{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_B},{}}},
+        {InputBind::MoveLeft,{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
+        {InputBind::MoveRight,{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
+        {InputBind::MoveStick,{{},{},{SDL_CONTROLLER_AXIS_LEFTX}}},
+        {InputBind::Attack,{{SDL_SCANCODE_E},{SDL_CONTROLLER_BUTTON_A},{}}},
     };
 
     enum class ButtonState
@@ -78,6 +95,7 @@ namespace jul
     {
         ButtonState buttonState;
         int controllerIndex;
+        bool allowKeyboard;
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
@@ -109,18 +127,12 @@ namespace jul
 
         template <typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
-        void RegisterCommand(std::string actionName, ButtonState buttonState,int controllerIndex, Args&&... args)
+        void RegisterCommand(InputBind actionName, ButtonState buttonState,int controllerIndex,bool allowKeyboard, Args&&... args)
         {
-            m_Binds.emplace_back(buttonState,controllerIndex,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
+            assert(INPUT_ACTIONS.contains(actionName) && "Action Does Not Exist");
+            m_Binds.emplace_back(buttonState,controllerIndex,allowKeyboard,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
         }
 
-
-        template <typename CommandType, typename... Args>
-            requires std::derived_from<CommandType, BaseCommand>
-        void RegisterCommand(std::string actionName, ButtonState buttonState, Args&&... args)
-        {
-            m_Binds.emplace_back(buttonState,0,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
-        }
 
         class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;

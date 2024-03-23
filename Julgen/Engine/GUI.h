@@ -10,7 +10,7 @@ namespace jul
     /**
      * Simple RAII wrapper for the ImGUI renderer
      */
-    class GUI final : public Singleton<GUI>
+class EngineGUI final : public Singleton<EngineGUI>
     {
     public:
         void Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
