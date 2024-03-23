@@ -1,12 +1,12 @@
 #pragma once
-#include "Renderer.h"
+#include "RenderComponent.h"
 #include <glm/vec2.hpp>
 
 namespace jul
 {
 	class Sprite;
 
-	class SpriteRenderer final : public Renderer
+class SpriteRenderer final : public RenderComponent
 	{
 	public:
         SpriteRenderer(GameObject* parent, Sprite* sprite = nullptr, int renderLayer = 0,glm::ivec2 drawCell = {});

@@ -5,9 +5,15 @@
 #include <algorithm>
 #include <vector>
 
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "GUI.h"
 #include "GlobalSettings.h"
-#include "Renderer.h"
+#include "RenderComponent.h"
 #include "Texture2D.h"
 #include "Transform.h"
 
@@ -33,9 +39,6 @@ void jul::RenderManager::Initialize(SDL_Window* window)
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 
-    SDL_RenderSetScale(m_RendererPtr, 5.0f, 5.0f); // Reset scaling
-
-    SetRenderOrthographic(m_OrthoSize);
 }
 
 
@@ -48,18 +51,27 @@ void jul::RenderManager::Destroy()
     m_RendererPtr = nullptr;
 }
 
-
-void jul::RenderManager::SetRenderOrthographic([[maybe_unused]] float orthoSize)
+glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
 {
-    orthoSize = 40;
 
-    SDL_Rect viewport;
-    viewport.w = static_cast<int>(GlobalSettings::WINDOW_WIDTH);
-    viewport.h = static_cast<int>(GlobalSettings::WINDOW_HEIGHT);
-    SDL_RenderSetViewport(m_RendererPtr, &viewport);
+    // Assuming you have a camera at the origin looking down the negative z-axis
+    glm::mat4 projectionMatrix = glm::ortho(-orthoSize * jul::GlobalSettings::ASPECT_RATIO, orthoSize * jul::GlobalSettings::ASPECT_RATIO, -orthoSize, orthoSize, -1.0f, 1.0f);
 
-    SDL_RenderSetLogicalSize(m_RendererPtr, GlobalSettings::RENDER_WIDTH, GlobalSettings::RENDER_HEIGHT);
+
+    glm::mat4 viewMatrix = glm::mat4(1.0f);
+
+    glm::vec4 clipSpacePos = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
+
+    // Perspective division
+    clipSpacePos /= clipSpacePos.w;
+
+    // Convert to clip screen space
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GlobalSettings::WINDOW_WIDTH;
+    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GlobalSettings::WINDOW_HEIGHT;
+
+    return glm::vec3(x_screen, y_screen, clipSpacePos.z);
 }
+
 
 
 void jul::RenderManager::Render() const
@@ -71,14 +83,9 @@ void jul::RenderManager::Render() const
 
 
     SDL_SetRenderDrawColor(m_RendererPtr, 255, 255, 255, 255);
-    for (int i = -5; i <= 5; ++i)
-    {
-        for (int j = -5; j <= 5; ++j)
-        {
-            SDL_Rect rect{i * 50,j * 50,50,50};
-            SDL_RenderDrawRect(m_RendererPtr, &rect);
-        }
-    }
+
+    SDL_RenderDrawLine(m_RendererPtr,0,0,GlobalSettings::WINDOW_WIDTH,GlobalSettings::WINDOW_HEIGHT);
+    SDL_RenderDrawLine(m_RendererPtr,0,GlobalSettings::WINDOW_HEIGHT,GlobalSettings::WINDOW_WIDTH,0);
 
 
 	RenderObjects();
@@ -92,12 +99,12 @@ void jul::RenderManager::RenderObjects() const
 {
 	auto renderers = std::vector(s_GlobalRendererPtrs.begin(), s_GlobalRendererPtrs.end());
 
-	const auto compareDistance = [](const Renderer* a, const Renderer* b)
+    const auto compareDistance = [](const RenderComponent* a, const RenderComponent* b)
 		{
 			return a->Transform().WorldPosition().z > b->Transform().WorldPosition().z;
 		};
 
-	const auto compareLayer = [](const Renderer* a, const Renderer* b)
+    const auto compareLayer = [](const RenderComponent* a, const RenderComponent* b)
 		{
 			return a->GetRenderLayer() < b->GetRenderLayer();
 		};
@@ -105,10 +112,10 @@ void jul::RenderManager::RenderObjects() const
 	std::ranges::sort(renderers, compareDistance);
 	std::ranges::stable_sort(renderers, compareLayer);
 
-	for (const Renderer* renderer : renderers)
+    for (const RenderComponent* renderer : renderers)
 		renderer->Render();
 
-	for (Renderer* renderer : renderers)
+    for (RenderComponent* renderer : renderers)
 		renderer->UpdateGUI();
 }
 
@@ -134,13 +141,21 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
     SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2 drawLocation, [[maybe_unused]] const glm::vec2 srcLocation,  const glm::ivec2 cellSize) const
+void jul::RenderManager::RenderTexture(const Texture2D& texture,[[maybe_unused]] const glm::vec2 drawLocation, [[maybe_unused]]const glm::vec2 srcLocation, [[maybe_unused]] const glm::ivec2 cellSize) const
 {
+
+    glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f), m_OrthoSize);
+
+    glm::vec2 cellSizeWorld = {cellSize.x / 8.0f, -(cellSize.y / 8.0f)};
+
+    glm::vec3 bottomRight = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
+
+
     SDL_Rect dstRect{};
-    dstRect.x = static_cast<int>(drawLocation.x);
-    dstRect.y = static_cast<int>(drawLocation.y);
-    dstRect.w = static_cast<int>(cellSize.x);
-    dstRect.h = static_cast<int>(cellSize.y);
+    dstRect.x = static_cast<int>(topLeft.x);
+    dstRect.y = static_cast<int>(topLeft.y);
+    dstRect.w = static_cast<int>(bottomRight.x);
+    dstRect.h = static_cast<int>(bottomRight.y);
 
     SDL_Rect srcRect{};
     srcRect.x = static_cast<int>(srcLocation.x);

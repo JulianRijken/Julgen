@@ -2,25 +2,26 @@
 #include <SDL.h>
 #include <unordered_set>
 #include <glm/vec2.hpp>
+#include <glm/mat4x4.hpp>
 
 #include "Singleton.h"
 
+
 namespace jul
 {
-	class Renderer;
+class RenderComponent;
 	class Texture2D;
 
 
 	class RenderManager final : public Singleton<RenderManager>
 	{
-		friend class Renderer;
+        friend class RenderComponent;
 
 	public:
 
 		void Initialize(SDL_Window* window);
 		void Destroy();
 
-        void SetRenderOrthographic(float orthoSize);
 
 		void Render() const;
 
@@ -42,9 +43,10 @@ namespace jul
 		SDL_Color m_ClearColor{};
 
         // TODO: Should be in the camera component
-        float m_OrthoSize = 15;
+        float m_OrthoSize = 10;
 
-		inline static std::unordered_set<Renderer*> s_GlobalRendererPtrs{};
-	};
+        inline static std::unordered_set<RenderComponent*> s_GlobalRendererPtrs{};
+        glm::mat4 vec3(float, float, float) const;
+    };
 }
 

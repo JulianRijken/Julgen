@@ -11,7 +11,7 @@
 
 
 jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer) :
-	Renderer(parent, "TextRenderer", renderLayer),
+      RenderComponent(parent, "TextRenderer", renderLayer),
 	m_TextColor({ 255,255,255,255 }),
 	m_Text(text),
 	m_FontSPtr(font),
@@ -21,7 +21,7 @@ jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Fon
 }
 
 jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, SDL_Color m_TextColor, int renderLayer) :
-	Renderer(parent, "TextRenderer", renderLayer),
+      RenderComponent(parent, "TextRenderer", renderLayer),
 	m_TextColor(m_TextColor),
 	m_Text(text),
 	m_FontSPtr(font),

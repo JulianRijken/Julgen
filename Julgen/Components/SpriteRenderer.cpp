@@ -5,7 +5,7 @@
 
 
 jul::SpriteRenderer::SpriteRenderer(GameObject* parent, Sprite* sprite, int renderLayer,glm::ivec2 drawCell) :
-    Renderer(parent,"SpriteRenderer",renderLayer),
+      RenderComponent(parent,"SpriteRenderer",renderLayer),
     m_DrawCell(drawCell)
 {
     SetSprite(sprite);

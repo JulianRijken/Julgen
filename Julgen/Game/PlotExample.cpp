@@ -5,7 +5,7 @@
 #include <implot.h>
 
 Examples::PlotExample::PlotExample(jul::GameObject* parent, int renderLayer) :
-	Renderer(parent, "FpsCounter", renderLayer)
+      RenderComponent(parent, "FpsCounter", renderLayer)
 {
 	m_LargeBufferGo = std::vector<GameObject3D>(BUFFER_SIZE);
 	m_LargeBufferGoAlt = std::vector<GameObject3DAlt>(BUFFER_SIZE);

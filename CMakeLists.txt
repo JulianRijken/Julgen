@@ -69,7 +69,7 @@ set(JULGEN_SOURCE_FILES
     Julgen/ObjectSystem/Component.cpp
     Julgen/ObjectSystem/GameObject.cpp
     Julgen/ObjectSystem/Object.cpp
-    Julgen/ObjectSystem/Renderer.cpp
+    Julgen/ObjectSystem/RenderComponent.cpp
 
     Julgen/Components/SpriteRenderer.cpp
     Julgen/Components/TextRenderer.cpp

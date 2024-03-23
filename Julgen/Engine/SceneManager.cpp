@@ -71,14 +71,17 @@ void jul::SceneManager::LoadScene(const std::string& name)
         bubbleAnimator->PlayAnimation("TestAnimation",true);
 
 
-        {
-        auto* levelTile = AddGameObject("LevelTile", { 0,0,0 });
-        levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
-        }
+        // {
+        // auto* levelTile = AddGameObject("LevelTile", { 0,0,0 });
+        // levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
+        // }
 
-        for (int i = 1; i < 31; ++i)
+        for (int i = 0; i < 20; ++i)
         {
-            auto* levelTile = AddGameObject("LevelTile", { i * 8,24 * 8,0 });
+            // if(i%2 == 0)
+            //     continue;
+
+            auto* levelTile = AddGameObject("LevelTile", { i,i,0 });
             levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), 0);
         }
 
