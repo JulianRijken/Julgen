@@ -3,6 +3,7 @@
 
 #include <ranges>
 
+#include "Achievement.h"
 #include "Animator.h"
 #include "ResourceManager.h"
 #include "Scene.h"
@@ -43,7 +44,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
         ResourceManager::LoadFont("Lingua", "Lingua.otf", 36);
         ResourceManager::LoadFont("LinguaSmall", "Lingua.otf", 16);
         ResourceManager::LoadFont("NES", "NES_Font.ttf", 36);
-
+        ResourceManager::LoadFont("NESSmall", "NES_Font.ttf", 16);
 
         ResourceManager::LoadSprite("background", "background.tga", 32);
         ResourceManager::LoadSprite("Dot", "Dot.png", 32);
@@ -58,7 +59,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
             {
                 {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
                 {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
-                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}}
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}},
+                {"Attack",SpriteAnimation{{{0,2}},1}}
             });
 
         ResourceManager::LoadSprite(
@@ -66,7 +68,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
             {
                 {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
                 {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
-                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}}
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}},
+                {"Attack",SpriteAnimation{{{0,2}},1}}
             });
 
 
@@ -87,20 +90,30 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestLivesButton,ButtonState::Down,0,false,player1,&bb::Player::OnTestLivesInput);
-        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestScoreButton,ButtonState::Down,0,false,player1,&bb::Player::OnTestScoreInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveLeft ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveLeftInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveRight ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveRightInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveStick ,ButtonState::Held,0,false,player1,&bb::Player::OnMoveStickInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::Attack    ,ButtonState::Down,0,false,player1,&bb::Player::OnAttackInput);
 
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestLivesButton,ButtonState::Down,1,true,player2,&bb::Player::OnTestLivesInput);
-        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::TestScoreButton,ButtonState::Down,1,true,player2,&bb::Player::OnTestScoreInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveLeft  ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveLeftInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveRight ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveRightInput);
         Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::MoveStick ,ButtonState::Held,1,true,player2,&bb::Player::OnMoveStickInput);
+        Input::GetInstance().RegisterCommand<FunctionCommand>(InputBind::Attack    ,ButtonState::Down,1,true,player2,&bb::Player::OnAttackInput);
+
+
+        auto* scoreInfoText = AddGameObject("InfoText", { 30,70,0 });
+        scoreInfoText->AddComponent<TextRenderer>("add Score: Z or gamepad A", ResourceManager::GetFont("NESSmall"), 100,true);
+
+        auto* livesInfoText = AddGameObject("InfoText", { 30,90,0 });
+        livesInfoText->AddComponent<TextRenderer>("add Lives: X or gamepad B", ResourceManager::GetFont("NESSmall"), 100,true);
+
+        auto* moveInfoText = AddGameObject("InfoText", { 30,110,0 });
+        moveInfoText->AddComponent<TextRenderer>("MOVE PLAYER: A-D OR D-PAD OR L-STICK", ResourceManager::GetFont("NESSmall"), 100,true);
 
 
 
-        GameObject* player1Hud = AddGameObject("HUD", { 30,50,0 });
+        GameObject* player1Hud = AddGameObject("PlayerHUD", { 30,150,0 });
         {
             auto* livesGameObject = AddGameObject("LivesText", { 0,0,0 });
             auto* livesText = livesGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
@@ -110,10 +123,10 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
             scoreGameObject->GetTransform().SetParent(&player1Hud->GetTransform(),false);
             livesGameObject->GetTransform().SetParent(&player1Hud->GetTransform(),false);
-            player1Hud->AddComponent<bb::PlayerHUD>(player1,scoreText,livesText);
+            player1Hud->AddComponent<bb::PlayerHUD>(player1,scoreText,livesText, SDL_Color(92, 230, 52,255));
         }
 
-        GameObject* player2Hud = AddGameObject("HUD", { 30,200,0 });
+        GameObject* player2Hud = AddGameObject("PlayerHUD", { 30,300,0 });
         {
             auto* livesGameObject = AddGameObject("LivesText", { 0,0,0 });
             auto* livesText = livesGameObject->AddComponent<TextRenderer>("error", ResourceManager::GetFont("NES"), 100);
@@ -123,11 +136,8 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
             scoreGameObject->GetTransform().SetParent(&player2Hud->GetTransform(),false);
             livesGameObject->GetTransform().SetParent(&player2Hud->GetTransform(),false);
-            player2Hud->AddComponent<bb::PlayerHUD>(player2,scoreText,livesText);
+            player2Hud->AddComponent<bb::PlayerHUD>(player2,scoreText,livesText, SDL_Color(52, 168, 230,255));
         }
-
-
-
 
 
         for (int i = -5; i < 5; ++i)

@@ -22,49 +22,28 @@
 #include <windows.h>
 #endif
 
+#ifdef USE_STEAMWORKS
+#include <steam_api.h>
+
+#ifdef __EMSCRIPTEN__
+#error  Steamworks cant be used in web builds... "Valve please fix" ~3kliksPhilip
+#endif
+
+#endif
+
 
 SDL_Window* g_window{};
 
-void LogSDLVersion(const std::string& message, const SDL_version& v)
-{
-#if WIN32
-	std::stringstream ss;
-	ss << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
-	OutputDebugString(ss.str().c_str());
-#else
-	std::cout << message << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << "\n";
-#endif
-}
-
-// Why bother with this? Because sometimes students have a different SDL version installed on their pc.
-// That is not a problem unless for some reason the dll's from this project are not copied next to the exe.
-// These entries in the debug output help to identify that issue.
-void PrintSDLVersion()
-{
-	SDL_version version{};
-	SDL_VERSION(&version);
-	LogSDLVersion("We compiled against SDL version ", version);
-
-	SDL_GetVersion(&version);
-	LogSDLVersion("We linked against SDL version ", version);
-
-	SDL_IMAGE_VERSION(&version);
-	LogSDLVersion("We compiled against SDL_image version ", version);
-
-	version = *IMG_Linked_Version();
-	LogSDLVersion("We linked against SDL_image version ", version);
-
-	SDL_TTF_VERSION(&version)
-		LogSDLVersion("We compiled against SDL_ttf version ", version);
-
-	version = *TTF_Linked_Version();
-	LogSDLVersion("We linked against SDL_ttf version ", version);
-}
-
-
 jul::Julgen::Julgen()
 {
-	PrintSDLVersion();
+    #ifdef USE_STEAMWORKS
+        if(not SteamAPI_Init())
+            std::runtime_error("Fatal Error - Steam must be running to play this game (SteamAPI_Init failed).");
+        else
+            std::cout << "Steam successfully initialized!" << std::endl;
+    #endif
+
+
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
@@ -96,6 +75,10 @@ jul::Julgen::~Julgen()
 	g_window = nullptr;
 
 	SDL_Quit();
+
+#ifdef USE_STEAMWORKS
+    SteamAPI_Shutdown();
+#endif
 }
 
 
@@ -119,12 +102,15 @@ void jul::Julgen::Run()
 
 	while (not m_IsApplicationQuitting)
 		RunOneFrame();
-	
 #endif
 }
 
 void jul::Julgen::RunOneFrame()
 {
+#ifdef USE_STEAMWORKS
+    SteamAPI_RunCallbacks(); // Valve Please Run :)
+#endif
+
 	// Update time
 	GameTime::Update();
 	m_Lag += GameTime::GetDeltaTime();

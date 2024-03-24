@@ -58,8 +58,7 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     // Assuming you have a camera at the origin looking down the negative z-axis
     glm::mat4 projectionMatrix = glm::ortho(-orthoSize * jul::GlobalSettings::ASPECT_RATIO, orthoSize * jul::GlobalSettings::ASPECT_RATIO, -orthoSize, orthoSize, -1.0f, 1.0f);
 
-
-    glm::mat4 viewMatrix = glm::mat4(1.0f);
+    glm::mat4 viewMatrix = glm::mat4(1.0f); // TODO: Implement camera
 
     glm::vec4 clipSpacePos = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
 

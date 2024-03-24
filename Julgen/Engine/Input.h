@@ -42,7 +42,6 @@ namespace jul
     enum class InputBind
     {
         TestLivesButton,
-        TestScoreButton,
         Jump,
         MoveLeft,
         MoveRight,
@@ -75,13 +74,12 @@ namespace jul
         // {"stickExample",   {{},{},{SDL_CONTROLLER_AXIS_RIGHTY,SDL_CONTROLLER_AXIS_RIGHTX}}},
         // {"triggerExample",   {{},{},{SDL_CONTROLLER_AXIS_TRIGGERRIGHT}}},
 
-        {InputBind::TestScoreButton,{{SDL_SCANCODE_Z},{SDL_CONTROLLER_BUTTON_A},{}}},
         {InputBind::TestLivesButton,{{SDL_SCANCODE_X},{SDL_CONTROLLER_BUTTON_B},{}}},
         {InputBind::Jump,{{SDL_SCANCODE_SPACE},{SDL_CONTROLLER_BUTTON_B},{}}},
         {InputBind::MoveLeft,{{SDL_SCANCODE_A},{SDL_CONTROLLER_BUTTON_DPAD_LEFT},{}}},
         {InputBind::MoveRight,{{SDL_SCANCODE_D},{SDL_CONTROLLER_BUTTON_DPAD_RIGHT},{}}},
         {InputBind::MoveStick,{{},{},{SDL_CONTROLLER_AXIS_LEFTX}}},
-        {InputBind::Attack,{{SDL_SCANCODE_E},{SDL_CONTROLLER_BUTTON_A},{}}},
+        {InputBind::Attack,{{SDL_SCANCODE_E,SDL_SCANCODE_Z},{SDL_CONTROLLER_BUTTON_A},{}}},
     };
 
     enum class ButtonState

@@ -19,20 +19,19 @@ namespace bb
 
 
         void Kill();
+        void Attack();
         void AddScore();
 
-        // void Jump();
+        void Jump();
         void Move(float input);
 
 
-        void OnTestScoreInput(InputContext context);
         void OnTestLivesInput(InputContext context);
-
         void OnMoveLeftInput(InputContext context);
         void OnMoveRightInput(InputContext context);
         void OnMoveStickInput(InputContext context);
-        // void OnJumpInput(InputContext context);
-        // void OnAttackInput(InputContext context);
+        void OnJumpInput(InputContext context);
+        void OnAttackInput(InputContext context);
 
     private:
 

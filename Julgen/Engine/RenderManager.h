@@ -9,7 +9,7 @@
 
 namespace jul
 {
-class RenderComponent;
+    class RenderComponent;
 	class Texture2D;
 
 

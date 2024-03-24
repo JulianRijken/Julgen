@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Achievement.h"
 #include "GameObject.h"
 
 #include <GameTime.h>
@@ -33,13 +34,30 @@ void bb::Player::Kill()
     m_OnDeathEvent.Invoke(m_Lives);
 
     if(m_Lives == 0)
+    {
+        Achievement::GetInstance().Unlock(AchievementType::Death);
         m_IsDead = true;
+    }
 }
 
-void bb::Player::AddScore()
+void bb::Player::Attack()
 {
+    if(not m_IsDead)
+        m_AnimatorPtr->PlayAnimation("Attack",false);
+
+    // TODO: Attack adds score for the example
     m_Score += 100;
     m_OnScoreChangeEvent.Invoke(m_Score);
+
+    // TODO: Change to use event queue instead of calling it directly
+    if(m_Score >= 500)
+        Achievement::GetInstance().Unlock(AchievementType::Winner);
+}
+
+
+void bb::Player::Jump()
+{
+    std::cout << "Julian was to lazy to implement jump :(" << std::endl;
 }
 
 void bb::Player::Move(float input)
@@ -54,11 +72,6 @@ void bb::Player::Move(float input)
     else
     if(input < 0)
         m_SpriteRenderer->m_FlipX = true;
-}
-
-void bb::Player::OnTestScoreInput(InputContext)
-{
-    AddScore();
 }
 
 void bb::Player::OnTestLivesInput(InputContext)
@@ -80,6 +93,11 @@ void bb::Player::OnMoveRightInput(InputContext)
 void bb::Player::OnMoveStickInput(InputContext context)
 {
     Move(std::get<float>(context.value()));
+}
+
+void bb::Player::OnAttackInput(InputContext)
+{
+    Attack();
 }
 
 void bb::Player::Update()
