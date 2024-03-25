@@ -5,7 +5,7 @@ class Object
 {
 public:
 
-	virtual ~Object() = default;
+    virtual ~Object() = default;
 
     Object(const Object&) = delete;
     Object(Object&&) noexcept = delete;

@@ -8,6 +8,5 @@ void Object::Destroy()
 
 Object::Object(const std::string& name) :
 	m_BeingDestroyed(false),
-	m_Name(name)
-{
-}
+    m_Name(name)
+{}

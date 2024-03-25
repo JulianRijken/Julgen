@@ -14,7 +14,7 @@ else()
 endif()
 
 option(USE_XINPUT "Switches between SDL and XInput" FALSE)
-option(USE_STEAMWORKS "Use steamworks SDK (must provide it in External/steamworks)" TRUE)
+option(USE_STEAMWORKS "Use steamworks SDK (must provide it in External/steamworks)" FALSE)
 
 set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
 
@@ -46,42 +46,41 @@ set(JULGEN_SOURCE_FILES
     Julgen/Engine/Event.h #HEADER
     Julgen/Engine/MathExtensions.h #HEADER
 
-    Julgen/Engine/Command.cpp
-    Julgen/Engine/Font.cpp
-    Julgen/Engine/GameTime.cpp
-    Julgen/Engine/GUI.cpp
-    Julgen/Engine/Input.cpp
-    Julgen/Engine/RenderManager.cpp
-    Julgen/Engine/ResourceManager.cpp
-    Julgen/Engine/Scene.cpp
-    Julgen/Engine/SceneManager.cpp
-    Julgen/Engine/Sprite.cpp
-    Julgen/Engine/Texture2D.cpp
-    Julgen/Engine/Achievement.cpp
-    Julgen/Engine/MessageQueue.cpp
+    Julgen/Engine/Command.cpp                   Julgen/Engine/Command.h
+    Julgen/Engine/Font.cpp                      Julgen/Engine/Font.h
+    Julgen/Engine/GameTime.cpp                  Julgen/Engine/GameTime.h
+    Julgen/Engine/GUI.cpp                       Julgen/Engine/GUI.h
+    Julgen/Engine/Input.cpp                     Julgen/Engine/Input.h
+    Julgen/Engine/RenderManager.cpp             Julgen/Engine/RenderManager.h
+    Julgen/Engine/ResourceManager.cpp           Julgen/Engine/ResourceManager.h
+    Julgen/Engine/Scene.cpp                     Julgen/Engine/Scene.h
+    Julgen/Engine/SceneManager.cpp              Julgen/Engine/SceneManager.h
+    Julgen/Engine/Sprite.cpp                    Julgen/Engine/Sprite.h
+    Julgen/Engine/Texture2D.cpp                 Julgen/Engine/Texture2D.h
+    Julgen/Engine/Achievement.cpp               Julgen/Engine/Achievement.h
+    Julgen/Engine/MessageQueue.cpp              Julgen/Engine/MessageQueue.h
 
-    Julgen/Game/AutoMove.cpp
-    Julgen/Game/AutoRotateAround.cpp
-    Julgen/Game/Bounce.cpp
-    Julgen/Game/FpsCounter.cpp
-    Julgen/Game/PlotExample.cpp
-    Julgen/Game/Player.cpp
-    Julgen/Game/Character.cpp
-    Julgen/Game/PlayerHUD.cpp
+    Julgen/Game/AutoMove.cpp                    Julgen/Game/AutoMove.h
+    Julgen/Game/AutoRotateAround.cpp            Julgen/Game/AutoRotateAround.h
+    Julgen/Game/Bounce.cpp                      Julgen/Game/Bounce.h
+    Julgen/Game/FpsCounter.cpp                  Julgen/Game/FpsCounter.h
+    Julgen/Game/PlotExample.cpp                 Julgen/Game/PlotExample.h
+    Julgen/Game/Player.cpp                      Julgen/Game/Player.h
+    Julgen/Game/Character.cpp                   Julgen/Game/Character.h
+    Julgen/Game/PlayerHUD.cpp                   Julgen/Game/PlayerHUD.h
 
     Julgen/Main/Main.cpp
-    Julgen/Main/Julgen.cpp
+    Julgen/Main/Julgen.cpp                      Julgen/Main/Julgen.h
 
-    Julgen/ObjectSystem/Component.cpp
-    Julgen/ObjectSystem/GameObject.cpp
-    Julgen/ObjectSystem/Object.cpp
-    Julgen/ObjectSystem/RenderComponent.cpp
+    Julgen/ObjectSystem/Component.cpp           Julgen/ObjectSystem/Component.h
+    Julgen/ObjectSystem/GameObject.cpp          Julgen/ObjectSystem/GameObject.h
+    Julgen/ObjectSystem/Object.cpp              Julgen/ObjectSystem/Object.h
+    Julgen/ObjectSystem/RenderComponent.cpp     Julgen/ObjectSystem/RenderComponent.h
 
-    Julgen/Components/SpriteRenderer.cpp
-    Julgen/Components/TextRenderer.cpp
-    Julgen/Components/Transform.cpp
-    Julgen/Components/Animator.cpp
-    Julgen/Components/Animator.cpp
+    Julgen/Components/SpriteRenderer.cpp        Julgen/Components/SpriteRenderer.h
+    Julgen/Components/TextRenderer.cpp          Julgen/Components/TextRenderer.h
+    Julgen/Components/Transform.cpp             Julgen/Components/Transform.h
+    Julgen/Components/Animator.cpp              Julgen/Components/Animator.h
 
 )
 

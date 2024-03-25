@@ -18,6 +18,7 @@ bb::PlayerHUD::PlayerHUD(GameObject* parentPtr,Player* player, TextRenderer* sco
     player->GetOnScoreChange().AddListener(this,&PlayerHUD::UpdateScore);
     player->GetOnDeath().AddListener(this,&PlayerHUD::UpdateLives);
 
+
     UpdateScore(0);
     UpdateLives(3); // TODO lives hardcoded should ideally be changed
 }

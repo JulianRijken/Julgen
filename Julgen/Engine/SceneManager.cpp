@@ -3,7 +3,6 @@
 
 #include <ranges>
 
-#include "Achievement.h"
 #include "Animator.h"
 #include "AutoMove.h"
 #include "ResourceManager.h"
@@ -24,9 +23,9 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
 
 	// Set new loaded scene as active
-	auto newSceneUPtr = std::make_unique<Scene>(name);
-	m_ActiveScenePtr = newSceneUPtr.get();
-	m_LoadedScenes[name] = std::move(newSceneUPtr);
+    auto newSceneUPtr = std::make_unique<Scene>(name);
+    m_ActiveScenePtr = newSceneUPtr.get();
+    m_LoadedScenes[name] = std::move(newSceneUPtr);
 
 	// TODO: Scenes are defined like this now and should be replaced by file loading
 	if(name == "Start")
@@ -367,8 +366,8 @@ jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const
 
 void jul::SceneManager::Update()
 {
-	for (const auto& scene : m_LoadedScenes | std::views::values)
-		scene->Update();
+    for (const auto& scene : m_LoadedScenes | std::views::values)
+        scene->Update();
 }
 
 void jul::SceneManager::LateUpdate()

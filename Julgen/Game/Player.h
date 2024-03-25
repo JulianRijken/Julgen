@@ -1,8 +1,8 @@
 #pragma once
+#include "Command.h"
 #include "Component.h"
 
 #include "Animator.h"
-#include "Input.h"
 #include "Event.h"
 
 
