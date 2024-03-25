@@ -58,6 +58,7 @@ set(JULGEN_SOURCE_FILES
     Julgen/Engine/Sprite.cpp
     Julgen/Engine/Texture2D.cpp
     Julgen/Engine/Achievement.cpp
+    Julgen/Engine/MessageQueue.cpp
 
     Julgen/Game/AutoMove.cpp
     Julgen/Game/AutoRotateAround.cpp

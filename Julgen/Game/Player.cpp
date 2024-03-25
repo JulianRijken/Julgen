@@ -1,13 +1,11 @@
 #include "Player.h"
-#include "Achievement.h"
 #include "GameObject.h"
+#include "MessageQueue.h"
 
 #include <GameTime.h>
 
-bb::Player::Player(GameObject* parentPtr,
-                   Animator* animator,
-                   SpriteRenderer* spriteRenderer)
-    : Component(parentPtr, "PlayerController"), m_AnimatorPtr(animator),m_SpriteRenderer(spriteRenderer)
+bb::Player::Player(GameObject* parentPtr, Animator* animator, SpriteRenderer* spriteRenderer) :
+	Component(parentPtr, "PlayerController"), m_AnimatorPtr(animator),m_SpriteRenderer(spriteRenderer)
 {
     if(m_AnimatorPtr == nullptr)
         m_AnimatorPtr = parentPtr->GetComponent<Animator>();
@@ -34,10 +32,7 @@ void bb::Player::Kill()
     m_OnDeathEvent.Invoke(m_Lives);
 
     if(m_Lives == 0)
-    {
-        Achievement::GetInstance().Unlock(AchievementType::Death);
         m_IsDead = true;
-    }
 }
 
 void bb::Player::Attack()
@@ -45,19 +40,25 @@ void bb::Player::Attack()
     if(not m_IsDead)
         m_AnimatorPtr->PlayAnimation("Attack",false);
 
-    // TODO: Attack adds score for the example
-    m_Score += 100;
-    m_OnScoreChangeEvent.Invoke(m_Score);
-
-    // TODO: Change to use event queue instead of calling it directly
-    if(m_Score >= 500)
-        Achievement::GetInstance().Unlock(AchievementType::Winner);
+    // TODO: Remove from attack
+    AddScore();
 }
 
+void bb::Player::AddScore()
+{
+    m_Score += 100;
+
+    // Can be used by individual observers and just this player instance
+    m_OnScoreChangeEvent.Invoke(m_Score);
+
+    // Global event for whole game and all players (also non-blocking)
+    // ALso does not care who listens and listeners don't care who sends
+    MessageQueue::Broadcast(Message{MessageType::PlayerScoreChanged,m_Score});
+}
 
 void bb::Player::Jump()
 {
-    std::cout << "Julian was to lazy to implement jump :(" << std::endl;
+    std::cout << "Julian was to lazy to implement jump :(" << '\n';
 }
 
 void bb::Player::Move(float input)

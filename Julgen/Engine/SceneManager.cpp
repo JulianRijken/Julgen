@@ -5,6 +5,7 @@
 
 #include "Achievement.h"
 #include "Animator.h"
+#include "AutoMove.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "PlayerHUD.h"
@@ -59,7 +60,7 @@ void jul::SceneManager::LoadScene(const std::string& name)
             {
                 {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
                 {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
-                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}},
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},10}},
                 {"Attack",SpriteAnimation{{{0,2}},1}}
             });
 
@@ -68,8 +69,14 @@ void jul::SceneManager::LoadScene(const std::string& name)
             {
                 {"Idle",SpriteAnimation{{{0,0},{1,0}},7}},
                 {"Walk",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},7}},
-                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},7}},
+                {"Death",SpriteAnimation{{{0,3},{1,3},{2,3},{3,3},{0,3},{1,3},{2,3},{3,3},{4,3},{5,3},{6,3}},10}},
                 {"Attack",SpriteAnimation{{{0,2}},1}}
+            });
+
+        ResourceManager::LoadSprite(
+            "BubbleParticle", "BubbleParticle.png", 8, {0.5f,0.5f}, 1, 4,
+            {
+                {"Twinkle",SpriteAnimation{{{0,0},{1,0},{2,0},{3,0}},4}},
             });
 
 
@@ -154,13 +161,28 @@ void jul::SceneManager::LoadScene(const std::string& name)
 
         for (int x = -16; x < 16; ++x)
         {
-            for (int y = -13; y < 13; ++y)
+            for (int y = -15; y < 15; ++y)
             {
                 if(math::RandomValue<float>() > 0.95f)
                 {
                     auto* levelTile = AddGameObject("LevelTile", { x,y,0 });
-                    levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -100,glm::ivec2{4,14});
+                    levelTile->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("LevelTiles"), -100,glm::ivec2{4,jul::math::RandomRange(13,14)});
+                    levelTile->AddComponent<AutoMove>(
+                        glm::vec3{0.0f,2.0f,0},
+                        glm::vec3{16,15,1}
+                        );
+
+                    auto* bubbleParticle = AddGameObject("BubbleCharacter", { x,y,0 });
+                    bubbleParticle->AddComponent<SpriteRenderer>(ResourceManager::GetSprite("BubbleParticle"), -90);
+                    bubbleParticle->AddComponent<Animator>()->PlayAnimation("Twinkle",true,jul::math::RandomValue<float>());
+                    bubbleParticle->AddComponent<AutoMove>(
+                        glm::vec3{jul::math::RandomRange(-1.0f,1.0f),jul::math::RandomRange(2.0f,4.0f),0},
+                        glm::vec3{16,15,1}
+                        );
+
+
                 }
+
                 // if((x+y)%2 == 0)
                 // {
                 //     auto* levelTile = AddGameObject("LevelTile", { x,y,0 });

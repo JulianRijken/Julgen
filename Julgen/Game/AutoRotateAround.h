@@ -8,7 +8,7 @@ class AutoRotateAround : public jul::Component
 {
 public:
 
-	AutoRotateAround(jul::GameObject* parent,float distanceFromTarget, float speed = 1.0f, glm::vec3 rotateAroundPoint = glm::vec3{0,0,0});
+    AutoRotateAround(jul::GameObject* parent,float distanceFromTarget, float speed = 1.0f, const glm::vec3& rotateAroundPoint = glm::vec3{0,0,0});
 
 private:
 	void Update() override;

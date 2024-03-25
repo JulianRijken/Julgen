@@ -16,6 +16,8 @@
 #include "RenderManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
+#include "MessageQueue.h"
+#include "Achievement.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -23,12 +25,20 @@
 #endif
 
 #ifdef USE_STEAMWORKS
-#include <steam_api.h>
+    #ifdef _MSC_VER
+    #pragma warning (push)
+    #pragma warning (disable: 4996)
+    #endif
 
-#ifdef __EMSCRIPTEN__
-#error  Steamworks cant be used in web builds... "Valve please fix" ~3kliksPhilip
-#endif
+    #include <steam_api.h>
 
+    #ifdef _MSC_VER
+    #pragma warning (pop)
+    #endif
+
+    #ifdef __EMSCRIPTEN__
+    #error  Steamworks cant be used in web builds... "Valve please fix" ~3kliksPhilip
+    #endif
 #endif
 
 
@@ -63,6 +73,7 @@ jul::Julgen::Julgen()
 
 	RenderManager::GetInstance().Initialize(g_window);
     EngineGUI::GetInstance().Initialize(g_window,RenderManager::GetInstance().GetSDLRenderer());
+    Achievement::GetInstance().Initialize();
 
     ResourceManager::Initialize();
 }
@@ -114,6 +125,9 @@ void jul::Julgen::RunOneFrame()
 	// Update time
 	GameTime::Update();
 	m_Lag += GameTime::GetDeltaTime();
+
+
+    MessageQueue::Dispatch();
 
 	// Handle input
     Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
