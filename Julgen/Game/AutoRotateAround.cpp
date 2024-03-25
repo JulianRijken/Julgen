@@ -4,11 +4,11 @@
 #include "Transform.h"
 
 
-AutoRotateAround::AutoRotateAround(jul::GameObject* parent, float distanceFromTarget, float speed, glm::vec3 rotateAroundPoint) :
-	Component(parent,"AutoRotateAround"),
-	m_Speed(speed),
-	m_DistanceFromTarget(distanceFromTarget),
-	m_RotateAroundPoint(rotateAroundPoint)
+AutoRotateAround::AutoRotateAround(jul::GameObject* parent, float distanceFromTarget, float speed,const glm::vec3& rotateAroundPoint) :
+    Component(parent,"AutoRotateAround"),
+    m_Speed(speed),
+    m_DistanceFromTarget(distanceFromTarget),
+    m_RotateAroundPoint(rotateAroundPoint)
 {}
 
 

@@ -1,7 +1,7 @@
 #include "Transform.h"
 
 
-jul::Transform::Transform(GameObject* parent,glm::vec3 position) :
+jul::Transform::Transform(GameObject* parent,const glm::vec3& position) :
 	Component(parent,"Transform"),
 	m_LocalPosition(position)
 {}

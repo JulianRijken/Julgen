@@ -1,5 +1,6 @@
 #include "TextRenderer.h"
 
+#include <algorithm>
 #include <stdexcept>
 
 #include "Font.h"
@@ -10,25 +11,15 @@
 
 
 
-jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer) :
+jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer, bool useAllUpper) :
       RenderComponent(parent, "TextRenderer", renderLayer),
-	m_TextColor({ 255,255,255,255 }),
-	m_Text(text),
-	m_FontSPtr(font),
-	m_TextTextureSPtr(nullptr)
+      m_UseAllCaps(useAllUpper),
+      m_Text(text),
+      m_FontSPtr(font)
 {
 	UpdateText();
 }
 
-jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, SDL_Color m_TextColor, int renderLayer) :
-      RenderComponent(parent, "TextRenderer", renderLayer),
-	m_TextColor(m_TextColor),
-	m_Text(text),
-	m_FontSPtr(font),
-	m_TextTextureSPtr(nullptr)
-{
-	UpdateText();
-}
 
 void jul::TextRenderer::SetText(const std::string& text)
 {
@@ -49,8 +40,9 @@ void jul::TextRenderer::SetColor(const SDL_Color& color)
 		or m_TextColor.a != m_LastDrawnColor.a)
 	{
 		UpdateText();
-	}
+    }
 }
+
 
 void jul::TextRenderer::Render() const
 {
@@ -69,7 +61,18 @@ void jul::TextRenderer::UpdateText()
 		return;
 	}
 
-	const auto surf = TTF_RenderText_Blended(m_FontSPtr->GetFont(), m_Text.c_str(), m_TextColor);
+    std::string text = m_Text;
+	if (m_UseAllCaps)
+	{
+		std::ranges::transform(text.begin(), text.end(), text.begin(), [](const char c)
+			{
+				// MSVC doesn't like std::toupper without static_cast
+				// Womp womp :(
+				return static_cast<char>(std::toupper(c));
+			});
+	}
+
+    const auto surf = TTF_RenderText_Blended(m_FontSPtr->GetFont(), text.c_str(), m_TextColor);
 	if (surf == nullptr)
 		throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 

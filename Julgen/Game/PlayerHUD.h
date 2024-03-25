@@ -9,7 +9,7 @@ namespace bb
 class PlayerHUD : public jul::Component
     {
     public:
-        PlayerHUD(jul::GameObject* parentPtr, Player* player, TextRenderer* scoreText, TextRenderer* livesText);
+        PlayerHUD(jul::GameObject* parentPtr, Player* player, TextRenderer* scoreText, TextRenderer* livesText, const SDL_Color& color);
 
     private:
         void UpdateScore(int score);

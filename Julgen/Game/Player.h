@@ -1,9 +1,10 @@
 #pragma once
-#include <Component.h>
+#include "Component.h"
 
+#include "Animator.h"
+#include "Input.h"
 #include "Event.h"
-#include <Animator.h>
-#include <Input.h>
+
 
 using namespace jul;
 
@@ -19,36 +20,35 @@ namespace bb
 
 
         void Kill();
+        void Attack();
         void AddScore();
 
-        // void Jump();
+        void Jump();
         void Move(float input);
 
 
-        void OnTestScoreInput(InputContext context);
         void OnTestLivesInput(InputContext context);
-
         void OnMoveLeftInput(InputContext context);
         void OnMoveRightInput(InputContext context);
         void OnMoveStickInput(InputContext context);
         // void OnJumpInput(InputContext context);
-        // void OnAttackInput(InputContext context);
+        void OnAttackInput(InputContext context);
 
     private:
 
         void Update() override;
 
-        Event<int> m_OnDeathEvent;
-        Event<int> m_OnScoreChangeEvent;
+        Event<int> m_OnDeathEvent{};
+        Event<int> m_OnScoreChangeEvent{};
 
         int m_Lives{3};
         int m_Score{0};
-        bool m_IsDead{};
+        bool m_IsDead{false};
 
         std::string m_DeathAnimationName{"Death"};
         std::string m_IdleAnimationName{"Idle"};
         std::string m_WalkAnimationName{"Walk"};
-        Animator* m_AnimatorPtr;
-        SpriteRenderer* m_SpriteRenderer;
+        Animator* m_AnimatorPtr{nullptr};
+        SpriteRenderer* m_SpriteRenderer{nullptr};
     };
 }
