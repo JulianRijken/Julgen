@@ -5,28 +5,31 @@
 
 namespace jul::math
 {
+
+    // TODO: For the random stuff consider std::rand or random number generator
+    //       this also to make it thread safe
     template<typename Type>
         requires std::floating_point<Type>
-    constexpr const Type RandomValue()
+    constexpr Type RandomValue()
     {
-        return rand() % RAND_MAX / float(RAND_MAX);
+        return static_cast<float>(rand() % RAND_MAX) / static_cast<float>(RAND_MAX);
     };
 
     template<typename Type>
         requires std::floating_point<Type>
-    constexpr const Type RandomRange(Type min, Type max)
+    constexpr Type RandomRange(Type min, Type max)
     {
         if (min > max)
         {
-            const Type tempMax = max;
+            const Type TEMP_MAX = max;
             max = min;
-            min = tempMax;
+            min = TEMP_MAX;
         }
 
-        const Type randomAlpha{ Type(rand()) / RAND_MAX };
-        const Type range{ max - min };
+        const Type RANDOM_ALPHA{ Type(rand()) / RAND_MAX };
+        const Type RANGE{ max - min };
 
-        return randomAlpha * range + min;
+        return RANDOM_ALPHA * RANGE + min;
     }
 
     template<typename Type>
@@ -59,9 +62,9 @@ namespace jul::math
 
         if (min > max)
         {
-            const Type tempMax = max;
+            const Type TEMP_MAX = max;
             max = min;
-            min = tempMax;
+            min = TEMP_MAX;
         }
 
         Type range = max - min;

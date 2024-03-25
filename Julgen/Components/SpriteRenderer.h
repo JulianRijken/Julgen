@@ -16,16 +16,17 @@ namespace jul
 
         [[nodiscard]] const Sprite* GetSprite();
 
-        // Avoid the use of Get and Set when unnesisaryed
-        bool m_FlipX{};
-        bool m_FlipY{};
+        bool m_FlipX{}; // NOLINT - C.131: Avoid trivial getters and setters
+        bool m_FlipY{}; // NOLINT
 
-	private:
+        [[nodiscard]] bool FlipX() const;
+        void SetFlipX(bool newFlipX);
 
-		void Render() const override;
+    private:
+        void Render() const override;
 
         glm::ivec2 m_DrawCell;
-        const Sprite* m_SpritePtr = nullptr; // Can be nullptr
+        const Sprite* m_SpritePtr = nullptr;
 	};
 }
 

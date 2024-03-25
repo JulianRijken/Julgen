@@ -3,7 +3,6 @@
 #include <functional>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <iostream>
 #include <optional>
 #include <variant>
 
@@ -11,14 +10,19 @@ namespace jul
 {
 	class GameObject;
 
-    typedef std::optional<std::variant<float,glm::vec2>> InputContext;
+    using InputContext = std::optional<std::variant<float, glm::vec2>>;
 
 	class BaseCommand
 	{
-	public:
+    public:
+        BaseCommand(const BaseCommand&) = delete;
+        BaseCommand(BaseCommand&&) noexcept = delete;
+        BaseCommand& operator=(const BaseCommand&) = delete;
+        BaseCommand& operator=(BaseCommand&&) noexcept = delete;
 
         virtual ~BaseCommand() = default;
         virtual void Execute(InputContext context = std::nullopt) = 0;
+
     protected:
         BaseCommand() = default;
     };
@@ -59,31 +63,30 @@ namespace jul
         glm::vec3 m_MoveDirection;
     };
 
-    class StickTestCommand : public BaseCommand
+    class StickTestCommand final : public BaseCommand
     {
     public:
         void Execute(InputContext context) override;
     };
 
 
-    class TriggerTestCommand : public BaseCommand
+    class TriggerTestCommand final : public BaseCommand
     {
     public:
         void Execute(InputContext context) override;
     };
 
-    class FunctionCommand : public BaseCommand
+    class FunctionCommand final : public BaseCommand
     {
-        typedef std::function<void(InputContext)> InputFunction;
+        using InputFunction = std::function<void (InputContext)>;
 
     public:
         template<typename ObjectType>
-        FunctionCommand(ObjectType* object,void (ObjectType::*memberFunction)(InputContext))
-        {
-           m_Function = [=](InputContext context) {
-                (object->*memberFunction)(context);
-            };
-        }
+        FunctionCommand(ObjectType* object,void (ObjectType::*memberFunction)(InputContext)) :
+              m_Function([=](InputContext context) {
+                  (object->*memberFunction)(context);
+              })
+        {}
         void Execute(InputContext context) override;
 
     private:

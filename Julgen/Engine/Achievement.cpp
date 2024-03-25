@@ -26,9 +26,9 @@ void jul::Achievement::OnScoreChange(const Message& message)
 {
     try
     {
-	    const int score = std::any_cast<int>(message.argument1);
+        const int SCORE = std::any_cast<int>(message.argument1);
 
-        if(score >= 500)
+        if(SCORE >= 500)
             Unlock(AchievementType::Winner);
 
     } catch (...)
@@ -55,8 +55,8 @@ void jul::Achievement::Unlock(AchievementType unlockType)
         std::cout << "Failed to unlock achievement: " << static_cast<int>(unlockType) << '\n';
 
 #else
-    std::cout << "Achievment Unlocked: " << (int)unlockType << std::endl;
-    std::cout << "Steamworks not initialized" << std::endl;
+    std::cout << "Achievment Unlocked: " << (int)unlockType << '\n';
+    std::cout << "Steamworks not initialized" << '\n';
 #endif
 }
 

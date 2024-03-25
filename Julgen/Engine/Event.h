@@ -11,17 +11,11 @@ namespace jul
     template<typename... EventArgs>
     class Event final
     {
-        typedef std::function<void(EventArgs...)> FunctionType;
-        typedef std::pair<void*, FunctionType> Listener;
+        using FunctionType = std::function<void (EventArgs...)>;
+        using Listener = std::pair<void *, FunctionType>;
 
     public:
         Event() = default;
-
-        Event(const Event&) = delete;
-        Event(Event&&) noexcept = delete;
-        Event& operator=(const Event&) = delete;
-        Event& operator=(Event&&) noexcept = delete;
-
 
         void AddListener(Listener listener)
         {

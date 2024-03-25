@@ -6,9 +6,9 @@
 void jul::GameTime::Update()
 {
 	// Calculate delta time
-	const auto currentTime = std::chrono::high_resolution_clock::now();
-	s_DeltaTime = std::min(MAX_DELTA_TIME, std::chrono::duration<double>(currentTime - s_LastTime).count());
-	s_LastTime = currentTime;
+    const auto CURRENT_TIME = std::chrono::high_resolution_clock::now();
+    s_DeltaTime = std::min(MAX_DELTA_TIME, std::chrono::duration<double>(CURRENT_TIME - s_LastTime).count());
+    s_LastTime = CURRENT_TIME;
 
 	// Update elapsed time
 	s_ElapsedTime += s_DeltaTime;

@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include <algorithm>
 
 
 jul::Transform::Transform(GameObject* parent,const glm::vec3& position) :
@@ -72,7 +73,7 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 		return;
 
 	// Remove from old parent
-	if (m_ParentPtr)
+    if (m_ParentPtr != nullptr)
 	{
 		m_ParentPtr->m_ChildPtrs.erase(this);
 
@@ -83,7 +84,7 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 	m_ParentPtr = newParentPtr;
 
 	// Add to new parent
-	if (m_ParentPtr)
+    if (m_ParentPtr != nullptr)
 	{
 		m_ParentPtr->m_ChildPtrs.insert(this);
 
@@ -99,11 +100,9 @@ bool jul::Transform::IsChild(Transform* checkChildPtr) const
 	if(m_ChildPtrs.contains(checkChildPtr))
 		return true;
 
-	for (const Transform* childPtr : m_ChildPtrs)
-	{
-		if (childPtr->IsChild(checkChildPtr))
-			return true;
-	}
+    return std::ranges::any_of(m_ChildPtrs, [=](const Transform* childPtr) {
+        return childPtr->IsChild(checkChildPtr);
+    });
 
 	return false;
 }

@@ -11,7 +11,7 @@
 
 
 
-jul::TextRenderer::TextRenderer(GameObject* parent, const std::string& text, Font* font, int renderLayer, bool useAllUpper) :
+jul::TextRenderer::TextRenderer(GameObject* parent,const std::string& text, Font* font, int renderLayer, bool useAllUpper) :
       RenderComponent(parent, "TextRenderer", renderLayer),
       m_UseAllCaps(useAllUpper),
       m_Text(text),
@@ -47,9 +47,9 @@ void jul::TextRenderer::SetColor(const SDL_Color& color)
 void jul::TextRenderer::Render() const
 {
 	if (m_TextTextureSPtr != nullptr)
-	{
-		auto& pos = Transform().WorldPosition();
-		RenderManager::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
+    {
+        const glm::vec3& pos = Transform().WorldPosition();
+        RenderManager::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
 	}
 }
 
@@ -64,25 +64,25 @@ void jul::TextRenderer::UpdateText()
     std::string text = m_Text;
 	if (m_UseAllCaps)
 	{
-		std::ranges::transform(text.begin(), text.end(), text.begin(), [](const char c)
+        std::ranges::transform(text.begin(), text.end(), text.begin(), [](const char CHARACTER)
 			{
 				// MSVC doesn't like std::toupper without static_cast
 				// Womp womp :(
-				return static_cast<char>(std::toupper(c));
+            return static_cast<char>(std::toupper(CHARACTER));
 			});
 	}
 
-    const auto surf = TTF_RenderText_Blended(m_FontSPtr->GetFont(), text.c_str(), m_TextColor);
-	if (surf == nullptr)
+    auto *const SURF = TTF_RenderText_Blended(m_FontSPtr->GetFont(), text.c_str(), m_TextColor);
+    if (SURF == nullptr)
 		throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 
 
-	auto texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), surf);
+    auto *texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), SURF);
 	if (texture == nullptr)
 		throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 
 
-	SDL_FreeSurface(surf);
+    SDL_FreeSurface(SURF);
 	m_TextTextureSPtr = std::make_unique<Texture2D>(texture);
 
 

@@ -56,10 +56,7 @@ void bb::Player::AddScore()
     MessageQueue::Broadcast(Message{MessageType::PlayerScoreChanged,m_Score});
 }
 
-void bb::Player::Jump()
-{
-    std::cout << "Julian was to lazy to implement jump :(" << '\n';
-}
+
 
 void bb::Player::Move(float input)
 {
@@ -75,28 +72,32 @@ void bb::Player::Move(float input)
         m_SpriteRenderer->m_FlipX = true;
 }
 
-void bb::Player::OnTestLivesInput(InputContext)
+// TODO: Find a way to make the input context optional like the timer in afterburner
+void bb::Player::OnTestLivesInput(InputContext /*unused*/)
 {
     Kill();
 }
 
 
-void bb::Player::OnMoveLeftInput(InputContext)
+void bb::Player::OnMoveLeftInput(InputContext /*unused*/)
 {
     Move(-1.0f);
 }
 
-void bb::Player::OnMoveRightInput(InputContext)
+void bb::Player::OnMoveRightInput(InputContext /*unused*/)
 {
     Move(1.0f);
 }
 
 void bb::Player::OnMoveStickInput(InputContext context)
 {
-    Move(std::get<float>(context.value()));
+    assert(context.has_value());
+
+    if(context.has_value())
+        Move(std::get<float>(context.value()));
 }
 
-void bb::Player::OnAttackInput(InputContext)
+void bb::Player::OnAttackInput(InputContext /*unused*/)
 {
     Attack();
 }
