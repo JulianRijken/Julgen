@@ -2,13 +2,8 @@
 
 namespace jul
 {
-
-
 	class Julgen final
 	{
-		double m_Lag{};
-		bool m_IsApplicationQuitting{};
-
 	public:
 
 		explicit Julgen();
@@ -21,5 +16,10 @@ namespace jul
 
 		void Run();
 		void RunOneFrame();
+
+    private:
+        double m_Lag{};
+        bool m_IsApplicationQuitting{};
+
 	};
 }

@@ -1,9 +1,7 @@
 #include "Julgen.h"
 
 #include <stdexcept>
-#include <sstream>
 #include <thread>
-#include <iostream>
 
 #include <SDL.h>
 #include <SDL_image.h>
