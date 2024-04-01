@@ -5,9 +5,8 @@ namespace jul
 	class GlobalSettings
 	{
 	public:
-
-		inline static constexpr char WINDOW_TITLE[] = "Julgen - Custom Engine By Julian Rijken";
-        inline static constexpr int RENDER_WIDTH { 32 * 8 * 4};
+        inline static constexpr char WINDOW_TITLE[] = "Julgen - Custom Engine by Julian Rijken";
+        inline static constexpr int RENDER_WIDTH{ 32 * 8 * 4 };
         inline static constexpr int RENDER_HEIGHT{ 26 * 8 * 4};
 
 

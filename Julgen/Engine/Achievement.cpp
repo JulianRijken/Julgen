@@ -26,12 +26,12 @@ void jul::Achievement::OnScoreChange(const Message& message)
 {
     try
     {
-        const int SCORE = std::any_cast<int>(message.argument1);
+        const int score = std::any_cast<int>(message.argument1);
 
-        if(SCORE >= 500)
+        if(score >= 500)
             Unlock(AchievementType::Winner);
-
-    } catch (...)
+    }
+    catch(...)
     {
         std::cerr << "Message send with wrong arguments" << '\n';
         assert(false);

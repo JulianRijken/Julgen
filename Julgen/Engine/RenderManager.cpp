@@ -1,18 +1,17 @@
 #include "RenderManager.h"
 
-#include <stdexcept>
-#include <cstring>
 #include <algorithm>
-#include <vector>
-
-#include <glm/vec3.hpp>
+#include <cstring>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+#include <stdexcept>
+#include <vector>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
-#include "GUI.h"
 #include "GlobalSettings.h"
+#include "GUI.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
 #include "Transform.h"
@@ -117,8 +116,6 @@ void jul::RenderManager::RenderObjects() const
 }
 
 
-
-
 void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
     SDL_Rect dst{};
@@ -168,12 +165,12 @@ void jul::RenderManager::RenderTexture(
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     if (flipX and flipY)
         flip = static_cast<SDL_RendererFlip>(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
-     else if (flipX)
+    else if(flipX)
         flip = SDL_FLIP_HORIZONTAL;
-     else if (flipY)
+    else if(flipY)
         flip = SDL_FLIP_VERTICAL;
 
 
-    SDL_Point center{}; // Not needed
+    const SDL_Point center{};  // Not needed
     SDL_RenderCopyEx(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect,0.0f,&center,flip);
 }

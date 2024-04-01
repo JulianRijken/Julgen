@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL.h>
 #include <SDL_keycode.h>
 #include <algorithm>
@@ -102,24 +103,15 @@ namespace jul
 
     class Input final : public Singleton<Input>
     {
-    public:
 
+    public:
         Input();
         ~Input() override;
 
-        template<typename DataType>
-        static float NormalizeAxis(const DataType& rawAxis, float deadzone,
-                                   std::optional<float> axisLimit = std::nullopt)
-        {
-            // Oh my god this axisLimit.value_or is the sickes syntax I have ever seen!
-            float input(static_cast<float>(rawAxis) / static_cast<float>(axisLimit.value_or(std::numeric_limits<DataType>::max())));
-            input = std::clamp(input,-1.0f,1.0f);
-            if(std::abs(input) < deadzone)
-                input = 0;
-
-            return input;
-        }
-
+        Input(const Input&) = delete;
+        Input(Input&&) noexcept = delete;
+        Input& operator=(const Input&) = delete;
+        Input& operator=(Input&&) noexcept = delete;
 
         void ProcessInput(bool& shouldQuit);
 
@@ -133,9 +125,22 @@ namespace jul
         }
 
     private:
-
         class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
+
+        template<typename DataType>
+        static float NormalizeAxis(const DataType& rawAxis, float deadzone,
+                                   std::optional<float> axisLimit = std::nullopt)
+        {
+            // Oh my god this axisLimit.value_or is the sickes syntax I have ever seen!
+            float input(static_cast<float>(rawAxis) /
+                        static_cast<float>(axisLimit.value_or(std::numeric_limits<DataType>::max())));
+            input = std::clamp(input, -1.0f, 1.0f);
+            if(std::abs(input) < deadzone)
+                input = 0;
+
+            return input;
+        }
 
         void HandleKeyboardContinually() const;
         // Defined by ControllerInputImpl

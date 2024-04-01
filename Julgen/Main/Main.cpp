@@ -23,18 +23,18 @@ int main(int, char*[])
 	#ifdef WIN32
 		if constexpr (GlobalSettings::SHOW_CONSOLE)
 		{
-			if (AllocConsole())
-			{
-				FILE* empty;
-				freopen_s(&empty, "CONOUT$", "w", stdout);
-				freopen_s(&empty, "CONOUT$", "w", stderr);
-			}
-		}
-	#endif
+            if(AllocConsole() == TRUE)
+            {
+                FILE* empty{};
+                freopen_s(&empty, "CONOUT$", "w", stdout);
+                freopen_s(&empty, "CONOUT$", "w", stderr);
+            }
+        }
+#endif
 
-	Julgen engine{};
-	engine.Run();
-    return 0;
+        Julgen engine{};
+        engine.Run();
+        return 0;
 }
 
 

@@ -4,9 +4,6 @@ namespace jul
 {
 class Input::ControllerInputImpl
 {
-
-    const float AXIS_LIMIT{std::numeric_limits<short>::max()};
-
     public:
 
         void HandleControllerContinually(const std::vector<InputBinding>& binds)
@@ -106,6 +103,7 @@ class Input::ControllerInputImpl
             return m_Controllers[controllerIndex];
         }
 
+        const float AXIS_LIMIT{ std::numeric_limits<short>::max() };
 
         std::vector<SDL_GameController*> m_Controllers;
     };

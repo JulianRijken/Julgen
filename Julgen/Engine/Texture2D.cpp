@@ -21,4 +21,3 @@ SDL_Texture* jul::Texture2D::GetSDLTexture() const
 {
 	return m_Texture;
 }
-

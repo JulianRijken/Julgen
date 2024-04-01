@@ -18,6 +18,6 @@ private:
 
 	float m_Offset{};
 	float m_Restitution{ 0.0f};
-	const float GRAVITY{ 400.0 };
+    const float GRAVITY{ 400.0 };
 };
 

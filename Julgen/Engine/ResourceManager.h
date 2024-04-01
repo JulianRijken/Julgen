@@ -31,14 +31,11 @@ namespace jul
 
 		static void ConfigurePath();
 
-
-		inline static std::map<std::string, std::unique_ptr<Font>> m_FontUPtrMap{};
-		inline static std::map<std::string, std::unique_ptr<Sprite>> m_SpriteUPtrMap{};
-
-		inline static std::vector<std::unique_ptr<Texture2D>> m_LoadedTextureUPtrs{};
-
-		inline static std::filesystem::path m_ContentPath{};
-	};
+        inline static std::map<std::string, std::unique_ptr<Font>> s_FontUPtrMap{};
+        inline static std::map<std::string, std::unique_ptr<Sprite>> s_SpriteUPtrMap{};
+        inline static std::vector<std::unique_ptr<Texture2D>> s_LoadedTextureUPtrs{};
+        inline static std::filesystem::path s_ContentPath{};
+    };
 }
 
 

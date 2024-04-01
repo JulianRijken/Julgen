@@ -12,7 +12,7 @@ enum class MessageType
 struct Message
 {
     MessageType type;
-    // Use a vector of arguments
+    // TODO: Use a vector of arguments
     std::any argument1;
 };
 

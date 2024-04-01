@@ -3,9 +3,8 @@
 #include "Transform.h"
 #include "RenderManager.h"
 
-
-jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, Sprite* sprite, int renderLayer,glm::ivec2 drawCell) :
-      RenderComponent(parentPtr,"SpriteRenderer",renderLayer),
+jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, Sprite* sprite, int renderLayer, glm::ivec2 drawCell) :
+    RenderComponent(parentPtr, "SpriteRenderer", renderLayer),
     m_DrawCell(drawCell)
 {
     SetSprite(sprite);
@@ -36,11 +35,10 @@ void jul::SpriteRenderer::Render() const
     RenderManager::GetInstance().RenderTexture(
         m_SpritePtr->GetTexture(),
         pos,
-        {m_SpritePtr->CELL_SIZE.x * m_DrawCell.x, m_SpritePtr->CELL_SIZE.y * m_DrawCell.y},
+        { m_SpritePtr->CELL_SIZE.x * m_DrawCell.x, m_SpritePtr->CELL_SIZE.y * m_DrawCell.y },
         m_SpritePtr->CELL_SIZE,
         m_SpritePtr->PIXELS_PER_UNIT,
         m_SpritePtr->PIVOT,
         FlipX,
-        FlipY
-        );
+        FlipY);
 }

@@ -2,7 +2,6 @@
 
 #include <numeric>
 
-
 void jul::GameTime::Update()
 {
 	// Calculate delta time
@@ -19,5 +18,3 @@ void jul::GameTime::Update()
 		s_FpsDeque.pop_back();
 	s_AverageFps = std::accumulate(s_FpsDeque.begin(), s_FpsDeque.end(), 0.0) / static_cast<int>(s_FpsDeque.size());
 }
-
-
