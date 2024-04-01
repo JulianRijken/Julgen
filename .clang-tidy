@@ -20,7 +20,8 @@ Checks: >
     -readability-magic-numbers,
     -readability-braces-around-statements,
     -cppcoreguidelines-pro-type-union-access,
-    -modernize-use-trailing-return-type
+    -modernize-use-trailing-return-type,
+    -misc-non-private-member-variables-in-classes
 
 HeaderFilterRegex: ''
 
@@ -51,8 +52,7 @@ CheckOptions:
     value:           UPPER_CASE
   - key:             readability-identifier-naming.MemberCase
     value:           CamelCase
-  - key:             readability-identifier-naming.MemberPrefix
-    value:           m_
   - key:             readability-identifier-naming.PrivateMemberPrefix
     value:           m_
-
+  - key:             readability-identifier-naming.PublicMemberCase
+    value:           camelBack

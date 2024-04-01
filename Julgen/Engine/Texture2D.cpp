@@ -1,6 +1,10 @@
 #include <SDL.h>
 #include "Texture2D.h"
 
+jul::Texture2D::Texture2D(SDL_Texture* texture) :
+    m_Texture(texture)
+{}
+
 jul::Texture2D::~Texture2D()
 {
 	SDL_DestroyTexture(m_Texture);
@@ -18,7 +22,3 @@ SDL_Texture* jul::Texture2D::GetSDLTexture() const
 	return m_Texture;
 }
 
-jul::Texture2D::Texture2D(SDL_Texture* texture)
-{
-	m_Texture = texture;
-}

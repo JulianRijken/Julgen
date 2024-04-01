@@ -66,10 +66,10 @@ void bb::Player::Move(float input)
     Transform().Translate(glm::vec3{input * GameTime::GetDeltaTimeF() * 10.0f,0,0});
 
     if(input > 0)
-        m_SpriteRenderer->m_FlipX = false;
+        m_SpriteRenderer->FlipX = false;
     else
     if(input < 0)
-        m_SpriteRenderer->m_FlipX = true;
+        m_SpriteRenderer->FlipX = true;
 }
 
 // TODO: Find a way to make the input context optional like the timer in afterburner

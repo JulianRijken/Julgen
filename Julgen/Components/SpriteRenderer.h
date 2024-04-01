@@ -16,10 +16,9 @@ namespace jul
 
         [[nodiscard]] const Sprite* GetSprite();
 
-        bool m_FlipX{}; // NOLINT - C.131: Avoid trivial getters and setters
-        bool m_FlipY{}; // NOLINT
+        bool FlipX{}; // NOLINT - C.131: Avoid trivial getters and setters
+        bool FlipY{}; // NOLINT
 
-        [[nodiscard]] bool FlipX() const;
         void SetFlipX(bool newFlipX);
 
     private:

@@ -15,7 +15,7 @@ class Input::ControllerInputImpl
 
             for (auto&& bind : binds)
             {
-                if (bind.buttonState != ButtonState::Held)
+                if (bind.state != ButtonState::Held)
                     continue;
 
                 // Get the controller and check if it exists

@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <map>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "Singleton.h"
@@ -22,17 +21,17 @@ namespace jul
         std::vector<SDL_GameControllerButton> controllerButtons;
         std::vector<SDL_GameControllerAxis> controllerAxis;
 
-        bool HasKeyboardKey(SDL_Scancode compareKey) const
+        [[nodiscard]] bool HasKeyboardKey(SDL_Scancode compareKey) const
         {
             return std::ranges::count(keyboardButtons,compareKey) > 0;
         }
 
-        bool HasControllerButton(SDL_GameControllerButton compareButton) const
+        [[nodiscard]] bool HasControllerButton(SDL_GameControllerButton compareButton) const
         {
             return std::ranges::count(controllerButtons,compareButton) > 0;
         }
 
-        bool HasControllerAxis(SDL_GameControllerAxis compareAxis) const
+        [[nodiscard]] bool HasControllerAxis(SDL_GameControllerAxis compareAxis) const
         {
             return std::ranges::count(controllerAxis,compareAxis) > 0;
         }
@@ -91,21 +90,20 @@ namespace jul
 
     struct InputBinding
     {
-        ButtonState buttonState;
+        ButtonState state;
         int controllerIndex;
         bool allowKeyboard;
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
-        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const;
-        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
+        [[nodiscard]] bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const;
+        [[nodiscard]] bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
     };
 
     class Input final : public Singleton<Input>
 	{
     public:
 
-        ~Input();
         Input();
 
         template<typename DataType>
@@ -142,6 +140,7 @@ namespace jul
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
         // Defined by ControllerInputImpl
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
+
 
         std::vector<InputBinding> m_Binds;
 	};

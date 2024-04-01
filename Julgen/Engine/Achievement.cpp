@@ -51,7 +51,7 @@ void jul::Achievement::Unlock(AchievementType unlockType)
 
     if (SteamUserStats()->StoreStats())
         std::cout << "Achievement Unlocked: " << static_cast<int>(unlockType) << '\n';
-     else
+    else
         std::cout << "Failed to unlock achievement: " << static_cast<int>(unlockType) << '\n';
 
 #else

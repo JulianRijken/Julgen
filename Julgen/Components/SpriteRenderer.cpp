@@ -40,7 +40,7 @@ void jul::SpriteRenderer::Render() const
         m_SpritePtr->CELL_SIZE,
         m_SpritePtr->PIXELS_PER_UNIT,
         m_SpritePtr->PIVOT,
-        m_FlipX,
-        m_FlipY
+        FlipX,
+        FlipY
         );
 }
