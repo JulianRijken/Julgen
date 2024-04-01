@@ -8,11 +8,11 @@ namespace jul
 	public:
 		static T& GetInstance()
 		{
-			static T instance{};
-			return instance;
-		}
+            static T instance{};
+            return instance;
+        }
 
-		virtual ~Singleton() = default;
+        virtual ~Singleton() = default;
 
 		Singleton(Singleton&& other) = delete;
 		Singleton(const Singleton& other) = delete;
@@ -22,4 +22,4 @@ namespace jul
 	protected:
 		Singleton() = default;
 	};
-}
+}  // namespace jul

@@ -107,10 +107,6 @@ void bb::Player::Update()
     if(m_IsDead)
         return;
 
-    if(not m_AnimatorPtr->IsPlaying())
-    {
-
+    if(not m_AnimatorPtr->IsPlaying())   
         m_AnimatorPtr->PlayAnimation(m_IdleAnimationName);
-    }
 }
-

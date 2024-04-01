@@ -45,7 +45,7 @@ void jul::Input::HandleKeyboardContinually() const
 
         for (auto&& keyboardKey : bind.acton.keyboardButtons)
         {
-            if (bind.buttonState == ButtonState::Held and keyboardState[keyboardKey])
+            if(bind.state == ButtonState::Held and keyboardState[keyboardKey])
             {    
                 bind.command->Execute();
                 break;
@@ -82,7 +82,7 @@ bool jul::InputBinding::TryExecuteController(
     int checkControllerIndex,
     SDL_GameControllerButton compareButton) const
 {
-    if(buttonState != checkButtonState)
+    if(state != checkButtonState)
         return false;
 
     if(controllerIndex != checkControllerIndex)
@@ -97,7 +97,7 @@ bool jul::InputBinding::TryExecuteController(
 
 bool jul::InputBinding::TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const
 {
-    if(buttonState != checkButtonState)
+    if(state != checkButtonState)
         return false;
 
     if(not acton.HasKeyboardKey(compareKey))

@@ -103,8 +103,6 @@ bool jul::Transform::IsChild(Transform* checkChildPtr) const
     return std::ranges::any_of(m_ChildPtrs, [=](const Transform* childPtr) {
         return childPtr->IsChild(checkChildPtr);
     });
-
-	return false;
 }
 
 

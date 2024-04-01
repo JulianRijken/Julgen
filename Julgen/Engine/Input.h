@@ -11,9 +11,8 @@
 
 namespace jul
 {
-    inline static const float STICK_DEADZONE{0.15f};
-    inline static const float TRIGGER_DEADZONE{0.05f};
-
+    inline static const float STICK_DEADZONE{ 0.15f };
+    inline static const float TRIGGER_DEADZONE{ 0.05f };
 
     struct InputAction
     {
@@ -96,18 +95,21 @@ namespace jul
         InputAction acton;
         std::unique_ptr<BaseCommand> command;
 
-        [[nodiscard]] bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,SDL_GameControllerButton compareButton) const;
-        [[nodiscard]] bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
+        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,
+                                  SDL_GameControllerButton compareButton) const;
+        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
     };
 
     class Input final : public Singleton<Input>
-	{
+    {
     public:
 
         Input();
+        ~Input() override;
 
         template<typename DataType>
-        static float NormalizeAxis(const DataType& rawAxis, float deadzone, std::optional<float> axisLimit = std::nullopt)
+        static float NormalizeAxis(const DataType& rawAxis, float deadzone,
+                                   std::optional<float> axisLimit = std::nullopt)
         {
             // Oh my god this axisLimit.value_or is the sickes syntax I have ever seen!
             float input(static_cast<float>(rawAxis) / static_cast<float>(axisLimit.value_or(std::numeric_limits<DataType>::max())));
@@ -126,9 +128,11 @@ namespace jul
         void RegisterCommand(InputBind actionName, ButtonState buttonState,int controllerIndex,bool allowKeyboard, Args&&... args)
         {
             assert(INPUT_ACTIONS.contains(actionName) && "Action Does Not Exist");
-            m_Binds.emplace_back(buttonState,controllerIndex,allowKeyboard,INPUT_ACTIONS.at(actionName),std::make_unique<CommandType>(args...));
+            m_Binds.emplace_back(buttonState, controllerIndex, allowKeyboard, INPUT_ACTIONS.at(actionName),
+                                 std::make_unique<CommandType>(args...));
         }
 
+    private:
 
         class ControllerInputImpl;
         std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
@@ -141,7 +145,6 @@ namespace jul
         // Defined by ControllerInputImpl
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
 
-
         std::vector<InputBinding> m_Binds;
-	};
+    };
 }

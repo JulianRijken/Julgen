@@ -7,6 +7,7 @@
 namespace Examples
 {
 
+    // clang-format off
 	struct Transform
 	{
 		float matrix[16] = {
@@ -15,19 +16,20 @@ namespace Examples
 			0,0,1,0,
 			0,0,0,1 };
 	};
+    // clang-format on```
 
 	class GameObject3D
 	{
 	public:
 		Transform transform;
-		int ID;
+		int id;
 	};
 
 	class GameObject3DAlt
 	{
 	public:
 		Transform* transform; // We make the transform a pointer to keep it 4 bytes
-		int ID;
+		int id;
 	};
 
 	/// TODO: This is currently using the Renderer component
@@ -52,13 +54,13 @@ namespace Examples
                 long long durationAverage{ 0 };
                 for (int testIndex = 0; testIndex < m_SampleCount; ++testIndex)
                 {
-                    const auto start = std::chrono::high_resolution_clock::now();
+                    const auto START = std::chrono::high_resolution_clock::now();
 
                     // Perform the test
                     for (int i = 0; i < BUFFER_SIZE; i += stepSize)
-                        buffer[i].ID *= 2;
+                        buffer[i].id *= 2;
 
-                    durationAverage += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count();;
+                    durationAverage += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - START).count();;
                 }
 
                 durationAverage /= (m_SampleCount);

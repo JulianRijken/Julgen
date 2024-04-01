@@ -174,4 +174,3 @@ jul::Input::Input() :
 {};
 
 jul::Input::~Input() = default;
-
