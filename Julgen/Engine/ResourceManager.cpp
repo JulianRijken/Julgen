@@ -17,20 +17,20 @@ void jul::ResourceManager::Initialize()
 
 jul::Font* jul::ResourceManager::GetFont(const std::string& name)
 {
-    if (s_FontUPtrMap.contains(name))
+    if(s_FontUPtrMap.contains(name))
         return s_FontUPtrMap.at(name).get();
 
-	std::cerr << "Font not loaded: " << name << '\n';
-	return nullptr;
+    std::cerr << "Font not loaded: " << name << '\n';
+    return nullptr;
 }
 
 jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
 {
-    if (s_SpriteUPtrMap.contains(name))
+    if(s_SpriteUPtrMap.contains(name))
         return s_SpriteUPtrMap.at(name).get();
 
-	std::cerr << "Sprite not loaded: " << name << '\n';
-	return nullptr;
+    std::cerr << "Sprite not loaded: " << name << '\n';
+    return nullptr;
 }
 
 jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, unsigned size)
