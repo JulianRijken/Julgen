@@ -5,13 +5,8 @@ if(EMSCRIPTEN)
   message("Using Emscripten!")
 endif()
 
-if(EMSCRIPTEN)
-  set(TARGET_NAME julgen_web)
-  set(TARGET_PARAM )
-else()
-  set(TARGET_NAME julgen)
-  set(TARGET_PARAM WIN32)
-endif()
+set(TARGET_NAME julgen)
+
 
 option(USE_XINPUT "Switches between SDL and XInput" FALSE)
 option(USE_STEAMWORKS "Use steamworks SDK (must provide it in External/steamworks)" FALSE)
@@ -99,16 +94,13 @@ else()
 endif()
 
 
-# list source files here
-add_executable(
-    ${TARGET_NAME}
-    ${TARGET_PARAM}
+add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
 )
 
-# Include directories
-target_include_directories(${TARGET_NAME} PRIVATE
+
+target_include_directories(${TARGET_NAME} PUBLIC
     ${JULGEN_SOURCE_DIR}
     ${JULGEN_SOURCE_DIR}/Components
     ${JULGEN_SOURCE_DIR}/Main
@@ -180,27 +172,33 @@ if(USE_STEAMWORKS)
 endif()
 
 
+function(HandleAssets GAME_TARGET_DIR)
+    if(WIN32)
+        set(SYMLINK_COMMAND copy_directory)
+    else()
+        set(SYMLINK_COMMAND create_symlink)
+    endif()
 
+    add_custom_command(TARGET ${TARGET_NAME} PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E ${SYMLINK_COMMAND}
+                    "${CMAKE_SOURCE_DIR}/Assets"
+                    "${GAME_TARGET_DIR}/Assets")
+endfunction()
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
-
 set_property(TARGET ${TARGET_NAME} PROPERTY
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED TRUE
     CXX_EXTENSIONS FALSE
 )
 
-
 # compile at max warning level + treat warnings as errors
-target_compile_options(${TARGET_NAME} PRIVATE
+target_compile_options(${TARGET_NAME} PUBLIC
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /MP>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
-
-# set julgen as the default startup project
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
 
@@ -386,9 +384,6 @@ elseif(WIN32)
   )
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
       COMMAND "${CMAKE_COMMAND}" -E copy "${SDL2_TTF_LIBRARY_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
-  )
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Assets" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Assets"
   )
 endif()
 

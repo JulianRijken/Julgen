@@ -51,8 +51,6 @@ jul::Julgen::Julgen()
             std::cout << "Steam successfully initialized!" << std::endl;
     #endif
 
-
-
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
@@ -74,6 +72,8 @@ jul::Julgen::Julgen()
     Achievement::GetInstance().Initialize();
 
     ResourceManager::Initialize();
+
+    GameStart();
 }
 
 jul::Julgen::~Julgen()

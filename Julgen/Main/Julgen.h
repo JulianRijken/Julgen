@@ -16,6 +16,7 @@ namespace jul
 
 		void Run();
 		void RunOneFrame();
+        void GameStart();
 
     private:
         double m_Lag{};
