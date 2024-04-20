@@ -29,7 +29,6 @@ void jul::GameObject::PropagateDestroy() const
 	}
 }
 
-
 void jul::GameObject::CleanupComponents()
 {
 	for (auto iterator = m_Components.begin(); iterator != m_Components.end();)

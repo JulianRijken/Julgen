@@ -16,10 +16,15 @@ namespace jul
 		GameObject(const std::string& name, const glm::vec3& position);
 
 
-		[[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
+        [[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
-		void Destroy() override;
-		void PropagateDestroy() const;
+        // Sets current game object to be destroyed
+        // Including the components
+        // But not the children
+        void Destroy() override;
+
+        // Sets all children to be destroyed
+        void PropagateDestroy() const;
 
 		void Update() const;
 		void LateUpdate() const;

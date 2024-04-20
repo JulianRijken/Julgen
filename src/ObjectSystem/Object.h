@@ -1,28 +1,29 @@
 #pragma once
 #include <string>
 
-class Object
+namespace jul
 {
-public:
+    class Object
+    {
+    public:
+        virtual ~Object() = default;
 
-    virtual ~Object() = default;
+        Object(const Object&) = delete;
+        Object(Object&&) noexcept = delete;
+        Object& operator=(const Object&) = delete;
+        Object& operator=(Object&&) noexcept = delete;
 
-    Object(const Object&) = delete;
-    Object(Object&&) noexcept = delete;
-    Object& operator=(const Object&) = delete;
-    Object& operator=(Object&&) noexcept = delete;
+        [[nodiscard]] const std::string& GetName() const { return m_Name; }
 
-	[[nodiscard]] const std::string& GetName() const { return m_Name; }
-	[[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
+        [[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
 
-	virtual void Destroy();
+        virtual void Destroy();
 
-protected:
+    protected:
+        Object(const std::string& name = "Object");
 
-    Object(const std::string& name = "Object");
-
-private:
-
-	bool m_BeingDestroyed;
-	std::string m_Name;
-};
+    private:
+        bool m_BeingDestroyed{};
+        std::string m_Name{};
+    };
+}  // namespace jul

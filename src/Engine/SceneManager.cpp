@@ -2,10 +2,11 @@
 
 #include <ranges>
 
+void jul::SceneManager::UnloadScene(const std::string& sceneName) { m_LoadedScenes.erase(sceneName); }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
-    return m_ActiveScenePtr->AddGameObjectToScene(std::make_unique<GameObject>(name, position));
+    return m_PrimaryScenePtr->AddGameObject(name, position);
 }
 
 

@@ -35,10 +35,10 @@ void jul::SpriteRenderer::Render() const
     RenderManager::GetInstance().RenderTexture(
         m_SpritePtr->GetTexture(),
         pos,
-        { m_SpritePtr->CELL_SIZE.x * m_DrawCell.x, m_SpritePtr->CELL_SIZE.y * m_DrawCell.y },
-        m_SpritePtr->CELL_SIZE,
-        m_SpritePtr->PIXELS_PER_UNIT,
-        m_SpritePtr->PIVOT,
-        FlipX,
-        FlipY);
+        { m_SpritePtr->cellSize.x * m_DrawCell.x, m_SpritePtr->cellSize.y * m_DrawCell.y },
+        m_SpritePtr->cellSize,
+        m_SpritePtr->pixelsPerUnit,
+        m_SpritePtr->pivot,
+        m_FlipX,
+        m_FlipY);
 }

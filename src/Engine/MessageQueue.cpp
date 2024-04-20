@@ -1,11 +1,8 @@
 #include "MessageQueue.h"
 
-void MessageQueue::Broadcast(const Message& message)
-{
-    m_Messages.push(message);
-}
+void jul::MessageQueue::Broadcast(const Message& message) { m_Messages.push(message); }
 
-void MessageQueue::Dispatch()
+void jul::MessageQueue::Dispatch()
 {
     while (not m_Messages.empty())
     {

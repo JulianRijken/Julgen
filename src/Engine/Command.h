@@ -76,16 +76,21 @@ namespace jul
         void Execute(InputContext context) override;
     };
 
-    class FunctionCommand final : public BaseCommand
+    class MemberFunctionCommand final : public BaseCommand
     {
         using InputFunction = std::function<void (InputContext)>;
 
     public:
         template<typename ObjectType>
-        FunctionCommand(ObjectType* object,void (ObjectType::*memberFunction)(InputContext)) :
-              m_Function([=](InputContext context) {
-                  (object->*memberFunction)(context);
-              })
+        MemberFunctionCommand(ObjectType* object, void (ObjectType::*memberFunction)(InputContext)) :
+            m_Function(
+                [object, memberFunction](InputContext context)
+                {
+                    if(memberFunction == nullptr)
+                        return;
+
+                    (object->*memberFunction)(context);
+                })
         {}
         void Execute(InputContext context) override;
 

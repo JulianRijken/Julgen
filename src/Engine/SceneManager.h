@@ -13,37 +13,49 @@
 namespace jul
 {
 
+    enum class SceneLoadMode
+    {
+        Override,
+        Additive,
+    };
+
     class SceneManager final : public Singleton<SceneManager>
     {
-        friend class Scene;
+        // Required to call update
+        friend void Julgen::RunOneFrame();
 
-		// Required to call update
-		friend void Julgen::RunOneFrame();
-
-
-	public:
+    public:
         // TODO Loading scenes is currently done via functions
         //      this would ideally be done via file loading
         template<typename LoadSceneFunction>
-        void LoadScene(const std::string& name, LoadSceneFunction loadScene)
+        void LoadScene(const std::string& name, LoadSceneFunction loadScene,
+                       SceneLoadMode loadMode = SceneLoadMode::Override)
         {
-            // Unload all loaded scenes
-            m_LoadedScenes.clear();
+            if(loadMode == SceneLoadMode::Override)
+            {
+                // Unload all loaded scenes
+                m_LoadedScenes.clear();
+            }
+
+            // Remove old scene if it has the same name
+            if(m_LoadedScenes.contains(name))
+                m_LoadedScenes.erase(name);
 
             // Set new loaded scene as active
             auto newSceneUPtr = std::make_unique<Scene>(name);
-            m_ActiveScenePtr = newSceneUPtr.get();
+
+            if(loadMode == SceneLoadMode::Override)
+                m_PrimaryScenePtr = newSceneUPtr.get();
+
+            if constexpr(std::is_invocable_v<LoadSceneFunction, Scene&>)
+                loadScene(*newSceneUPtr);
+            else
+                loadScene();
+
             m_LoadedScenes[name] = std::move(newSceneUPtr);
-
-            loadScene();
-
-            // TODO: Game objects and components can still be created without adding them to a scene
-            //        or having them attached to a game object
-            //        This is still possible tho. Look in to this :)
-            //        Maybne use camke and private link
-            //      [[maybe_unused]] GameObject* wrongGameObject = new GameObject("Test", glm::vec3(1, 1, 1));
-            //      [[maybe_unused]] FpsCounter* wrongFpsCounter = new FpsCounter(wrongGameObject);
         }
+
+        void UnloadScene(const std::string& sceneName);
 
         GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
 
@@ -54,7 +66,7 @@ namespace jul
 
         void CleanupGameObjects();
 
-        Scene* m_ActiveScenePtr{};
+        Scene* m_PrimaryScenePtr{};
         std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
     };
 }

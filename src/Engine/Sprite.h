@@ -11,27 +11,27 @@ namespace jul
 
     struct SpriteAnimation final
     {
-        SpriteAnimation(const std::vector<glm::ivec2>& cellFrames, const float framesPerSecond = 0.0f);
+        SpriteAnimation(const std::vector<glm::ivec2>& cellFrames, int framesPerSecond = 0.0f);
 
         [[nodiscard]] const glm::ivec2& GetCellFromNormalizedTime(float time) const;
 
-        const std::vector<glm::ivec2> CELL_FRAMES{};
-        const int FRAME_COUNT{};
-        const float FRAMES_PER_SECOND;
+        std::vector<glm::ivec2> cellFrames{};
+        int frameCount{};
+        int framesPerSecond;
     };
 
     struct Sprite final
 	{
-		Sprite(const Texture2D* texturePtr, int pixelsPerUnit = 100, const glm::vec2& pivotAlpha = {},
-               int rowCount = 1, int colCount = 1,const std::map<std::string, SpriteAnimation>& animations = {});
-        
+        Sprite(Texture2D* texturePtr, int pixelsPerUnit = 100, const glm::vec2& pivotAlpha = {}, int rowCount = 1,
+               int colCount = 1, const std::map<std::string, SpriteAnimation>& animations = {});
+
         [[nodiscard]] const SpriteAnimation* GetAnimation(const std::string& name) const;
         [[nodiscard]] const Texture2D& GetTexture() const;
 
-        const int PIXELS_PER_UNIT;
-		const glm::vec2 PIVOT;
-		const glm::ivec2 CELL_SIZE;
-		const Texture2D* TEXTURE_PTR;
-        const std::map<std::string, SpriteAnimation> ANIMATIONS;
-	};
+        int pixelsPerUnit;
+        glm::vec2 pivot;
+        glm::ivec2 cellSize;
+        Texture2D* texturePtr;
+        std::map<std::string, SpriteAnimation> animations;
+    };
 }

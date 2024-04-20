@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/vec3.hpp>
 #include <list>
 #include <memory>
 #include <string>
@@ -9,25 +10,24 @@ namespace jul
 
 	class Scene final
 	{
-		friend class SceneManager;
+        friend class SceneManager;
 
-	public:
-		Scene(const std::string& name);
-		~Scene() = default;
+    public:
+        Scene(const std::string& name);
+        ~Scene() = default;
 
-	private:
+        GameObject* AddGameObject(const std::string& name, const glm::vec3& position);
 
-		void Update() const;
-		void LateUpdate() const;
+    private:
+        void Update() const;
+        void LateUpdate() const;
 		void FixedUpdate() const;
 
 		void CleanupGameObjects();
 
-		GameObject* AddGameObjectToScene(std::unique_ptr<GameObject>&& object);
 
+        std::string m_Name;
+        std::list<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
+    };
 
-		std::string m_Name;
-		std::list<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
-	};
-
-}
+}  // namespace jul

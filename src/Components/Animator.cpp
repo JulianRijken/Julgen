@@ -44,7 +44,7 @@ void jul::Animator::Update()
 
     if (m_IsPlaying)
 	{
-        m_FrameTime += GameTime::GetDeltaTimeF() * (m_ActiveAnimation->FRAMES_PER_SECOND / static_cast<float>(m_ActiveAnimation->FRAME_COUNT)) * m_SpeedMultiplier;
+        m_FrameTime += GameTime::GetDeltaTimeF() * (m_ActiveAnimation->framesPerSecond / static_cast<float>(m_ActiveAnimation->frameCount)) * m_SpeedMultiplier;
 
 		if(m_IsLooping)
         {

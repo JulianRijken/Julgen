@@ -7,7 +7,6 @@
 #endif
 
 #if _DEBUG
-	// ReSharper disable once CppUnusedIncludeDirective
 	#if __has_include(<vld.h>)
 	#include <vld.h>
 	#endif
@@ -20,6 +19,7 @@
 
     int main(int, char*[])
     {
+
 #ifdef WIN32
         if(GameSettings::m_ShowConsole)
         {

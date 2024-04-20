@@ -1,5 +1,4 @@
 #pragma once
-#include <chrono>
 #include <deque>
 
 namespace jul
@@ -9,46 +8,43 @@ namespace jul
         friend class Julgen;
 
     public:
-        static void SetTimeScale(double timeScale) { s_TimeScale = timeScale; }
+        static void SetTimeScale(double timeScale) { g_TimeScale = timeScale; }
 
-        [[nodiscard]] static int GetFrameCount() { return s_FrameCount; }
+        [[nodiscard]] static int GetFrameCount() { return g_FrameCount; }
 
-        [[nodiscard]] static double GetElapsedTime() { return s_ElapsedTime; }
+        [[nodiscard]] static double GetElapsedTime() { return g_ElapsedTime; }
 
-        [[nodiscard]] static double GetFps() { return 1.0 / s_DeltaTime; }
+        [[nodiscard]] static double GetFps() { return 1.0 / g_DeltaTime; }
 
-        [[nodiscard]] static double GetSmoothFps() { return s_AverageFps; }
+        [[nodiscard]] static double GetSmoothFps() { return g_AverageFps; }
 
-        [[nodiscard]] static double GetTimeScale() { return s_TimeScale; }
+        [[nodiscard]] static double GetTimeScale() { return g_TimeScale; }
 
-        [[nodiscard]] static double GetUnScaledDeltaTime() { return s_DeltaTime; }
+        [[nodiscard]] static double GetUnScaledDeltaTime() { return g_DeltaTime; }
 
-        [[nodiscard]] static double GetDeltaTime() { return s_DeltaTime * s_TimeScale; }
+        [[nodiscard]] static double GetDeltaTime() { return g_DeltaTime * g_TimeScale; }
 
-        [[nodiscard]] static float GetDeltaTimeF() { return static_cast<float>(s_DeltaTime * s_TimeScale); }
+        [[nodiscard]] static float GetDeltaTimeF() { return static_cast<float>(g_DeltaTime * g_TimeScale); }
 
-        [[nodiscard]] static double GetFixedDeltaTime() { return s_FixedDeltaTime; }
+        [[nodiscard]] static double GetFixedDeltaTime() { return g_FixedDeltaTime; }
 
-        [[nodiscard]] static float GetFixedDeltaTimeF() { return static_cast<float>(s_FixedDeltaTime); }
+        [[nodiscard]] static float GetFixedDeltaTimeF() { return static_cast<float>(g_FixedDeltaTime); }
 
         inline static double g_MaxDeltaTime{ 1.0 / 30.0 };
-        inline static double s_FixedDeltaTime{ 1.0 / 60.0 };
+        inline static double g_FixedDeltaTime{ 1.0 / 60.0 };
 
     private:
         static void Update();
 
-        static void AddToFrameCount() { s_FrameCount++; }
+        static void AddToFrameCount() { g_FrameCount++; }
 
-        inline static int s_FrameCount{ 0 };
-        inline static double s_ElapsedTime{ 0 };
-        inline static double s_DeltaTime{ 0.0 };
-        inline static double s_TimeScale{ 1.0 };
-        inline static std::chrono::time_point<std::chrono::high_resolution_clock> s_LastTime{
-            std::chrono::high_resolution_clock::now()
-        };
+        inline static int g_FrameCount{ 0 };
+        inline static double g_ElapsedTime{ 0 };
+        inline static double g_DeltaTime{ 0.0 };
+        inline static double g_TimeScale{ 1.0 };
 
-        inline static std::deque<double> s_FpsDeque{};
-        inline static double s_AverageFps{ 0 };
+        inline static std::deque<double> g_FpsDeque{};
+        inline static double g_AverageFps{ 0 };
         inline static constexpr int AMOUNT_OF_FRAMES_TO_AVERAGE{ 60 };
     };
 }  // namespace jul

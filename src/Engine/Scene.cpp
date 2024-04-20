@@ -8,13 +8,13 @@ using namespace jul;
 
 Scene::Scene(const std::string& name) :
 m_Name(name)
-{}
-
-
-GameObject* Scene::AddGameObjectToScene(std::unique_ptr<GameObject>&& object)
 {
-	m_GameObjectsInSceneSPtr.emplace_back(std::move(object));
-	return m_GameObjectsInSceneSPtr.back().get();
+}
+
+GameObject* Scene::AddGameObject(const std::string& name, const glm::vec3& position)
+{
+    m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, position));
+    return m_GameObjectsInSceneSPtr.back().get();
 }
 
 void Scene::Update() const

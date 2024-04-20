@@ -71,14 +71,14 @@ namespace jul
         static void Bind(ActionEnum actionEnum, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
                          Args&&... args)
         {
-            GetInstance().RegisterCommand<FunctionCommand>(
+            GetInstance().RegisterCommand<MemberFunctionCommand>(
                 static_cast<int>(actionEnum), buttonState, controllerIndex, allowKeyboard, args...);
         }
 
         template<typename ActionEnum>
-        static void AddAction(ActionEnum actionEnum, const InputAction action)
+        static void AddAction(ActionEnum actionEnum, InputAction&& action)
         {
-            GetInstance().s_InputActions.emplace(static_cast<int>(actionEnum), std::move(action));
+            GetInstance().m_InputActions.emplace(static_cast<int>(actionEnum), action);
         }
 
         inline static float g_StickDeadzone{ 0.15f };
@@ -92,11 +92,11 @@ namespace jul
         void RegisterCommand(int actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
                              Args&&... args)
         {
-            assert(INPUT_ACTIONS.contains(actionName) && "Action Does Not Exist");
+            assert(m_InputActions.contains(actionName) && "Action Does Not Exist");
             m_Binds.emplace_back(buttonState,
                                  controllerIndex,
                                  allowKeyboard,
-                                 s_InputActions.at(actionName),
+                                 m_InputActions.at(actionName),
                                  std::make_unique<CommandType>(args...));
         }
 
@@ -127,6 +127,6 @@ namespace jul
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
 
         std::vector<InputBinding> m_Binds;
-        std::map<int, InputAction> s_InputActions{};
+        std::map<int, InputAction> m_InputActions{};
     };
 }

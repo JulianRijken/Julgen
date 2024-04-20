@@ -44,9 +44,4 @@ void jul::TriggerTestCommand::Execute(InputContext context)
     std::cout << "Trigger Input: " << INPUT << '\n';
 }
 
-
-
-void jul::FunctionCommand::Execute(InputContext context)
-{
-    m_Function(context);
-}
+void jul::MemberFunctionCommand::Execute(InputContext context) { m_Function(context); }
