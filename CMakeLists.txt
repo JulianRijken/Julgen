@@ -11,7 +11,7 @@ set(TARGET_NAME julgen)
 option(USE_XINPUT "Switches between SDL and XInput" FALSE)
 option(USE_STEAMWORKS "Use steamworks SDK (must provide it in External/steamworks)" FALSE)
 
-set(JULGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Julgen)
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
 set(IMGUI_SOURCE_FILES
@@ -36,46 +36,37 @@ set(IMGUI_SOURCE_FILES
 
 
 set(JULGEN_SOURCE_FILES
-    Julgen/Engine/GlobalSettings.h #HEADER
-    Julgen/Engine/Singleton.h #HEADER
-    Julgen/Engine/Event.h #HEADER
-    Julgen/Engine/MathExtensions.h #HEADER
+    ${SOURCE_DIR}/Engine/GameSettings.h #HEADER
+    ${SOURCE_DIR}/Engine/Singleton.h #HEADER
+    ${SOURCE_DIR}/Engine/Event.h #HEADER
+    ${SOURCE_DIR}/Engine/MathExtensions.h #HEADER
 
-    Julgen/Engine/Command.cpp                   Julgen/Engine/Command.h
-    Julgen/Engine/Font.cpp                      Julgen/Engine/Font.h
-    Julgen/Engine/GameTime.cpp                  Julgen/Engine/GameTime.h
-    Julgen/Engine/GUI.cpp                       Julgen/Engine/GUI.h
-    Julgen/Engine/Input.cpp                     Julgen/Engine/Input.h
-    Julgen/Engine/RenderManager.cpp             Julgen/Engine/RenderManager.h
-    Julgen/Engine/ResourceManager.cpp           Julgen/Engine/ResourceManager.h
-    Julgen/Engine/Scene.cpp                     Julgen/Engine/Scene.h
-    Julgen/Engine/SceneManager.cpp              Julgen/Engine/SceneManager.h
-    Julgen/Engine/Sprite.cpp                    Julgen/Engine/Sprite.h
-    Julgen/Engine/Texture2D.cpp                 Julgen/Engine/Texture2D.h
-    Julgen/Engine/Achievement.cpp               Julgen/Engine/Achievement.h
-    Julgen/Engine/MessageQueue.cpp              Julgen/Engine/MessageQueue.h
+    ${SOURCE_DIR}/Engine/Command.cpp                   ${SOURCE_DIR}/Engine/Command.h
+    ${SOURCE_DIR}/Engine/Font.cpp                      ${SOURCE_DIR}/Engine/Font.h
+    ${SOURCE_DIR}/Engine/GameTime.cpp                  ${SOURCE_DIR}/Engine/GameTime.h
+    ${SOURCE_DIR}/Engine/GUI.cpp                       ${SOURCE_DIR}/Engine/GUI.h
+    ${SOURCE_DIR}/Engine/Input.cpp                     ${SOURCE_DIR}/Engine/Input.h
+    ${SOURCE_DIR}/Engine/RenderManager.cpp             ${SOURCE_DIR}/Engine/RenderManager.h
+    ${SOURCE_DIR}/Engine/ResourceManager.cpp           ${SOURCE_DIR}/Engine/ResourceManager.h
+    ${SOURCE_DIR}/Engine/Scene.cpp                     ${SOURCE_DIR}/Engine/Scene.h
+    ${SOURCE_DIR}/Engine/SceneManager.cpp              ${SOURCE_DIR}/Engine/SceneManager.h
+    ${SOURCE_DIR}/Engine/Sprite.cpp                    ${SOURCE_DIR}/Engine/Sprite.h
+    ${SOURCE_DIR}/Engine/Texture2D.cpp                 ${SOURCE_DIR}/Engine/Texture2D.h
+    ${SOURCE_DIR}/Engine/Achievement.cpp               ${SOURCE_DIR}/Engine/Achievement.h
+    ${SOURCE_DIR}/Engine/MessageQueue.cpp              ${SOURCE_DIR}/Engine/MessageQueue.h
 
-    Julgen/Game/AutoMove.cpp                    Julgen/Game/AutoMove.h
-    Julgen/Game/AutoRotateAround.cpp            Julgen/Game/AutoRotateAround.h
-    Julgen/Game/Bounce.cpp                      Julgen/Game/Bounce.h
-    Julgen/Game/FpsCounter.cpp                  Julgen/Game/FpsCounter.h
-    Julgen/Game/PlotExample.cpp                 Julgen/Game/PlotExample.h
-    Julgen/Game/Player.cpp                      Julgen/Game/Player.h
-    Julgen/Game/Character.cpp                   Julgen/Game/Character.h
-    Julgen/Game/PlayerHUD.cpp                   Julgen/Game/PlayerHUD.h
+    ${SOURCE_DIR}/Main/Main.cpp
+    ${SOURCE_DIR}/Main/Julgen.cpp                      ${SOURCE_DIR}/Main/Julgen.h
 
-    Julgen/Main/Main.cpp
-    Julgen/Main/Julgen.cpp                      Julgen/Main/Julgen.h
+    ${SOURCE_DIR}/ObjectSystem/Component.cpp           ${SOURCE_DIR}/ObjectSystem/Component.h
+    ${SOURCE_DIR}/ObjectSystem/GameObject.cpp          ${SOURCE_DIR}/ObjectSystem/GameObject.h
+    ${SOURCE_DIR}/ObjectSystem/Object.cpp              ${SOURCE_DIR}/ObjectSystem/Object.h
+    ${SOURCE_DIR}/ObjectSystem/RenderComponent.cpp     ${SOURCE_DIR}/ObjectSystem/RenderComponent.h
 
-    Julgen/ObjectSystem/Component.cpp           Julgen/ObjectSystem/Component.h
-    Julgen/ObjectSystem/GameObject.cpp          Julgen/ObjectSystem/GameObject.h
-    Julgen/ObjectSystem/Object.cpp              Julgen/ObjectSystem/Object.h
-    Julgen/ObjectSystem/RenderComponent.cpp     Julgen/ObjectSystem/RenderComponent.h
-
-    Julgen/Components/SpriteRenderer.cpp        Julgen/Components/SpriteRenderer.h
-    Julgen/Components/TextRenderer.cpp          Julgen/Components/TextRenderer.h
-    Julgen/Components/Transform.cpp             Julgen/Components/Transform.h
-    Julgen/Components/Animator.cpp              Julgen/Components/Animator.h
+    ${SOURCE_DIR}/Components/SpriteRenderer.cpp        ${SOURCE_DIR}/Components/SpriteRenderer.h
+    ${SOURCE_DIR}/Components/TextRenderer.cpp          ${SOURCE_DIR}/Components/TextRenderer.h
+    ${SOURCE_DIR}/Components/Transform.cpp             ${SOURCE_DIR}/Components/Transform.h
+    ${SOURCE_DIR}/Components/Animator.cpp              ${SOURCE_DIR}/Components/Animator.h
 
 )
 
@@ -84,12 +75,12 @@ set(JULGEN_SOURCE_FILES
 if(USE_XINPUT)
     message("InputImplXInput is enabled")
     list(APPEND JULGEN_SOURCE_FILES
-        Julgen/Engine/InputImplXInput.cpp
+        ${SOURCE_DIR}/Engine/InputImplXInput.cpp
     )
 else()
     message("InputImplSDL is enabled")
     list(APPEND JULGEN_SOURCE_FILES
-        Julgen/Engine/InputImplSDL.cpp
+        ${SOURCE_DIR}/Engine/InputImplSDL.cpp
     )
 endif()
 
@@ -101,12 +92,10 @@ add_library(${TARGET_NAME} STATIC
 
 
 target_include_directories(${TARGET_NAME} PUBLIC
-    ${JULGEN_SOURCE_DIR}
-    ${JULGEN_SOURCE_DIR}/Components
-    ${JULGEN_SOURCE_DIR}/Main
-    ${JULGEN_SOURCE_DIR}/Engine
-    ${JULGEN_SOURCE_DIR}/ObjectSystem
-    ${JULGEN_SOURCE_DIR}/Game
+    ${SOURCE_DIR}/Components
+    ${SOURCE_DIR}/Main
+    ${SOURCE_DIR}/Engine
+    ${SOURCE_DIR}/ObjectSystem
 
     ${CMAKE_CURRENT_SOURCE_DIR}/External
     ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui
@@ -225,6 +214,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC glm::glm)
 
 
 
+
 # add SDL2
 if (WIN32)
   FetchContent_Declare(
@@ -297,7 +287,7 @@ if (WIN32)
   endif()
 
   # set all include directories
-  target_include_directories(${TARGET_NAME} PRIVATE
+  target_include_directories(${TARGET_NAME} PUBLIC
     ${VLD_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
