@@ -56,11 +56,11 @@ jul::Julgen::Julgen()
 
     InitSettings();
 
-    g_Window = SDL_CreateWindow(GameSettings::g_WindowTitle.c_str(),
+    g_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
-                                GameSettings::g_WindowWidth,
-                                GameSettings::g_WindowHeight,
+                                GameSettings::s_WindowWidth,
+                                GameSettings::s_WindowHeight,
                                 SDL_WINDOW_OPENGL);
 
     if(g_Window == nullptr)

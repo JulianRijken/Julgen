@@ -38,7 +38,7 @@ void jul::RenderManager::Initialize(SDL_Window* window)
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 
-    SDL_RenderSetLogicalSize(m_RendererPtr,GameSettings::g_RenderWidth,GameSettings::g_RenderHeight);
+    SDL_RenderSetLogicalSize(m_RendererPtr,GameSettings::s_RenderWidth,GameSettings::s_RenderHeight);
 }
 
 
@@ -67,8 +67,8 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     clipSpacePos /= clipSpacePos.w;
 
     // Convert to clip screen space
-    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::g_RenderWidth;
-    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GameSettings::g_RenderHeight;
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::s_RenderWidth;
+    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GameSettings::s_RenderHeight;
 
     return glm::vec3(x_screen, y_screen, clipSpacePos.z);
 }
@@ -133,20 +133,15 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
     SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void jul::RenderManager::RenderTexture(
-    const Texture2D& texture,
-    [[maybe_unused]] const glm::vec2 drawLocation,
-    [[maybe_unused]] const glm::vec2 srcLocation,
-    [[maybe_unused]] const glm::ivec2 cellSize,
-    int pixelsPerUnit,
-    glm::vec2 pivot,
-    bool flipX,
-    bool flipY) const
+void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2 drawLocation,
+                                       const glm::vec2 srcLocation, const glm::ivec2 cellSize, int pixelsPerUnit,
+                                       glm::vec2 pivot, bool flipX, bool flipY) const
 {
 
-    glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f), m_OrthoSize);
-    glm::vec2 cellSizeWorld = {cellSize.x / static_cast<float>(pixelsPerUnit), -(cellSize.y / static_cast<float>(pixelsPerUnit))};
-    glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
+    const glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f), m_OrthoSize);
+    const glm::vec2 cellSizeWorld = { static_cast<float>(cellSize.x) / static_cast<float>(pixelsPerUnit),
+                                      -(static_cast<float>(cellSize.y) / static_cast<float>(pixelsPerUnit)) };
+    const glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
 
     SDL_Rect dstRect{};
     dstRect.x = static_cast<int>(topLeft.x - rectSize.x * pivot.x);

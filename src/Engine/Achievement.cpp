@@ -26,7 +26,7 @@ void jul::Achievement::OnScoreChange(const Message& message)
 {
     try
     {
-        const int score = std::any_cast<int>(message.argument1);
+        const int score = std::any_cast<int>(message.arguments[0]);
 
         if(score >= 500)
             Unlock(AchievementType::Winner);

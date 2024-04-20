@@ -20,28 +20,18 @@ namespace jul
 
         [[nodiscard]] bool HasKeyboardKey(SDL_Scancode compareKey) const
         {
-            return std::ranges::count(keyboardButtons,compareKey) > 0;
+            return std::ranges::count(keyboardButtons, compareKey) > 0;
         }
 
         [[nodiscard]] bool HasControllerButton(SDL_GameControllerButton compareButton) const
         {
-            return std::ranges::count(controllerButtons,compareButton) > 0;
+            return std::ranges::count(controllerButtons, compareButton) > 0;
         }
 
         [[nodiscard]] bool HasControllerAxis(SDL_GameControllerAxis compareAxis) const
         {
-            return std::ranges::count(controllerAxis,compareAxis) > 0;
+            return std::ranges::count(controllerAxis, compareAxis) > 0;
         }
-    };
-
-    enum class InputBind
-    {
-        TestLivesButton,
-        Jump,
-        MoveLeft,
-        MoveRight,
-        MoveStick,
-        Attack,
     };
 
     enum class ButtonState
@@ -77,29 +67,36 @@ namespace jul
         Input& operator=(Input&&) noexcept = delete;
 
         // Used as a shorthand for a function command
-        template<typename... Args>
-        static void Bind(InputBind actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
+        template<typename... Args, typename ActionEnum>
+        static void Bind(ActionEnum actionEnum, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
                          Args&&... args)
         {
             GetInstance().RegisterCommand<FunctionCommand>(
-                actionName, buttonState, controllerIndex, allowKeyboard, args...);
+                static_cast<int>(actionEnum), buttonState, controllerIndex, allowKeyboard, args...);
+        }
+
+        template<typename ActionEnum>
+        static void AddAction(ActionEnum actionEnum, const InputAction action)
+        {
+            GetInstance().s_InputActions.emplace(static_cast<int>(actionEnum), std::move(action));
         }
 
         inline static float g_StickDeadzone{ 0.15f };
         inline static float g_TriggerDeadzone{ 0.05f };
-        inline static std::map<InputBind, InputAction> g_InputActions{};
+
 
         void ProcessInput(bool& shouldQuit);
 
-        template <typename CommandType, typename... Args>
+        template<typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
-        void RegisterCommand(InputBind actionName, ButtonState buttonState,int controllerIndex,bool allowKeyboard, Args&&... args)
+        void RegisterCommand(int actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
+                             Args&&... args)
         {
             assert(INPUT_ACTIONS.contains(actionName) && "Action Does Not Exist");
             m_Binds.emplace_back(buttonState,
                                  controllerIndex,
                                  allowKeyboard,
-                                 g_InputActions.at(actionName),
+                                 s_InputActions.at(actionName),
                                  std::make_unique<CommandType>(args...));
         }
 
@@ -130,5 +127,6 @@ namespace jul
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
 
         std::vector<InputBinding> m_Binds;
+        std::map<int, InputAction> s_InputActions{};
     };
 }
