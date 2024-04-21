@@ -13,6 +13,7 @@
 #include "GUI.h"
 #include "Input.h"
 #include "MessageQueue.h"
+#include "Physics.h"
 #include "RenderManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
@@ -69,7 +70,7 @@ jul::Julgen::Julgen()
     RenderManager::GetInstance().Initialize(g_Window);
     EngineGUI::GetInstance().Initialize(g_Window, RenderManager::GetInstance().GetSDLRenderer());
     Achievement::GetInstance().Initialize();
-
+    Physics::GetInstance().Initialize();
     ResourceManager::Initialize();
 
     GameStart();
@@ -129,8 +130,9 @@ void jul::Julgen::RunOneFrame()
 	// Fixed Update,
 	while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
-		SceneManager::GetInstance().FixedUpdate();
-		m_Lag -= GameTime::GetFixedDeltaTime();
+        SceneManager::GetInstance().FixedUpdate();
+        Physics::GetInstance().FixedUpdate();
+        m_Lag -= GameTime::GetFixedDeltaTime();
 	}
 
 	// Update

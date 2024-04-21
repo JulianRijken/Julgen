@@ -30,13 +30,14 @@ namespace jul
 
         [[nodiscard]] static float GetFixedDeltaTimeF() { return static_cast<float>(g_FixedDeltaTime); }
 
-        inline static double g_MaxDeltaTime{ 1.0 / 30.0 };
-        inline static double g_FixedDeltaTime{ 1.0 / 60.0 };
 
     private:
         static void Update();
 
         static void AddToFrameCount() { g_FrameCount++; }
+
+        inline static double g_MaxDeltaTime{ 1.0 / 30.0 };
+        inline static double g_FixedDeltaTime{ 1.0 / 60.0 };
 
         inline static int g_FrameCount{ 0 };
         inline static double g_ElapsedTime{ 0 };

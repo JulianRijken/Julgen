@@ -41,6 +41,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Event.h #HEADER
     ${SOURCE_DIR}/Engine/MathExtensions.h #HEADER
 
+    ${SOURCE_DIR}/Engine/Physics.cpp                   ${SOURCE_DIR}/Engine/Physics.h
     ${SOURCE_DIR}/Engine/Command.cpp                   ${SOURCE_DIR}/Engine/Command.h
     ${SOURCE_DIR}/Engine/Font.cpp                      ${SOURCE_DIR}/Engine/Font.h
     ${SOURCE_DIR}/Engine/GameTime.cpp                  ${SOURCE_DIR}/Engine/GameTime.h
@@ -67,6 +68,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Components/TextRenderer.cpp          ${SOURCE_DIR}/Components/TextRenderer.h
     ${SOURCE_DIR}/Components/Transform.cpp             ${SOURCE_DIR}/Components/Transform.h
     ${SOURCE_DIR}/Components/Animator.cpp              ${SOURCE_DIR}/Components/Animator.h
+    ${SOURCE_DIR}/Components/Rigidbody.cpp             ${SOURCE_DIR}/Components/Rigidbody.h
 
 )
 
