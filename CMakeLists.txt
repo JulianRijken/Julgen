@@ -9,29 +9,29 @@ set(TARGET_NAME julgen)
 
 
 option(USE_XINPUT "Switches between SDL and XInput" FALSE)
-option(USE_STEAMWORKS "Use steamworks SDK (must provide it in External/steamworks)" FALSE)
+option(USE_STEAMWORKS "Use steamworks SDK (must provide it in external/steamworks)" FALSE)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
 set(IMGUI_SOURCE_FILES
     #https://github.com/epezent/implot
-    External/imgui/implot.cpp
-    External/imgui/implot_demo.cpp
-    External/imgui/implot_items.cpp
-    External/imgui/implot_items.cpp
+    external/imgui/implot.cpp
+    external/imgui/implot_demo.cpp
+    external/imgui/implot_items.cpp
+    external/imgui/implot_items.cpp
 
-    External/imgui/backends/imgui_impl_sdl2
-    External/imgui/backends/imgui_impl_sdlrenderer2
+    external/imgui/backends/imgui_impl_sdl2
+    external/imgui/backends/imgui_impl_sdlrenderer2
 
-    External/imgui/imgui_demo.cpp
+    external/imgui/imgui_demo.cpp
 
-    External/imgui/imgui.cpp
-    External/imgui/imgui_draw.cpp
-    External/imgui/imgui_widgets.cpp
-    External/imgui/imgui_tables.cpp
-    External/imgui/backends/imgui_impl_sdl2.cpp
-    External/imgui/backends/imgui_impl_sdlrenderer2.cpp
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/backends/imgui_impl_sdl2.cpp
+    external/imgui/backends/imgui_impl_sdlrenderer2.cpp
 )
 
 
@@ -97,9 +97,9 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${SOURCE_DIR}/Engine
     ${SOURCE_DIR}/ObjectSystem
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/External
-    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui
-    ${CMAKE_CURRENT_SOURCE_DIR}/External/imgui/backends
+    ${CMAKE_CURRENT_SOURCE_DIR}/external
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
 )
 
 
@@ -110,18 +110,18 @@ endif()
 
 # Credits to All-Purpose Mat https://allpurposem.at/ for providing steamworks cmake inegration
 if(USE_STEAMWORKS)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/External/steamworks")
-        message(FATAL_ERROR "Steamworks directory not found. Please place the contents of the Steamworks zip file at External/steamworks")
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/external/steamworks")
+        message(FATAL_ERROR "Steamworks directory not found. Please place the contents of the Steamworks zip file at external/steamworks")
     else()
-        file(GLOB STEAMWORKS_FILES "${CMAKE_SOURCE_DIR}/External/steamworks/*")
+        file(GLOB STEAMWORKS_FILES "${CMAKE_SOURCE_DIR}/external/steamworks/*")
         if(NOT STEAMWORKS_FILES)
             message(FATAL_ERROR "Steamworks directory is empty. Please make sure it contains the necessary files.")
         endif()
     endif()
 
 
-    set(STEAMWORKS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/External/steamworks/public/steam)
-    set(STEAMWORKS_LIB_DIR ${CMAKE_SOURCE_DIR}/External/steamworks/redistributable_bin)
+    set(STEAMWORKS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/steamworks/public/steam)
+    set(STEAMWORKS_LIB_DIR ${CMAKE_SOURCE_DIR}/external/steamworks/redistributable_bin)
 
     if(WIN32)
         if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -187,6 +187,10 @@ target_compile_options(${TARGET_NAME} PUBLIC
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /MP>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
+
+
+add_subdirectory(external/Box2D-cmake)
+target_link_libraries(${TARGET_NAME} PUBLIC tobanteGaming::Box2D)
 
 
 include(FetchContent)
