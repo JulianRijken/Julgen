@@ -41,7 +41,6 @@
 #endif
 
 
-SDL_Window* g_Window{};
 
 jul::Julgen::Julgen()
 {
@@ -70,21 +69,21 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
 
-    g_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
+    m_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 GameSettings::s_WindowWidth,
                                 GameSettings::s_WindowHeight,
                                 SDL_WINDOW_OPENGL);
 
-    if(g_Window == nullptr)
+    if(m_Window == nullptr)
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
-    RenderManager::GetInstance().Initialize(g_Window);
+    RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
     Physics::GetInstance().Initialize();
 
-    EngineGUI::Initialize(g_Window, RenderManager::GetInstance().GetSDLRenderer());
+    EngineGUI::Initialize(m_Window, RenderManager::GetInstance().GetSDLRenderer());
     ResourceManager::Initialize();
 
     GameStart();
@@ -95,8 +94,8 @@ jul::Julgen::~Julgen()
 {
     EngineGUI::Destroy();
     RenderManager::GetInstance().Destroy();
-    SDL_DestroyWindow(g_Window);
-    g_Window = nullptr;
+    SDL_DestroyWindow(m_Window);
+    m_Window = nullptr;
 
     SDL_Quit();
 

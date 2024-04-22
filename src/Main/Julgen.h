@@ -1,13 +1,15 @@
 #pragma once
 
+struct SDL_Window;
+
 namespace jul
 {
 	class Julgen final
 	{
-	public:
 
-		explicit Julgen();
-		~Julgen();
+    public:
+        explicit Julgen();
+        ~Julgen();
 
         Julgen(Julgen&&) = delete;
         Julgen(const Julgen&) = delete;
@@ -23,5 +25,6 @@ namespace jul
     private:
         double m_Lag{};
         bool m_IsApplicationQuitting{};
+        SDL_Window* m_Window;
     };
 }  // namespace jul
