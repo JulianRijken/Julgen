@@ -4,7 +4,10 @@
 
 #include "GameTime.h"
 
-void Physics::Initialize() { m_World = std::make_unique<b2World>(b2Vec2{ 0, -9.81f }); }
+Physics::Physics() :
+    m_World(std::make_unique<b2World>(b2Vec2{ 0, -9.81f }))
+{
+}
 
 void Physics::FixedUpdate()
 {

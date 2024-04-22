@@ -94,7 +94,7 @@ namespace jul
         {
             Input& inputInstance = GetInstance();
 
-            assert(m_InputActions.contains(actionName) && "Action Does Not Exist");
+            assert(inputInstance.m_InputActions.contains(actionName) && "Action Does Not Exist");
             inputInstance.m_Binds.emplace_back(buttonState,
                                                controllerIndex,
                                                allowKeyboard,

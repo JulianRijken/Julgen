@@ -1,8 +1,8 @@
 #pragma once
 
-
 struct SDL_Window;
 struct SDL_Renderer;
+union SDL_Event;
 
 namespace jul
 {
@@ -15,6 +15,7 @@ namespace jul
         static void Destroy();
         static void NewFrame();
         static void EndFrame();
+        static bool ProcessEvent(const SDL_Event* event);
     };
 }
 

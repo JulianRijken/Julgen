@@ -1,16 +1,15 @@
 #pragma once
 #include <Box2D/Box2D.h>
 
-#include "Singleton.h"
-
-class Physics final : public jul::Singleton<Physics>
+class Physics final
 {
+
 public:
-    void Initialize();
+    Physics();
+
     void FixedUpdate();
 
     b2World& GetWorld() { return *m_World; }
-
 
 private:
     std::unique_ptr<b2World> m_World;

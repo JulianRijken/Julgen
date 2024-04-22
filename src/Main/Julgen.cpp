@@ -12,6 +12,7 @@
 #include "GameTime.h"
 #include "GUI.h"
 #include "Input.h"
+#include "Locator.h"
 #include "MessageQueue.h"
 #include "Physics.h"
 #include "RenderManager.h"
@@ -79,9 +80,12 @@ jul::Julgen::Julgen()
     if(m_Window == nullptr)
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
+
+    Locator::Provide<Physics>();
+
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
-    Physics::GetInstance().Initialize();
+
 
     EngineGUI::Initialize(m_Window, RenderManager::GetInstance().GetSDLRenderer());
     ResourceManager::Initialize();
@@ -144,7 +148,7 @@ void jul::Julgen::RunOneFrame()
 	while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
         SceneManager::GetInstance().FixedUpdate();
-        Physics::GetInstance().FixedUpdate();
+        Locator::Get<Physics>().FixedUpdate();  // TODO: Needs cache?
         m_Lag -= GameTime::GetFixedDeltaTime();
 	}
 

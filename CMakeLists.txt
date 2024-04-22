@@ -36,10 +36,11 @@ set(IMGUI_SOURCE_FILES
 
 
 set(JULGEN_SOURCE_FILES
-    ${SOURCE_DIR}/Engine/GameSettings.h #HEADER
-    ${SOURCE_DIR}/Engine/Singleton.h #HEADER
-    ${SOURCE_DIR}/Engine/Event.h #HEADER
-    ${SOURCE_DIR}/Engine/MathExtensions.h #HEADER
+    ${SOURCE_DIR}/Engine/GameSettings.h
+    ${SOURCE_DIR}/Engine/Singleton.h
+    ${SOURCE_DIR}/Engine/Event.h
+    ${SOURCE_DIR}/Engine/MathExtensions.h
+    ${SOURCE_DIR}/Engine/Locator.h
 
     ${SOURCE_DIR}/Engine/Physics.cpp                   ${SOURCE_DIR}/Engine/Physics.h
     ${SOURCE_DIR}/Engine/Command.cpp                   ${SOURCE_DIR}/Engine/Command.h

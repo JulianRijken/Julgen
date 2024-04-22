@@ -1,7 +1,9 @@
 #include "Input.h"
 
-#include <SDL.h>
 #include <imgui_impl_sdl2.h>
+#include <SDL.h>
+
+#include "GUI.h"
 
 
 // TODO: Maybe not handle shouldQuit via a reference
@@ -28,7 +30,7 @@ void jul::Input::ProcessInput(bool& shouldQuit)
         // TODO: Should be before the other input
         // But it should only take input when focused
         // No clue why it always takes keyboard events now ¯\_(ツ)_/¯
-        if(ImGui_ImplSDL2_ProcessEvent(&event))
+        if(EngineGUI::ProcessEvent(&event))
             continue;
     }
 

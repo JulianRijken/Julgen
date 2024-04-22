@@ -38,6 +38,7 @@ void jul::EngineGUI::EndFrame()
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 }
 
+bool jul::EngineGUI::ProcessEvent(const SDL_Event* event) { return ImGui_ImplSDL2_ProcessEvent(event); }
 
 
 void jul::EngineGUI::Destroy()

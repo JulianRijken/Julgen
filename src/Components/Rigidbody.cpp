@@ -1,5 +1,6 @@
 #include "Rigidbody.h"
 
+#include "Locator.h"
 #include "Physics.h"
 #include "Transform.h"
 
@@ -14,7 +15,7 @@ Rigidbody::Rigidbody(jul::GameObject* parent) :
     bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
     bodyDef.fixedRotation = true;  // TODO: Game currently does not yet support rotation
-    m_BodyPtr = Physics::GetInstance().GetWorld().CreateBody(&bodyDef);
+    m_BodyPtr = Locator::Get<Physics>().GetWorld().CreateBody(&bodyDef);
 
 
     // Collider
