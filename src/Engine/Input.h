@@ -89,15 +89,17 @@ namespace jul
 
         template<typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
-        void RegisterCommand(int actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
-                             Args&&... args)
+        static void RegisterCommand(int actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
+                                    Args&&... args)
         {
+            Input& inputInstance = GetInstance();
+
             assert(m_InputActions.contains(actionName) && "Action Does Not Exist");
-            m_Binds.emplace_back(buttonState,
-                                 controllerIndex,
-                                 allowKeyboard,
-                                 m_InputActions.at(actionName),
-                                 std::make_unique<CommandType>(args...));
+            inputInstance.m_Binds.emplace_back(buttonState,
+                                               controllerIndex,
+                                               allowKeyboard,
+                                               inputInstance.m_InputActions.at(actionName),
+                                               std::make_unique<CommandType>(args...));
         }
 
     private:
@@ -126,7 +128,7 @@ namespace jul
         // Defined by ControllerInputImpl
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
 
-        std::vector<InputBinding> m_Binds;
+        std::vector<InputBinding> m_Binds{};
         std::map<int, InputAction> m_InputActions{};
     };
 }

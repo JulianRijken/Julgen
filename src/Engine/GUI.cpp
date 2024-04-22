@@ -25,14 +25,14 @@ void jul::EngineGUI::Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr
     ImGui_ImplSDLRenderer2_Init(rendererPtr);
 }
 
-void jul::EngineGUI::NewFrame() const
+void jul::EngineGUI::NewFrame()
 {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 }
 
-void jul::EngineGUI::EndFrame() const
+void jul::EngineGUI::EndFrame()
 {
     ImGui::Render();
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());

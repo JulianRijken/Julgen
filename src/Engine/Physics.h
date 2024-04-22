@@ -3,13 +3,14 @@
 
 #include "Singleton.h"
 
-class Physics : public jul::Singleton<Physics>
+class Physics final : public jul::Singleton<Physics>
 {
 public:
     void Initialize();
     void FixedUpdate();
 
     b2World& GetWorld() { return *m_World; }
+
 
 private:
     std::unique_ptr<b2World> m_World;

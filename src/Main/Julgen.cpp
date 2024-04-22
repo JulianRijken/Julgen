@@ -45,6 +45,8 @@ SDL_Window* g_Window{};
 
 jul::Julgen::Julgen()
 {
+    PreInit();
+
 #ifdef USE_STEAMWORKS
     if(not SteamAPI_Init())
         std::runtime_error("Fatal Error - Steam must be running to play this game (SteamAPI_Init failed).");
@@ -52,10 +54,21 @@ jul::Julgen::Julgen()
         std::cout << "Steam successfully initialized!" << std::endl;
 #endif
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
-		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
+#ifdef WIN32
+    if(GameSettings::m_ShowConsole)
+    {
+        if(AllocConsole() == TRUE)
+        {
+            FILE* empty{};
+            freopen_s(&empty, "CONOUT$", "w", stdout);
+            freopen_s(&empty, "CONOUT$", "w", stderr);
+        }
+    }
+#endif
 
-    InitSettings();
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
+        throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
+
 
     g_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
                                 SDL_WINDOWPOS_CENTERED,
@@ -68,9 +81,10 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
     RenderManager::GetInstance().Initialize(g_Window);
-    EngineGUI::GetInstance().Initialize(g_Window, RenderManager::GetInstance().GetSDLRenderer());
     Achievement::GetInstance().Initialize();
     Physics::GetInstance().Initialize();
+
+    EngineGUI::Initialize(g_Window, RenderManager::GetInstance().GetSDLRenderer());
     ResourceManager::Initialize();
 
     GameStart();
@@ -79,8 +93,8 @@ jul::Julgen::Julgen()
 
 jul::Julgen::~Julgen()
 {
-    EngineGUI::GetInstance().Destroy();
-	RenderManager::GetInstance().Destroy();
+    EngineGUI::Destroy();
+    RenderManager::GetInstance().Destroy();
     SDL_DestroyWindow(g_Window);
     g_Window = nullptr;
 

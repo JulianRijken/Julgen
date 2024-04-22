@@ -12,7 +12,7 @@ namespace jul
 
     using InputContext = std::optional<std::variant<float, glm::vec2>>;
 
-	class BaseCommand
+    class BaseCommand
 	{
     public:
         BaseCommand(const BaseCommand&) = delete;

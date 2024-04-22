@@ -1,22 +1,20 @@
 #pragma once
 
-#include "Singleton.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
 
 namespace jul
 {
-    /**
-     * Simple RAII wrapper for the ImGUI renderer
-     */
-class EngineGUI final : public Singleton<EngineGUI>
+    class EngineGUI final
     {
     public:
-        void Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
-        void Destroy();
-        void NewFrame() const;
-        void EndFrame() const;
+        EngineGUI() = delete;
+
+        static void Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
+        static void Destroy();
+        static void NewFrame();
+        static void EndFrame();
     };
 }
 

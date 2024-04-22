@@ -17,7 +17,7 @@ namespace jul
 		void Run();
 		void RunOneFrame();
 
-        void InitSettings();
+        void PreInit();
         void GameStart();
 
     private:

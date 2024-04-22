@@ -80,11 +80,11 @@ void jul::RenderManager::Render() const
 	const SDL_Color& color = GetBackgroundColor();
     SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a);
     SDL_RenderClear(m_RendererPtr);
-    EngineGUI::GetInstance().NewFrame();
+    EngineGUI::NewFrame();
     {
         RenderObjects();
     }
-    EngineGUI::GetInstance().EndFrame();
+    EngineGUI::EndFrame();
     SDL_RenderPresent(m_RendererPtr);
 }
 

@@ -6,21 +6,26 @@
 Rigidbody::Rigidbody(jul::GameObject* parent) :
     jul::Component(parent)
 {
-
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 4.0f);
+
+    // Init the start positon
+    const glm::vec3 transformPosition = Transform().WorldPosition();
+    bodyDef.position.Set(transformPosition.x, transformPosition.y);
+
+    bodyDef.fixedRotation = true;  // TODO: Game currently does not yet support rotation
     m_BodyPtr = Physics::GetInstance().GetWorld().CreateBody(&bodyDef);
 
 
+    // Collider
     b2PolygonShape dynamicBox;
     dynamicBox.SetAsBox(1.0f, 1.0f);
-
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
     fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
-    fixtureDef.restitution = 1.1f;
+    fixtureDef.friction = 0.0f;
+    fixtureDef.restitution = 1.0f;
+
     m_BodyPtr->CreateFixture(&fixtureDef);
 }
 

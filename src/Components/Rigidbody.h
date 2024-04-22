@@ -13,8 +13,11 @@ public:
     Rigidbody& operator=(const Rigidbody&) = delete;
     Rigidbody& operator=(Rigidbody&&) noexcept = delete;
 
-    void FixedUpdate() override;
+    // TODO: Decide between abstracting box 2D or returning this
+    b2Body& GetBody() { return *m_BodyPtr; }
 
+
+    void FixedUpdate() override;
 private:
     b2Body* m_BodyPtr;  // Owned by world
 };
