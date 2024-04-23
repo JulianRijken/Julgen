@@ -1,42 +1,44 @@
 #pragma once
 
-#include <any>
 #include <memory>
 #include <typeindex>
 
+#include "Service.h"
 #include "unordered_map"
 
-class Locator final
+namespace jul
 {
-public:
-    template<typename Service, typename... Args>
-    static void Provide(Args... args)
+    class Locator final
     {
-        g_Services.emplace(typeid(Service), std::make_shared<Service>(args...));
-    }
+        friend class Julgen;
 
-    // template<typename Service>
-    // static Service* Release()
-    // {
-    //     auto node = g_Services.extract(typeid(Service));
-    //     return node.mapped().
-    // }
+    public:
+        template<typename ServiceType, typename... Args>
+        static void Provide(Args... args)
+        {
+            g_Services.emplace(typeid(ServiceType), std::make_unique<ServiceType>(args...));
+        }
 
-    template<typename Service>
-    static Service& Get()
-    {
-        auto service = g_Services.find(typeid(Service));
+        template<typename ServiceType>
+        static ServiceType& Get()
+        {
+            auto service = g_Services.find(typeid(ServiceType));
 
-        return *std::any_cast<std::shared_ptr<Service>>(service->second);
-    }
+            Service* test = service->second.get();
+            ServiceType* result = dynamic_cast<ServiceType*>(test);
 
-private:
-    static inline std::unordered_map<std::type_index, std::any> g_Services{};
-};
+            return *result;
+        }
 
-// TODO: Implement null service
-// if(service == g_Services.end())
-// {
-//     // Return null
-//     return;
-// }
+        // template<typename ServiceType>
+        // static ServiceType* Release()
+        // {
+        //     auto node = g_Services.extract(typeid(ServiceType));
+        //     return std::any_cast<Service<ServiceType>>(node.mapped()).Release();
+        // }
+
+    private:
+        static inline std::unordered_map<std::type_index, std::unique_ptr<Service>> g_Services{};
+    };
+
+}  // namespace jul

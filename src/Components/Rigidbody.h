@@ -1,24 +1,38 @@
 #pragma once
-#include <Box2D/Box2D.h>
+
+#include <glm/vec2.hpp>
 
 #include "Component.h"
 
-class Rigidbody final : public jul::Component
+class b2Body;
+
+namespace jul
 {
-public:
-    Rigidbody(jul::GameObject* parent);
-
-    Rigidbody(const Rigidbody&) = delete;
-    Rigidbody(Rigidbody&&) noexcept = delete;
-    Rigidbody& operator=(const Rigidbody&) = delete;
-    Rigidbody& operator=(Rigidbody&&) noexcept = delete;
-
-    // TODO: Decide between abstracting box 2D or returning this
-    b2Body& GetBody() { return *m_BodyPtr; }
+    enum class ForceMode
+    {
+        Impulse,
+        Force
+    };
 
 
-    void FixedUpdate() override;
-private:
-    b2Body* m_BodyPtr;  // Owned by world
-};
+    class Rigidbody final : public jul::Component
+    {
+    public:
+        Rigidbody(jul::GameObject* parent);
 
+        Rigidbody(const Rigidbody&) = delete;
+        Rigidbody(Rigidbody&&) noexcept = delete;
+        Rigidbody& operator=(const Rigidbody&) = delete;
+        Rigidbody& operator=(Rigidbody&&) noexcept = delete;
+
+        glm::vec2 Positon();
+        glm::vec2 Velicty();
+        void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
+        void SetPosition(glm::vec2 position);
+        void FixedUpdate() override;
+
+    private:
+        b2Body* m_BodyPtr;  // Owned by world
+    };
+
+}  // namespace jul

@@ -67,7 +67,7 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     clipSpacePos /= clipSpacePos.w;
 
     // Convert to clip screen space
-    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::s_RenderWidth;
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::s_RenderWidth;  // TODO: maybe remove 0.5f
     float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GameSettings::s_RenderHeight;
 
     return glm::vec3(x_screen, y_screen, clipSpacePos.z);

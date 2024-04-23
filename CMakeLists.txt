@@ -41,6 +41,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Event.h
     ${SOURCE_DIR}/Engine/MathExtensions.h
     ${SOURCE_DIR}/Engine/Locator.h
+    ${SOURCE_DIR}/Engine/Service.h
 
     ${SOURCE_DIR}/Engine/Physics.cpp                   ${SOURCE_DIR}/Engine/Physics.h
     ${SOURCE_DIR}/Engine/Command.cpp                   ${SOURCE_DIR}/Engine/Command.h
