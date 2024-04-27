@@ -8,15 +8,18 @@ namespace jul
 
     class Physics final : public jul::Service
     {
+        friend class Rigidbody;
+
     public:
         Physics();
 
         void FixedUpdate();
 
-        // TODO: Should be abstracted away in to functions
-        b2World& GetWorld() { return *m_World; }
-
     private:
+        void AddRidgidbody(Rigidbody* rigidbody);
+        void RemoveRidgidbody(Rigidbody* rigidbody);
+
+
         std::unique_ptr<b2World> m_World;
         int32 m_VelocityIterations = 6;
         int32 m_PositionIterations = 2;

@@ -4,19 +4,18 @@
 #include "Physics.h"
 #include "Transform.h"
 
-jul::Rigidbody::Rigidbody(jul::GameObject* parent) :
-    jul::Component(parent)
+jul::Rigidbody::Rigidbody(GameObject* parent, Settings setting) :
+    jul::Component(parent),
+    m_Settings(setting)
 {
+    const glm::vec3 transformPosition = Transform().WorldPosition();
+
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-
-    // Init the start positon
-    const glm::vec3 transformPosition = Transform().WorldPosition();
     bodyDef.position.Set(transformPosition.x, transformPosition.y);
-
     bodyDef.fixedRotation = true;  // TODO: Game currently does not yet support rotation
-    m_BodyPtr = Locator::Get<Physics>().GetWorld().CreateBody(&bodyDef);
 
+    Locator::Get<Physics>().AddRidgidbody(this);
 
     // Collider
     b2PolygonShape dynamicBox;
@@ -44,7 +43,7 @@ glm::vec2 jul::Rigidbody::Velicty()
 
 void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
 {
-    b2Vec2 b2Force = { force.x, force.y };
+    const b2Vec2 b2Force = { force.x, force.y };
 
     if(forceMode == ForceMode::Force)
         m_BodyPtr->ApplyForceToCenter(b2Force, wake);

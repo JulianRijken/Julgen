@@ -8,17 +8,42 @@ class b2Body;
 
 namespace jul
 {
-    enum class ForceMode
-    {
-        Impulse,
-        Force
-    };
-
-
     class Rigidbody final : public jul::Component
     {
+        friend class Physics;
+
     public:
-        Rigidbody(jul::GameObject* parent);
+        enum class ForceMode
+        {
+            Impulse,
+            Force
+        };
+
+        /// Static: zero mass, zero velocity, may be manually moved.
+        /// Kinematic: zero mass, non-zero velocity set by user, moved by solver.
+        /// Dynamic: positive mass, non-zero velocity determined by forces, moved by solver.
+        enum class Mode
+        {
+            Static,
+            Kinematic,
+            Dynamic
+        };
+
+        struct Settings
+        {
+            Mode mode = Mode::Dynamic;
+            float angle = 0.0f;
+            float linearDamping = 0.0f;
+            float angularDamping = 0.0f;
+            float gravityScale = 1.0f;
+            bool allowSleep = true;
+            bool awake = true;
+            bool fixedRotation = false;
+            bool avoidTunnelingOnDynamicBodies = false;
+            bool active = true;
+        };
+
+        Rigidbody(jul::GameObject* parent, Settings setting);
 
         Rigidbody(const Rigidbody&) = delete;
         Rigidbody(Rigidbody&&) noexcept = delete;
@@ -32,7 +57,8 @@ namespace jul
         void FixedUpdate() override;
 
     private:
-        b2Body* m_BodyPtr;  // Owned by world
+        b2Body* m_BodyPtr{};  // Owned by world
+        Settings m_Settings{};
     };
 
 }  // namespace jul

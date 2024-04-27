@@ -81,6 +81,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Components/Transform.cpp             ${SOURCE_DIR}/Components/Transform.h
     ${SOURCE_DIR}/Components/Animator.cpp              ${SOURCE_DIR}/Components/Animator.h
     ${SOURCE_DIR}/Components/Rigidbody.cpp             ${SOURCE_DIR}/Components/Rigidbody.h
+    ${SOURCE_DIR}/Components/BoxCollider.cpp           ${SOURCE_DIR}/Components/BoxCollider.h
 )
 
 # Switch between sld implementation and xinput implementation
@@ -170,17 +171,3 @@ add_custom_command(TARGET ${TARGET_NAME} PRE_BUILD
                 COMMAND ${CMAKE_COMMAND} -E ${SYMLINK_COMMAND}
                 "${CMAKE_SOURCE_DIR}/Assets"
                 "${CMAKE_BINARY_DIR}/Assets")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
