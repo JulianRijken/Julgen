@@ -2,7 +2,6 @@
 
 namespace jul
 {
-
     class Service
     {
     public:
@@ -14,5 +13,4 @@ namespace jul
         Service& operator=(const Service&) = delete;
         Service& operator=(Service&&) noexcept = delete;
     };
-
 }  // namespace jul

@@ -60,6 +60,10 @@ endfunction()
 
 function(make_libs_available)
 
+    set(FETCHCONTENT_QUIET FALSE)
+
+    include(FetchContent)
+
     if(NOT WIN32)
         find_package(glm REQUIRED)
         find_package(fmt REQUIRED)
@@ -68,10 +72,6 @@ function(make_libs_available)
         find_package(SDL2_ttf REQUIRED)
         find_package(SDL2_image REQUIRED)
     else()
-
-        include(FetchContent)
-
-        set(BUILD_SHARED_LIBS OFF)
 
         message(STATUS "Downloading " glm...)
         FetchContent_Declare(
@@ -90,6 +90,8 @@ function(make_libs_available)
         FetchContent_MakeAvailable(fmt)
 
         message(STATUS "Downloading " sdl2...)
+
+        set(SDL_STATIC OFF)
         FetchContent_Declare(
             sdl2
             GIT_REPOSITORY https://github.com/libsdl-org/SDL
@@ -107,7 +109,6 @@ function(make_libs_available)
 
         # Windows requires building FreeType
         set(SDL2TTF_VENDORED TRUE)
-        set(BUILD_SHARED_LIBS OFF)
 
         message(STATUS "Downloading " sdl2_ttf...)
         FetchContent_Declare(
@@ -117,6 +118,37 @@ function(make_libs_available)
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(sdl2-ttf)
     endif()
+
+
+    message(STATUS "Downloading " soloud...)
+    FetchContent_Declare(
+          soloud
+          GIT_REPOSITORY https://github.com/jarikomppa/soloud.git
+          GIT_TAG 1157475881da0d7f76102578255b937c7d4e8f57
+          GIT_PROGRESS TRUE
+          GIT_SHALLOW TRUE)
+
+      set(SOLOUD_STATIC ON)
+      set(SOLOUD_BACKEND_SDL2 OFF)
+      set(SOLOUD_C_API ON)
+      set(SOLOUD_BACKEND_NULL OFF)
+
+      if(NOT WIN32)
+        set(SOLOUD_BACKEND_ALSA ON)
+      else()
+        set(SOLOUD_BACKEND_WINMM ON)
+      endif()
+
+      FetchContent_GetProperties(soloud)
+      if(NOT SOLOUD_POPULATED)
+          FetchContent_Populate(soloud)
+
+          add_subdirectory(${soloud_SOURCE_DIR}/contrib ${soloud_BINARY_DIR})
+          set(SOLOUD_INCLUDE_DIR ${soloud_SOURCE_DIR}/include PARENT_SCOPE)
+      endif()
+
+      target_compile_options(soloud PRIVATE -Wno-multichar)
+
 endfunction()
 
 function(make_vld_available)
