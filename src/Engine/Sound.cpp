@@ -1,17 +1,15 @@
 #include "Sound.h"
 
-// #include <soloud_wav.h>
+#include <soloud.h>
+#include <soloud_wav.h>
 
-// void jul::Sound::PlaySound()
-// {
+jul::Sound::Sound() { m_SoLoud.init(); }
 
-//     // Declare some variables
-//     SoLoud::Soloud soloud;  // Engine core
-//     SoLoud::Wav sample;     // One sample
+jul::Sound::~Sound() { m_SoLoud.deinit(); }
 
-//     // Initialize SoLoud (automatic back-end selection)
-//     soloud.init();
-
-//     sample.load("Assets/pew_pew.wav");  // Load a wave file
-//     soloud.play(sample);         // Play it
-// }
+void jul::Sound::PlaySound()
+{
+    SoLoud::Wav sample;
+    sample.load("./Assets/SFX/Bubble Bobble SFX (17).wav");  // Load a wave file
+    m_SoLoud.play(sample, 1.0f);
+}

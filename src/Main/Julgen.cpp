@@ -18,6 +18,7 @@
 #include "RenderManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
+#include "Sound.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -82,6 +83,7 @@ jul::Julgen::Julgen()
 
 
     Locator::Provide<Physics>();
+    Locator::Provide<Sound>();
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();

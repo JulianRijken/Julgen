@@ -1,13 +1,19 @@
 #pragma once
+#include <soloud.h>
+
 #include "Service.h"
+
 
 namespace jul
 {
-    class Sound : public Service
+    class Sound final : public Service
     {
     public:
         Sound();
+        ~Sound();
+        void PlaySound();
 
-        // void PlaySound();
+    private:
+        SoLoud::Soloud m_SoLoud;
     };
 }  // namespace jul

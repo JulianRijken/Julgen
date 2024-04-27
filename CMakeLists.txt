@@ -118,7 +118,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${SOURCE_DIR}/Engine
     ${SOURCE_DIR}/ObjectSystem
 
-    ${SOLOUD_INCLUDE_DIR}
+    ${SOLOUD_INCLUDE_DIR} #Set in Libraries
 
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui

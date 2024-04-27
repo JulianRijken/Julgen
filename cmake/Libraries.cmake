@@ -136,7 +136,7 @@ function(make_libs_available)
       if(NOT WIN32)
         set(SOLOUD_BACKEND_ALSA ON)
       else()
-        set(SOLOUD_BACKEND_WINMM ON)
+        set(SOLOUD_BACKEND_WASAPI ON)
       endif()
 
       FetchContent_GetProperties(soloud)

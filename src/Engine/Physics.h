@@ -8,7 +8,7 @@
 namespace jul
 {
 
-    class Physics final : public jul::Service
+    class Physics final : public Service
     {
     public:
         Physics();
