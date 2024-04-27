@@ -1,8 +1,9 @@
 #pragma once
 #include <SDL.h>
-#include <unordered_set>
-#include <glm/vec2.hpp>
+
 #include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
+#include <unordered_set>
 
 #include "Singleton.h"
 
@@ -10,11 +11,10 @@
 namespace jul
 {
     class RenderComponent;
-	class Texture2D;
+    class Texture2D;
 
-
-	class RenderManager final : public Singleton<RenderManager>
-	{
+    class RenderManager final : public Singleton<RenderManager>
+    {
         friend class RenderComponent;
 
 	public:

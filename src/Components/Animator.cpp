@@ -6,8 +6,8 @@
 #include <GameTime.h>
 
 jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr) :
-    Component{parentPtr,"Animator"},
-    m_SpriteRendererPtr{spriteRendererPtr}
+    Component{ parentPtr, "Animator" },
+    m_SpriteRendererPtr{ spriteRendererPtr }
 {
     if(m_SpriteRendererPtr == nullptr)
         m_SpriteRendererPtr = parentPtr->GetComponent<SpriteRenderer>();

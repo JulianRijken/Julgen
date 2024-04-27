@@ -8,9 +8,10 @@ class b2Body;
 
 namespace jul
 {
-    class Rigidbody final : public jul::Component
+    class Rigidbody final : public Component
     {
         friend class Physics;
+        friend class BoxCollider;
 
     public:
         enum class ForceMode
@@ -43,7 +44,8 @@ namespace jul
             bool active = true;
         };
 
-        Rigidbody(jul::GameObject* parent, Settings setting);
+        Rigidbody(GameObject* parentPtr, Settings setting);
+        ~Rigidbody() override;
 
         Rigidbody(const Rigidbody&) = delete;
         Rigidbody(Rigidbody&&) noexcept = delete;
@@ -51,10 +53,12 @@ namespace jul
         Rigidbody& operator=(Rigidbody&&) noexcept = delete;
 
         glm::vec2 Positon();
-        glm::vec2 Velicty();
+        glm::vec2 Velocity();
         void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
         void SetPosition(glm::vec2 position);
         void FixedUpdate() override;
+
+        [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
     private:
         b2Body* m_BodyPtr{};  // Owned by world

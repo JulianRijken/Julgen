@@ -1,3 +1,5 @@
+
+# Credits to Matias https://allpurposem.at/ for providing help with steamworks setup
 function(use_steamworks ENGINE_TARGET)
     set(STEAMWORKS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/steamworks")
 
@@ -56,10 +58,6 @@ function(use_steamworks ENGINE_TARGET)
 endfunction()
 
 
-
-
-
-
 function(make_libs_available)
 
     if(NOT WIN32)
@@ -75,7 +73,7 @@ function(make_libs_available)
 
         set(BUILD_SHARED_LIBS OFF)
 
-        message(STATUS Downloading glm...)
+        message(STATUS "Downloading " glm...)
         FetchContent_Declare(
             glm
             GIT_REPOSITORY https://github.com/g-truc/glm
@@ -83,7 +81,7 @@ function(make_libs_available)
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(glm)
 
-        message(STATUS Downloading fmt...)
+        message(STATUS "Downloading " fmt...)
         FetchContent_Declare(
             fmt
             GIT_REPOSITORY https://github.com/fmtlib/fmt.git
@@ -91,7 +89,7 @@ function(make_libs_available)
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(fmt)
 
-        message(STATUS Downloading sdl2...)
+        message(STATUS "Downloading " sdl2...)
         FetchContent_Declare(
             sdl2
             GIT_REPOSITORY https://github.com/libsdl-org/SDL
@@ -99,7 +97,7 @@ function(make_libs_available)
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(sdl2)
 
-        message(STATUS Downloading sdl2_image...)
+        message(STATUS "Downloading " sdl2_image...)
         FetchContent_Declare(
             sdl2-image
             GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
@@ -111,29 +109,26 @@ function(make_libs_available)
         set(SDL2TTF_VENDORED TRUE)
         set(BUILD_SHARED_LIBS OFF)
 
-        message(STATUS Downloading sdl2_ttf...)
+        message(STATUS "Downloading " sdl2_ttf...)
         FetchContent_Declare(
             sdl2-ttf
             GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf
             GIT_TAG release-2.22.0
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(sdl2-ttf)
+    endif()
+endfunction()
 
+function(make_vld_available)
+    set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
 
-        # Enable if USE_VLD and windows
-        if(USE_VLD)
-            set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
+    if(EXISTS ${VLD_DIR})
+        set(VLD_INCLUDE_DIR "${VLD_DIR}/include" PARENT_SCOPE)
 
-            if(EXISTS ${VLD_DIR})
-                set(VLD_INCLUDE_DIR "${VLD_DIR}/include" PARENT_SCOPE)
-
-                if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-                    set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib" PARENT_SCOPE)
-                else()
-                    set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib" PARENT_SCOPE)
-                endif()
-            endif()
+        if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+            set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib" PARENT_SCOPE)
+        else()
+            set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib" PARENT_SCOPE)
         endif()
-
     endif()
 endfunction()

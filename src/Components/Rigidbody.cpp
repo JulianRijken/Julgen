@@ -4,30 +4,14 @@
 #include "Physics.h"
 #include "Transform.h"
 
-jul::Rigidbody::Rigidbody(GameObject* parent, Settings setting) :
-    jul::Component(parent),
+jul::Rigidbody::Rigidbody(GameObject* parentPtr, Settings setting) :
+    Component(parentPtr),
     m_Settings(setting)
 {
-    const glm::vec3 transformPosition = Transform().WorldPosition();
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(transformPosition.x, transformPosition.y);
-    bodyDef.fixedRotation = true;  // TODO: Game currently does not yet support rotation
-
     Locator::Get<Physics>().AddRidgidbody(this);
-
-    // Collider
-    b2PolygonShape dynamicBox;
-    dynamicBox.SetAsBox(1.0f, 1.0f);
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.0f;
-    fixtureDef.restitution = 1.0f;
-
-    m_BodyPtr->CreateFixture(&fixtureDef);
 }
+
+jul::Rigidbody::~Rigidbody() { Locator::Get<Physics>().RemoveRidgidbody(this); }
 
 glm::vec2 jul::Rigidbody::Positon()
 {
@@ -35,7 +19,7 @@ glm::vec2 jul::Rigidbody::Positon()
     return { x, y };
 }
 
-glm::vec2 jul::Rigidbody::Velicty()
+glm::vec2 jul::Rigidbody::Velocity()
 {
     auto [x, y] = m_BodyPtr->GetLinearVelocity();
     return { x, y };

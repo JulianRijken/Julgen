@@ -23,6 +23,12 @@ endif()
 # Use Libraries file and fetch / find all needed libs
 make_libs_available()
 
+if(WIN32)
+    if(USE_VLD)
+    make_vld_available()
+endif()
+endif()
+
 
 set(IMGUI_SOURCE_FILES
     #https://github.com/epezent/implot
@@ -145,6 +151,14 @@ target_link_libraries(${TARGET_NAME} PUBLIC
 if(USE_STEAMWORKS)
     use_steamworks(${TARGET_NAME})
 endif()
+
+if(USE_VLD)
+    if (WIN32)
+        target_include_directories(${TARGET_NAME} PUBLIC ${VLD_INCLUDE_DIR})
+        target_link_libraries(${TARGET_NAME} PUBLIC ${VLD_LIBRARY})
+    endif()
+endif()
+
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

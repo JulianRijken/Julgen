@@ -96,6 +96,7 @@ jul::Julgen::Julgen()
 
 jul::Julgen::~Julgen()
 {
+    ResourceManager::Destroy();
     EngineGUI::Destroy();
     RenderManager::GetInstance().Destroy();
     SDL_DestroyWindow(m_Window);
