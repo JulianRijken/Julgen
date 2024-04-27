@@ -9,7 +9,6 @@ jul::Sound::~Sound() { m_SoLoud.deinit(); }
 
 void jul::Sound::PlaySound()
 {
-    SoLoud::Wav sample;
-    sample.load("./Assets/SFX/Bubble Bobble SFX (17).wav");  // Load a wave file
-    m_SoLoud.play(sample, 1.0f);
+    sample.load("./Assets/SFX/The Quest Begins.ogg");
+    m_SoLoud.play(sample, 0.1f);
 }

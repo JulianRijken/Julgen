@@ -42,9 +42,11 @@ namespace jul
             bool fixedRotation = false;
             bool avoidTunnelingOnDynamicBodies = false;
             bool active = true;
+
+            static Settings Default() { return {}; }
         };
 
-        Rigidbody(GameObject* parentPtr, Settings setting);
+        Rigidbody(GameObject* parentPtr, Settings setting = Settings::Default());
         ~Rigidbody() override;
 
         Rigidbody(const Rigidbody&) = delete;

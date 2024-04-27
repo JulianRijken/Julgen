@@ -1,5 +1,6 @@
 #pragma once
 #include <soloud.h>
+#include <soloud_wav.h>
 
 #include "Service.h"
 
@@ -14,6 +15,7 @@ namespace jul
         void PlaySound();
 
     private:
+        SoLoud::Wav sample;
         SoLoud::Soloud m_SoLoud;
     };
 }  // namespace jul
