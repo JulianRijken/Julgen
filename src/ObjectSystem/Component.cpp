@@ -9,7 +9,4 @@ jul::Component::Component(GameObject* parent, const std::string& name) :
 	assert(parent);
 }
 
-jul::Transform& jul::Component::Transform() const
-{
-	return m_ParentGameObjectPtr->GetTransform();
-}
+jul::Transform& jul::Component::GetTransform() const { return m_ParentGameObjectPtr->GetTransform(); }

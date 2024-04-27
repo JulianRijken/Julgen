@@ -31,7 +31,7 @@ void jul::SpriteRenderer::Render() const
 	if(m_SpritePtr == nullptr)
 		return;
 
-    const glm::vec2& pos = Transform().WorldPosition();
+    const glm::vec2& pos = GetTransform().WorldPosition();
     RenderManager::GetInstance().RenderTexture(
         m_SpritePtr->GetTexture(),
         pos,

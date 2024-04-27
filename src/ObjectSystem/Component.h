@@ -19,10 +19,11 @@ namespace jul
         Component& operator=(const Component&) = delete;
         Component& operator=(Component&&) noexcept = delete;
 
-		[[nodiscard]] GameObject* GetGameObject() const { return m_ParentGameObjectPtr;  }
-		[[nodiscard]] Transform& Transform() const;
+        [[nodiscard]] GameObject* GetGameObject() const { return m_ParentGameObjectPtr; }
 
-		virtual void Update() {}
+        [[nodiscard]] Transform& GetTransform() const;
+
+        virtual void Update() {}
 		virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
 

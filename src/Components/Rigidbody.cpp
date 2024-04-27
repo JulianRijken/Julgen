@@ -43,5 +43,5 @@ void jul::Rigidbody::FixedUpdate()
     //       should not just overwrite this is for testing
     auto position = m_BodyPtr->GetPosition();
     const glm::vec3 targetPosition = { position.x, position.y, 0 };
-    Transform().SetWorldPosition(targetPosition);
+    GetTransform().SetWorldPosition(targetPosition);
 }

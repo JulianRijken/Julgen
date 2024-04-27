@@ -24,7 +24,7 @@ void jul::Physics::AddRidgidbody(Rigidbody* rigidbodyPtr)
         const Rigidbody::Settings& settings = rigidbodyPtr->GetSettings();
 
         // Make sure positons is set correct on init
-        const glm::vec3 transformPosition = rigidbodyPtr->Transform().WorldPosition();
+        const glm::vec3 transformPosition = rigidbodyPtr->GetTransform().WorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
         const Rigidbody::Mode mode = settings.mode;
@@ -78,7 +78,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
 
     b2BodyDef bodyDef;
     {
-        const glm::vec3 transformPosition = colliderPtr->Transform().WorldPosition();
+        const glm::vec3 transformPosition = colliderPtr->GetTransform().WorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
         // TODO: Just the default body gets created for any non connected collider

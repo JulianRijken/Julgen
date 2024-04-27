@@ -48,7 +48,7 @@ void jul::TextRenderer::Render() const
 {
 	if (m_TextTextureSPtr != nullptr)
     {
-        const glm::vec3& pos = Transform().WorldPosition();
+        const glm::vec3& pos = GetTransform().WorldPosition();
         RenderManager::GetInstance().RenderTexture(*m_TextTextureSPtr, pos.x, pos.y);
 	}
 }
