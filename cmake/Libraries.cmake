@@ -96,7 +96,8 @@ function(make_libs_available)
             sdl2
             GIT_REPOSITORY https://github.com/libsdl-org/SDL
             GIT_TAG release-2.30.2
-            GIT_SHALLOW TRUE)
+            GIT_SHALLOW TRUE
+            OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2)
 
         message(STATUS "Downloading " sdl2_image...)
@@ -104,7 +105,8 @@ function(make_libs_available)
             sdl2-image
             GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
             GIT_TAG release-2.8.2
-            GIT_SHALLOW TRUE)
+            GIT_SHALLOW TRUE
+            OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2-image)
 
         # Windows requires building FreeType
@@ -115,7 +117,8 @@ function(make_libs_available)
             sdl2-ttf
             GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf
             GIT_TAG release-2.22.0
-            GIT_SHALLOW TRUE)
+            GIT_SHALLOW TRUE
+            OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2-ttf)
     endif()
 
@@ -147,8 +150,9 @@ function(make_libs_available)
           set(SOLOUD_INCLUDE_DIR ${soloud_SOURCE_DIR}/include PARENT_SCOPE)
       endif()
 
-      target_compile_options(soloud PRIVATE -Wno-multichar)
-
+       if(NOT WIN32)
+          target_compile_options(soloud PRIVATE -Wno-multichar)
+      endif()
 endfunction()
 
 function(make_vld_available)
