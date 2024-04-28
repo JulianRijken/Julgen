@@ -1,3 +1,3 @@
 #include "SoundWave.h"
 
-SoundWave::SoundWave() {}
+jul::SoundWave::SoundWave(const std::string& path) { m_Wave.load(path.c_str()); }

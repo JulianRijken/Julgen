@@ -3,6 +3,7 @@
 #include <map>
 
 #include "Font.h"
+#include "SoundWave.h"
 #include "Sprite.h"
 #include "Texture2D.h"
 
@@ -26,12 +27,43 @@ namespace jul
                                   const glm::vec2& pivotAlpha = {}, int rowCount = 1, int colCount = 1,
                                   const std::map<std::string, SpriteAnimation>& animations = {});
 
+        template<typename SoundType>
+        static SoundWave* GetSound(SoundType soundType)
+        {
+            int soundId = static_cast<int>(soundType);
+
+            if(not g_SoundPathsUPtrMap.contains(soundId))
+                throw std::runtime_error("Getting non binded sound");
+
+            if(g_SoundUPtrMap.contains(soundId))
+                return g_SoundUPtrMap[soundId].get();
+
+            const std::string& path = g_SoundPathsUPtrMap[soundId];
+            return g_SoundUPtrMap.emplace(soundId, std::make_unique<SoundWave>(path)).first->second.get();
+        }
+
+        template<typename SoundType>
+        static void BindSound(SoundType soundType, const std::string& filePath, bool preload)
+        {
+            int soundId = static_cast<int>(soundType);
+
+            g_SoundPathsUPtrMap.emplace(soundId, (g_ContentPath / filePath).string());
+
+            if(preload)
+                GetSound(soundId);
+        }
+
+
     private:
         // Textures are currently only used by the sprites, so they are not exposed to the user
 		// In the future when textures are needed for 3D models or other things, this should be changed
         static Texture2D* LoadTexture(const std::string& filePath);
 
         static void ConfigurePath();
+
+        inline static std::unordered_map<int, std::unique_ptr<SoundWave>> g_SoundUPtrMap{};
+        inline static std::unordered_map<int, std::string> g_SoundPathsUPtrMap{};
+
 
         inline static std::map<std::string, std::unique_ptr<Font>> g_FontUPtrMap{};
         inline static std::map<std::string, std::unique_ptr<Sprite>> g_SpriteUPtrMap{};

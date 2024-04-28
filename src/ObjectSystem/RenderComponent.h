@@ -22,14 +22,13 @@ class RenderComponent : public Component
 
 
 	protected:
+        virtual void Render() const {}
 
-		virtual void Render() const {}
-		virtual void UpdateGUI() {}
+        virtual void UpdateGUI() {}
 
-	private:
-
-		bool m_Visible{true};
-		int m_RenderLayer{};
-	};
+    private:
+        bool m_Visible{ true };
+        int m_RenderLayer{};
+    };
 }
 

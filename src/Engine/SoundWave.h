@@ -1,9 +1,20 @@
+#pragma once
+#include <soloud.h>
+#include <soloud_wav.h>
 
-class SoundWave
+#include <string>
+
+namespace jul
 {
-public:
-    SoundWave();
 
+    class SoundWave
+    {
+    public:
+        SoundWave(const std::string& fullPath);
 
-private:
-};
+        SoLoud::Wav& GetSound() { return m_Wave; }
+
+    private:
+        SoLoud::Wav m_Wave;
+    };
+}  // namespace jul

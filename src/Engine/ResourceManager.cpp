@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "RenderManager.h"
-#include "Texture2D.h"
+
 
 void jul::ResourceManager::Initialize()
 {
@@ -60,6 +60,7 @@ jul::Sprite* jul::ResourceManager::LoadSprite(const std::string& assetName, cons
             std::make_unique<Sprite>(LoadTexture(filePath), pixelsPerUnit, pivotAlpha, rowCount, colCount, animations))
         .first->second.get();
 }
+
 
 jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
 {

@@ -22,7 +22,6 @@ namespace jul
         {
         }
 
-
         ~Sound_Logging() override = default;
 
         Sound_Logging(Sound_Logging&&) = delete;

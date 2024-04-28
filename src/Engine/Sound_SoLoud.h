@@ -2,7 +2,6 @@
 #include <condition_variable>
 #include <queue>
 #include <thread>
-#include <unordered_map>
 
 #include "Sound.h"
 
@@ -21,10 +20,9 @@ namespace jul
 
         void PlaySound(int soundType) override;
 
-        void SoundThread();
 
     private:
-        std::unordered_map<int, SoLoud::Wav> m_Samples;
+        void SoundThread();
 
         SoLoud::Soloud m_SoLoud;
 
@@ -32,8 +30,6 @@ namespace jul
         std::mutex m_PlayConditionMutex;
         std::mutex m_QueueMutex;
 
-
-        std::unordered_map<int, std::string> m_SoundBinds{};
         std::queue<int> m_QueuedSounds{};  // Using a set to void duplicates
 
         bool m_IsSoundThreadActive;

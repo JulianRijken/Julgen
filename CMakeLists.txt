@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.18)
 project(Julgen)
 
 # Options
@@ -68,7 +68,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Sound.h
 
     ${SOURCE_DIR}/Engine/Sound_SoLoud.h             ${SOURCE_DIR}/Engine/Sound_SoLoud.cpp
-    ${SOURCE_DIR}/Engine/Sound_Logging.h            ${SOURCE_DIR}/Engine/Sound_Logging.cpp
+    ${SOURCE_DIR}/Engine/Sound_Logging.h
     ${SOURCE_DIR}/Engine/Physics.h                  ${SOURCE_DIR}/Engine/Physics.cpp
     ${SOURCE_DIR}/Engine/Command.h                  ${SOURCE_DIR}/Engine/Command.cpp
     ${SOURCE_DIR}/Engine/Font.h                     ${SOURCE_DIR}/Engine/Font.cpp
