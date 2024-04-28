@@ -3,18 +3,14 @@
 #include <any>
 #include <functional>
 #include <queue>
+#include <utility>
+
 
 namespace jul
 {
-
-    enum class MessageType
-    {
-        PlayerScoreChanged
-    };
-
     struct Message
     {
-        MessageType type;
+        int id;
         std::vector<std::any> arguments;
     };
 
@@ -25,12 +21,19 @@ namespace jul
     public:
         static void Broadcast(const Message& message);
 
-        template<typename ObjectType>
+        template<typename MessageType>
+        static void Broadcast(MessageType messageType, std::vector<std::any>&& args = {})
+        {
+            m_Messages.push({ static_cast<int>(messageType), std::move(args) });
+        }
+
+        template<typename ObjectType, typename MessageType>
         static void AddListener(MessageType eventType, ObjectType* object,
                                 void (ObjectType::*memberFunction)(const Message&))
         {
             m_MessageListeners.insert({
-                eventType, {object, [=](const Message& message) { (object->*memberFunction)(message); }}
+                static_cast<int>(eventType),
+                {object, [=](const Message& message) { (object->*memberFunction)(message); }}
             });
         }
 
@@ -42,7 +45,7 @@ namespace jul
 
         static void Dispatch();
 
-        static inline std::unordered_multimap<MessageType, Listener> m_MessageListeners{};
+        static inline std::unordered_multimap<int, Listener> m_MessageListeners{};
         static inline std::queue<Message> m_Messages{};
     };
 

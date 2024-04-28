@@ -19,7 +19,8 @@
 
 void jul::Achievement::Initialize()
 {
-    MessageQueue::AddListener(MessageType::PlayerScoreChanged,this,&Achievement::OnScoreChange);
+    // TODO: Achevements should be part of the game and not the engine unless abstracted further
+    // MessageQueue::AddListener(MessageType::PlayerScoreChanged,this,&Achievement::OnScoreChange);
 }
 
 void jul::Achievement::OnScoreChange(const Message& message)

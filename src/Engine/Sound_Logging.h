@@ -30,9 +30,9 @@ namespace jul
         Sound_Logging& operator=(Sound_Logging&&) = delete;
         Sound_Logging& operator=(const Sound_Logging&) = delete;
 
-        void PlaySound() override
+        void PlaySound(int soundType) override
         {
-            m_SoundSystemPtr->PlaySound();
+            m_SoundSystemPtr->PlaySound(soundType);
             fmt::println("Sound Played");
         }
 

@@ -34,6 +34,7 @@ namespace jul
             Provide<ServiceType, ServiceType>(std::forward<Args>(args)...);
         }
 
+        // TODO: Implement null service or error handeling
         template<typename ServiceType>
         static ServiceType& Get()
         {

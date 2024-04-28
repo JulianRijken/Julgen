@@ -114,6 +114,7 @@ endif()
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
+    src/Engine/SoundWave.h src/Engine/SoundWave.cpp
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

@@ -18,7 +18,6 @@ namespace jul
         Sound& operator=(Sound&&) = delete;
         Sound& operator=(const Sound&) = delete;
 
-
-        virtual void PlaySound() = 0;
+        virtual void PlaySound(int soundType) = 0;
     };
 }  // namespace jul

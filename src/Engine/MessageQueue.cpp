@@ -9,9 +9,9 @@ void jul::MessageQueue::Dispatch()
         const Message message = m_Messages.front();
         m_Messages.pop();
 
-        auto listeners = m_MessageListeners.equal_range(message.type);
+        auto listenersItterator = m_MessageListeners.equal_range(message.id);
 
-        for(auto it = listeners.first; it != listeners.second; ++it)
+        for(auto it = listenersItterator.first; it != listenersItterator.second; ++it)
             it->second.second(message);
     }
 }
