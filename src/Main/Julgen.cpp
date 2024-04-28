@@ -20,6 +20,7 @@
 #include "SceneManager.h"
 #include "Sound.h"
 #include "Sound_Logging.h"
+#include "Sound_Null.h"
 #include "Sound_SoLoud.h"
 
 #if WIN32
@@ -48,6 +49,8 @@
 
 jul::Julgen::Julgen()
 {
+    Locator::Provide<Sound, Sound_Null>();
+
     PreInit();
 
 #ifdef USE_STEAMWORKS
@@ -83,8 +86,11 @@ jul::Julgen::Julgen()
     if(m_Window == nullptr)
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
-
+    // TODO: Needs null service
+    // Currently only implemented for sound
     Locator::Provide<Physics>();
+
+    Locator::Release<Sound, Sound_Null>();
     Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>();
 
     // TODO: REMOVE

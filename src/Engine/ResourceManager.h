@@ -43,7 +43,7 @@ namespace jul
         }
 
         template<typename SoundType>
-        static void BindSound(SoundType soundType, const std::string& filePath, bool preload)
+        static void BindSound(SoundType soundType, const std::string& filePath, bool preload = false)
         {
             int soundId = static_cast<int>(soundType);
 

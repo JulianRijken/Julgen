@@ -32,7 +32,7 @@ namespace jul
         void PlaySound(int soundType) override
         {
             m_SoundSystemPtr->PlaySound(soundType);
-            fmt::println("Sound Played");
+            fmt::println("Sound Played {}", soundType);
         }
 
         std::unique_ptr<SoundSystemType> ReleaseSoundSystem() { return std::move(m_SoundSystemPtr); }
