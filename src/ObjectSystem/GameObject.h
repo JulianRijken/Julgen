@@ -40,7 +40,8 @@ namespace jul
                 return reinterpret_cast<ComponentType*>(m_TransformPtr);
             }
 
-            auto& addedComponent = m_Components.emplace_back(std::make_unique<ComponentType>(this, args...));
+            auto& addedComponent =
+                m_Components.emplace_back(std::make_unique<ComponentType>(this, std::forward<Args>(args)...));
 
             // TODO: Awake is currently redundant and should be only called at the end of the frame to allow
             // components to find each other

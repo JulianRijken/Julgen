@@ -11,7 +11,11 @@ namespace jul
 	{
 
 	public:
-		explicit Component(GameObject* parent = nullptr, const std::string& name = "Component");
+        // TODO: Validate the use of macros for short hand notation
+        // #define transform GetTransform()
+        // #define gameobject (*GetGameObject())
+
+        explicit Component(GameObject* parent = nullptr, const std::string& name = "Component");
         ~Component() override = default;
 
         Component(const Component&) = delete;

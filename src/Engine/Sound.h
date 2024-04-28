@@ -7,15 +7,18 @@
 
 namespace jul
 {
-    class Sound final : public Service
+    class Sound : public Service
     {
     public:
-        Sound();
-        ~Sound();
-        void PlaySound();
+        explicit Sound() = default;
+        ~Sound() override = default;
 
-    private:
-        SoLoud::Wav sample;
-        SoLoud::Soloud m_SoLoud;
+        Sound(Sound&&) = delete;
+        Sound(const Sound&) = delete;
+        Sound& operator=(Sound&&) = delete;
+        Sound& operator=(const Sound&) = delete;
+
+
+        virtual void PlaySound() = 0;
     };
 }  // namespace jul

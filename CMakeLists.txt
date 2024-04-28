@@ -55,43 +55,47 @@ set(IMGUI_SOURCE_FILES
 
 
 set(JULGEN_SOURCE_FILES
+    ${SOURCE_DIR}/Main/Main.cpp # CPP
+
+    ${SOURCE_DIR}/Main/Julgen.h                     ${SOURCE_DIR}/Main/Julgen.cpp
+
     ${SOURCE_DIR}/Engine/GameSettings.h
     ${SOURCE_DIR}/Engine/Singleton.h
     ${SOURCE_DIR}/Engine/Event.h
     ${SOURCE_DIR}/Engine/MathExtensions.h
     ${SOURCE_DIR}/Engine/Locator.h
     ${SOURCE_DIR}/Engine/Service.h
+    ${SOURCE_DIR}/Engine/Sound.h
 
-    ${SOURCE_DIR}/Engine/Sound.h                        ${SOURCE_DIR}/Engine/Sound.cpp
-    ${SOURCE_DIR}/Engine/Physics.cpp                    ${SOURCE_DIR}/Engine/Physics.h
-    ${SOURCE_DIR}/Engine/Command.cpp                    ${SOURCE_DIR}/Engine/Command.h
-    ${SOURCE_DIR}/Engine/Font.cpp                       ${SOURCE_DIR}/Engine/Font.h
-    ${SOURCE_DIR}/Engine/GameTime.cpp                   ${SOURCE_DIR}/Engine/GameTime.h
-    ${SOURCE_DIR}/Engine/GUI.cpp                        ${SOURCE_DIR}/Engine/GUI.h
-    ${SOURCE_DIR}/Engine/Input.cpp                      ${SOURCE_DIR}/Engine/Input.h
-    ${SOURCE_DIR}/Engine/RenderManager.cpp              ${SOURCE_DIR}/Engine/RenderManager.h
-    ${SOURCE_DIR}/Engine/ResourceManager.cpp            ${SOURCE_DIR}/Engine/ResourceManager.h
-    ${SOURCE_DIR}/Engine/Scene.cpp                      ${SOURCE_DIR}/Engine/Scene.h
-    ${SOURCE_DIR}/Engine/SceneManager.cpp               ${SOURCE_DIR}/Engine/SceneManager.h
-    ${SOURCE_DIR}/Engine/Sprite.cpp                     ${SOURCE_DIR}/Engine/Sprite.h
-    ${SOURCE_DIR}/Engine/Texture2D.cpp                  ${SOURCE_DIR}/Engine/Texture2D.h
-    ${SOURCE_DIR}/Engine/Achievement.cpp                ${SOURCE_DIR}/Engine/Achievement.h
-    ${SOURCE_DIR}/Engine/MessageQueue.cpp               ${SOURCE_DIR}/Engine/MessageQueue.h
+    ${SOURCE_DIR}/Engine/Sound_SoLoud.h             ${SOURCE_DIR}/Engine/Sound_SoLoud.cpp
+    ${SOURCE_DIR}/Engine/Sound_Logging.h            ${SOURCE_DIR}/Engine/Sound_Logging.cpp
+    ${SOURCE_DIR}/Engine/Physics.h                  ${SOURCE_DIR}/Engine/Physics.cpp
+    ${SOURCE_DIR}/Engine/Command.h                  ${SOURCE_DIR}/Engine/Command.cpp
+    ${SOURCE_DIR}/Engine/Font.h                     ${SOURCE_DIR}/Engine/Font.cpp
+    ${SOURCE_DIR}/Engine/GameTime.h                 ${SOURCE_DIR}/Engine/GameTime.cpp
+    ${SOURCE_DIR}/Engine/GUI.h                      ${SOURCE_DIR}/Engine/GUI.cpp
+    ${SOURCE_DIR}/Engine/Input.h                    ${SOURCE_DIR}/Engine/Input.cpp
+    ${SOURCE_DIR}/Engine/RenderManager.h            ${SOURCE_DIR}/Engine/RenderManager.cpp
+    ${SOURCE_DIR}/Engine/ResourceManager.h          ${SOURCE_DIR}/Engine/ResourceManager.cpp
+    ${SOURCE_DIR}/Engine/Scene.h                    ${SOURCE_DIR}/Engine/Scene.cpp
+    ${SOURCE_DIR}/Engine/SceneManager.h             ${SOURCE_DIR}/Engine/SceneManager.cpp
+    ${SOURCE_DIR}/Engine/Sprite.h                   ${SOURCE_DIR}/Engine/Sprite.cpp
+    ${SOURCE_DIR}/Engine/Texture2D.h                ${SOURCE_DIR}/Engine/Texture2D.cpp
+    ${SOURCE_DIR}/Engine/Achievement.h              ${SOURCE_DIR}/Engine/Achievement.cpp
+    ${SOURCE_DIR}/Engine/MessageQueue.h             ${SOURCE_DIR}/Engine/MessageQueue.cpp
 
-    ${SOURCE_DIR}/Main/Main.cpp
-    ${SOURCE_DIR}/Main/Julgen.cpp                       ${SOURCE_DIR}/Main/Julgen.h
 
-    ${SOURCE_DIR}/ObjectSystem/Component.cpp            ${SOURCE_DIR}/ObjectSystem/Component.h
-    ${SOURCE_DIR}/ObjectSystem/GameObject.cpp           ${SOURCE_DIR}/ObjectSystem/GameObject.h
-    ${SOURCE_DIR}/ObjectSystem/Object.cpp               ${SOURCE_DIR}/ObjectSystem/Object.h
-    ${SOURCE_DIR}/ObjectSystem/RenderComponent.cpp      ${SOURCE_DIR}/ObjectSystem/RenderComponent.h
+    ${SOURCE_DIR}/ObjectSystem/Component.h          ${SOURCE_DIR}/ObjectSystem/Component.cpp
+    ${SOURCE_DIR}/ObjectSystem/GameObject.h         ${SOURCE_DIR}/ObjectSystem/GameObject.cpp
+    ${SOURCE_DIR}/ObjectSystem/Object.h             ${SOURCE_DIR}/ObjectSystem/Object.cpp
+    ${SOURCE_DIR}/ObjectSystem/RenderComponent.h    ${SOURCE_DIR}/ObjectSystem/RenderComponent.cpp
 
-    ${SOURCE_DIR}/Components/SpriteRenderer.cpp         ${SOURCE_DIR}/Components/SpriteRenderer.h
-    ${SOURCE_DIR}/Components/TextRenderer.cpp           ${SOURCE_DIR}/Components/TextRenderer.h
-    ${SOURCE_DIR}/Components/Transform.cpp              ${SOURCE_DIR}/Components/Transform.h
-    ${SOURCE_DIR}/Components/Animator.cpp               ${SOURCE_DIR}/Components/Animator.h
-    ${SOURCE_DIR}/Components/Rigidbody.cpp              ${SOURCE_DIR}/Components/Rigidbody.h
-    ${SOURCE_DIR}/Components/BoxCollider.cpp            ${SOURCE_DIR}/Components/BoxCollider.h
+    ${SOURCE_DIR}/Components/SpriteRenderer.h       ${SOURCE_DIR}/Components/SpriteRenderer.cpp
+    ${SOURCE_DIR}/Components/TextRenderer.h         ${SOURCE_DIR}/Components/TextRenderer.cpp
+    ${SOURCE_DIR}/Components/Transform.h            ${SOURCE_DIR}/Components/Transform.cpp
+    ${SOURCE_DIR}/Components/Animator.h             ${SOURCE_DIR}/Components/Animator.cpp
+    ${SOURCE_DIR}/Components/Rigidbody.h            ${SOURCE_DIR}/Components/Rigidbody.cpp
+    ${SOURCE_DIR}/Components/BoxCollider.h          ${SOURCE_DIR}/Components/BoxCollider.cpp
 )
 
 # Switch between sld implementation and xinput implementation

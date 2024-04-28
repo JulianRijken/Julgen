@@ -13,29 +13,43 @@ namespace jul
         friend class Julgen;
 
     public:
-        template<typename ServiceType, typename... Args>
-        static void Provide(Args... args)
+        // When using an existing service
+        template<typename ServiceType, typename ImplementationType>
+        static void Provide(std::unique_ptr<ImplementationType> implementationUPtr)
         {
-            g_Services.emplace(typeid(ServiceType), std::make_unique<ServiceType>(args...));
+            g_Services.emplace(typeid(ServiceType), std::move(implementationUPtr));
+        }
+
+        // When creating a new service
+        template<typename ServiceType, typename ImplementationType, typename... Args>
+        static void Provide(Args&&... args)
+        {
+            g_Services.emplace(typeid(ServiceType), std::make_unique<ImplementationType>(std::forward<Args>(args)...));
+        }
+
+        // When creating a new service with no specific implementation
+        template<typename ServiceType, typename... Args>
+        static void Provide(Args&&... args)
+        {
+            Provide<ServiceType, ServiceType>(std::forward<Args>(args)...);
         }
 
         template<typename ServiceType>
         static ServiceType& Get()
         {
-            auto service = g_Services.find(typeid(ServiceType));
-
-            Service* test = service->second.get();
-            ServiceType* result = dynamic_cast<ServiceType*>(test);
-
-            return *result;
+            auto service{ g_Services.find(typeid(ServiceType)) };
+            return *dynamic_cast<ServiceType*>(service->second.get());
         }
 
-        // template<typename ServiceType>
-        // static ServiceType* Release()
-        // {
-        //     auto node = g_Services.extract(typeid(ServiceType));
-        //     return std::any_cast<Service<ServiceType>>(node.mapped()).Release();
-        // }
+        template<typename ServiceType, typename ImplementationType>
+        static std::unique_ptr<ImplementationType> Release()
+        {
+            auto node{ g_Services.extract(typeid(ServiceType)) };
+
+            auto* releasedPtr = dynamic_cast<ImplementationType*>(node.mapped().release());
+
+            return std::unique_ptr<ImplementationType>(releasedPtr);
+        }
 
     private:
         static inline std::unordered_map<std::type_index, std::unique_ptr<Service>> g_Services{};

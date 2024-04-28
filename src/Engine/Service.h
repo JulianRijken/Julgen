@@ -5,7 +5,7 @@ namespace jul
     class Service
     {
     public:
-        Service() = default;
+        explicit Service() = default;
         virtual ~Service() = default;
 
         Service(const Service&) = delete;

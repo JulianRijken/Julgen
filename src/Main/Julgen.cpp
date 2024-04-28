@@ -19,6 +19,8 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
+#include "Sound_Logging.h"
+#include "Sound_SoLoud.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -56,7 +58,7 @@ jul::Julgen::Julgen()
 #endif
 
 #ifdef WIN32
-    if(GameSettings::m_ShowConsole)
+    if(GameSettings::s_ShowConsole)
     {
         if(AllocConsole() == TRUE)
         {
@@ -83,7 +85,18 @@ jul::Julgen::Julgen()
 
 
     Locator::Provide<Physics>();
-    Locator::Provide<Sound>();
+
+    {
+        Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>();
+
+        // Change to non logigng
+        auto soundLoggingUPtr = Locator::Release<Sound, Sound_Logging<Sound_SoLoud>>();
+        Locator::Provide<Sound, Sound_SoLoud>(soundLoggingUPtr->ReleaseSoundSystem());
+
+        // Change back to logging
+        Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>(Locator::Release<Sound, Sound_SoLoud>());
+    }
+
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();

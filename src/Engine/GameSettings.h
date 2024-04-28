@@ -15,6 +15,6 @@ namespace jul
         inline static int s_RenderHeight{ 720 };
         inline static int s_WindowWidth{ 1280 };
         inline static int s_WindowHeight{ 720 };
-        inline static bool m_ShowConsole{ true };
+        inline static bool s_ShowConsole{ true };
     };
 }
