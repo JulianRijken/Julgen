@@ -4,13 +4,12 @@
 #include <unordered_map>
 
 #include "Font.h"
-#include "SoundWave.h"
+#include "Sound.h"
 #include "Sprite.h"
 #include "Texture2D.h"
 
 namespace jul
 {
-
     class ResourceManager final
     {
 

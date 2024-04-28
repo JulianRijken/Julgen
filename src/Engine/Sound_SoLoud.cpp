@@ -7,6 +7,34 @@
 
 #include <mutex>
 
+namespace jul
+{
+    struct SoundWave::SoundWave_Impl
+    {
+        SoLoud::Wav& GetSound() { return wave; }
+
+        SoLoud::Wav wave;
+    };
+
+}  // namespace jul
+
+jul::SoundWave::SoundWave(const std::string& fullPath) :
+    m_SoundWaveImplUPtr(std::make_unique<SoundWave_Impl>())
+{
+    m_SoundWaveImplUPtr->wave.load(fullPath.c_str());
+}
+
+jul::SoundWave::~SoundWave() = default;
+
+namespace jul
+{
+    struct Sound_SoLoud::Soloud_Impl
+    {
+        SoLoud::Soloud soLoudEngine;
+    };
+}  // namespace jul
+
+
 jul::Sound_SoLoud::Sound_SoLoud() :
     m_IsSoundThreadActive{ true },
     m_SoundThread{ &Sound_SoLoud::SoundThread, this }
@@ -32,7 +60,8 @@ jul::Sound_SoLoud::~Sound_SoLoud()
 
 void jul::Sound_SoLoud::SoundThread()
 {
-    m_SoLoud.init();
+    m_SoloudImplUPtr = std::make_unique<Soloud_Impl>();
+    m_SoloudImplUPtr->soLoudEngine.init();
 
     while(m_IsSoundThreadActive)
     {
@@ -58,13 +87,13 @@ void jul::Sound_SoLoud::SoundThread()
 
         SoundWave* sampleToPlay{ ResourceManager::GetSound(soundIndexToPlay) };
 
-        m_SoLoud.play(sampleToPlay->GetSound(), 0.3f);
+        m_SoloudImplUPtr->soLoudEngine.play(sampleToPlay->GetImpl()->GetSound(), 0.3f);  // TODO: Pass volume
 
 
-        fmt::println("Sound Thread Loop Back");
+        // fmt::println("Sound Thread Loop Back");
     }
 
-    m_SoLoud.deinit();
+    m_SoloudImplUPtr->soLoudEngine.deinit();
 
-    fmt::println("Sound Thread Closed");
+    // fmt::println("Sound Thread Closed");
 }

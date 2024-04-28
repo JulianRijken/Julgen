@@ -9,6 +9,9 @@ namespace jul
 {
     class Sound_SoLoud final : public Sound
     {
+        struct Soloud_Impl;
+        std::unique_ptr<Soloud_Impl> m_SoloudImplUPtr;
+
     public:
         explicit Sound_SoLoud();
         ~Sound_SoLoud() override;
@@ -23,8 +26,6 @@ namespace jul
 
     private:
         void SoundThread();
-
-        SoLoud::Soloud m_SoLoud;
 
         std::condition_variable m_PlayCondition;
         std::mutex m_PlayConditionMutex;

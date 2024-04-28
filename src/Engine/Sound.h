@@ -1,13 +1,24 @@
 #pragma once
-#include <soloud.h>
-#include <soloud_wav.h>
-
+#include <memory>
+#include <string>
 
 #include "Service.h"
 
 
 namespace jul
 {
+    class SoundWave
+    {
+        struct SoundWave_Impl;
+        std::unique_ptr<SoundWave_Impl> m_SoundWaveImplUPtr;
+
+    public:
+        SoundWave(const std::string& fullPath);
+        ~SoundWave();
+
+        SoundWave_Impl* GetImpl() { return m_SoundWaveImplUPtr.get(); }
+    };
+
     class Sound : public Service
     {
     public:

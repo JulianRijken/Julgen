@@ -85,15 +85,18 @@ jul::Julgen::Julgen()
 
 
     Locator::Provide<Physics>();
+    Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>();
 
+    // TODO: REMOVE
+    // THIS IS AN EXAMPLE ON HOW TO SWTICH BETWEEN LOGGING
     {
-        Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>();
+        // We start as logging above
 
         // Change to non logigng
         auto soundLoggingUPtr = Locator::Release<Sound, Sound_Logging<Sound_SoLoud>>();
         Locator::Provide<Sound, Sound_SoLoud>(soundLoggingUPtr->ReleaseSoundSystem());
 
-        // Change back to logging
+        // Change to logging
         Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>(Locator::Release<Sound, Sound_SoLoud>());
     }
 
