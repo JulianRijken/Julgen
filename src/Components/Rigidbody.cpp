@@ -1,5 +1,7 @@
 #include "Rigidbody.h"
 
+#include <fmt/core.h>
+
 #include "Locator.h"
 #include "Physics.h"
 #include "Transform.h"
@@ -45,3 +47,11 @@ void jul::Rigidbody::FixedUpdate()
     const glm::vec3 targetPosition = { position.x, position.y, 0 };
     GetTransform().SetWorldPosition(targetPosition);
 }
+
+void jul::Rigidbody::BeginContact(b2Contact* contact)
+{
+    if(contact->GetFixtureA()->GetBody() == m_BodyPtr)
+        fmt::println("Contact Begin");
+}
+
+void jul::Rigidbody::EndContact(b2Contact*) { fmt::println("Contact End"); }

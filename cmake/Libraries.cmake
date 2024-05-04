@@ -126,29 +126,13 @@ function(make_libs_available)
     message(STATUS "Downloading " soloud...)
     FetchContent_Declare(
           soloud
-          GIT_REPOSITORY https://github.com/jarikomppa/soloud.git
-          GIT_TAG 1157475881da0d7f76102578255b937c7d4e8f57
+          GIT_REPOSITORY https://github.com/Casqade/soloud
+          GIT_TAG master
           GIT_PROGRESS TRUE
-          GIT_SHALLOW TRUE)
+          GIT_SHALLOW TRUE
+          SOURCE_SUBDIR contrib)
+    FetchContent_MakeAvailable(soloud)
 
-      set(SOLOUD_STATIC ON)
-      set(SOLOUD_BACKEND_SDL2 OFF)
-      set(SOLOUD_C_API ON)
-      set(SOLOUD_BACKEND_NULL OFF)
-
-      if(NOT WIN32)
-        set(SOLOUD_BACKEND_ALSA ON)
-      else()
-        set(SOLOUD_BACKEND_WASAPI ON)
-      endif()
-
-      FetchContent_GetProperties(soloud)
-      if(NOT SOLOUD_POPULATED)
-          FetchContent_Populate(soloud)
-
-          add_subdirectory(${soloud_SOURCE_DIR}/contrib ${soloud_BINARY_DIR})
-          set(SOLOUD_INCLUDE_DIR ${soloud_SOURCE_DIR}/include PARENT_SCOPE)
-      endif()
 
        if(NOT WIN32)
           target_compile_options(soloud PRIVATE -Wno-multichar)

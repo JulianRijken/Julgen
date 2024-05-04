@@ -1,6 +1,13 @@
 #include "Command.h"
+
 #include "GameObject.h"
 #include "GameTime.h"
+#include "Locator.h"
+#include "Sound.h"
+#include "Sound_Logging.h"
+#include "Sound_Null.h"
+#include "Sound_System.h"
+
 
 jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm::vec3& moveDirection) :
       GameObjectCommand(gameObject),
@@ -45,3 +52,18 @@ void jul::TriggerTestCommand::Execute(InputContext context)
 }
 
 void jul::MemberFunctionCommand::Execute(InputContext context) { m_Function(context); }
+
+void jul::MuteGameCommand::Execute(InputContext /*context*/)
+{
+    auto* currentSystem = &Locator::Get<Sound>();
+    if(dynamic_cast<Sound_Null*>(currentSystem))
+    {
+        Locator::Release<Sound, Sound_Null>();
+        Locator::Provide<Sound, Sound_System>();
+    }
+    else if(dynamic_cast<Sound_System*>(currentSystem))
+    {
+        Locator::Release<Sound, Sound_System>();
+        Locator::Provide<Sound, Sound_Null>();
+    }
+}

@@ -65,10 +65,13 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/MathExtensions.h
     ${SOURCE_DIR}/Engine/Locator.h
     ${SOURCE_DIR}/Engine/Service.h
-    ${SOURCE_DIR}/Engine/Sound.h
 
-    ${SOURCE_DIR}/Engine/Sound_SoLoud.h             ${SOURCE_DIR}/Engine/Sound_SoLoud.cpp
+    ${SOURCE_DIR}/Engine/Sound.h
+    ${SOURCE_DIR}/Engine/Sound_Null.h
     ${SOURCE_DIR}/Engine/Sound_Logging.h
+    ${SOURCE_DIR}/Engine/Sound_System.h             ${SOURCE_DIR}/Engine/Sound_System_SoLoud_Impl.cpp
+
+
     ${SOURCE_DIR}/Engine/Physics.h                  ${SOURCE_DIR}/Engine/Physics.cpp
     ${SOURCE_DIR}/Engine/Command.h                  ${SOURCE_DIR}/Engine/Command.cpp
     ${SOURCE_DIR}/Engine/Font.h                     ${SOURCE_DIR}/Engine/Font.cpp
@@ -114,7 +117,6 @@ endif()
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
-    src/Engine/Sound_Null.h
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC
@@ -122,8 +124,6 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${SOURCE_DIR}/Main
     ${SOURCE_DIR}/Engine
     ${SOURCE_DIR}/ObjectSystem
-
-    ${SOLOUD_INCLUDE_DIR} #Set in Libraries
 
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui

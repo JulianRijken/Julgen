@@ -97,4 +97,10 @@ namespace jul
     private:
         InputFunction m_Function;
     };
+
+    class MuteGameCommand final : public BaseCommand
+    {
+    public:
+        void Execute(InputContext context) override;
+    };
 }

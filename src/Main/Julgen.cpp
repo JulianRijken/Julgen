@@ -19,9 +19,7 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
-#include "Sound_Logging.h"
 #include "Sound_Null.h"
-#include "Sound_SoLoud.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -86,30 +84,14 @@ jul::Julgen::Julgen()
     if(m_Window == nullptr)
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
-    // TODO: Needs null service
-    // Currently only implemented for sound
     Locator::Provide<Physics>();
 
     Locator::Release<Sound, Sound_Null>();
-    Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>();
-
-    // TODO: REMOVE
-    // THIS IS AN EXAMPLE ON HOW TO SWTICH BETWEEN LOGGING
-    {
-        // We start as logging above
-
-        // Change to non logigng
-        auto soundLoggingUPtr = Locator::Release<Sound, Sound_Logging<Sound_SoLoud>>();
-        Locator::Provide<Sound, Sound_SoLoud>(soundLoggingUPtr->ReleaseSoundSystem());
-
-        // Change to logging
-        Locator::Provide<Sound, Sound_Logging<Sound_SoLoud>>(Locator::Release<Sound, Sound_SoLoud>());
-    }
+    Locator::Provide<Sound, Sound_System>();
 
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
-
 
     EngineGUI::Initialize(m_Window, RenderManager::GetInstance().GetSDLRenderer());
     ResourceManager::Initialize();

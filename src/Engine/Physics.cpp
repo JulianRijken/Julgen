@@ -49,6 +49,8 @@ void jul::Physics::AddRidgidbody(Rigidbody* rigidbodyPtr)
     }
 
     rigidbodyPtr->m_BodyPtr = m_World->CreateBody(&bodyDef);
+
+    m_World->SetContactListener(rigidbodyPtr);
 }
 
 void jul::Physics::RemoveRidgidbody(Rigidbody* rigidbodyPtr) { m_World->DestroyBody(rigidbodyPtr->m_BodyPtr); }

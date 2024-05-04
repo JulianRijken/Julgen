@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
+
 #include <glm/vec2.hpp>
 
 #include "Component.h"
@@ -8,7 +10,7 @@ class b2Body;
 
 namespace jul
 {
-    class Rigidbody final : public Component
+    class Rigidbody final : public Component, public b2ContactListener
     {
         friend class Physics;
         friend class BoxCollider;
@@ -65,6 +67,11 @@ namespace jul
     private:
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};
+
+        // b2ContactListener interface
+
+        void BeginContact(b2Contact* contact) override;
+        void EndContact(b2Contact* contact) override;
     };
 
 }  // namespace jul

@@ -13,7 +13,6 @@
 #endif
 
 #include "Julgen.h"
-
 int main(int, char*[])
 {
     const jul::Julgen engine;
