@@ -19,6 +19,7 @@ void jul::ResourceManager::Initialize()
 void jul::ResourceManager::Destroy()
 {
     // Force cleanup because of order
+    g_SoundUPtrMap.clear();
     g_FontUPtrMap.clear();
     g_SpriteUPtrMap.clear();
     g_LoadedTextureUPtrs.clear();
