@@ -70,26 +70,26 @@ void jul::Rigidbody::FixedUpdate()
     }
 }
 
-void jul::Rigidbody::OnCollisionBegin(b2Contact* collision, b2Fixture* otherFixture)
+void jul::Rigidbody::OnCollisionBegin(Collision collision)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionBegin(collision, otherFixture);
+        listener->OnCollisionBegin(collision);
 }
 
-void jul::Rigidbody::OnCollisionEnd(b2Contact* collision, b2Fixture* otherFixture)
+void jul::Rigidbody::OnCollisionEnd(Collision collision)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionEnd(collision, otherFixture);
+        listener->OnCollisionEnd(collision);
 }
 
-void jul::Rigidbody::OnCollisionPreSolve(b2Contact* collision, b2Fixture* otherFixture)
+void jul::Rigidbody::OnCollisionPreSolve(Collision collision)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionPreSolve(collision, otherFixture);
+        listener->OnCollisionPreSolve(collision);
 }
 
-void jul::Rigidbody::OnCollisionPostSolve(b2Contact* collision, b2Fixture* otherFixture)
+void jul::Rigidbody::OnCollisionPostSolve(Collision collision)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionPostSolve(collision, otherFixture);
+        listener->OnCollisionPostSolve(collision);
 }

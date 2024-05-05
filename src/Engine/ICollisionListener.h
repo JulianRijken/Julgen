@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Box2D/Dynamics/b2Body.h"
+#include "Physics.h"
+
 
 namespace jul
 {
-    class Collision;
+    struct Collision;
 
     class ICollisionListener
     {
@@ -16,10 +17,10 @@ namespace jul
         ICollisionListener& operator=(const ICollisionListener&) = delete;
         ICollisionListener& operator=(ICollisionListener&&) noexcept = delete;
 
-        virtual void OnCollisionBegin(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
-        virtual void OnCollisionEnd(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
-        virtual void OnCollisionPreSolve(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
-        virtual void OnCollisionPostSolve(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
+        virtual void OnCollisionBegin(Collision /*unused*/){};
+        virtual void OnCollisionEnd(Collision /*unused*/){};
+        virtual void OnCollisionPreSolve(Collision /*unused*/){};
+        virtual void OnCollisionPostSolve(Collision /*unused*/){};
 
     protected:
         ICollisionListener() = default;

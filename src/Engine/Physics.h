@@ -7,6 +7,14 @@
 
 namespace jul
 {
+    struct Collision
+    {
+        b2Fixture* thisFixture;
+        b2Fixture* otherFixture;
+
+        b2Contact* contact;
+    };
+
     class Physics final : public Service, public b2ContactListener
     {
     public:
@@ -31,7 +39,7 @@ namespace jul
         void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
         void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
-        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*, b2Fixture*)> callback);
+        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, Collision)> callback);
     };
 
 }  // namespace jul

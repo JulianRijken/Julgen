@@ -71,7 +71,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Sound_Logging.h
     ${SOURCE_DIR}/Engine/Sound_System.h             ${SOURCE_DIR}/Engine/Sound_System_SoLoud_Impl.cpp
 
-
+    ${SOURCE_DIR}/Engine/ICollisionListener.h
     ${SOURCE_DIR}/Engine/Physics.h                  ${SOURCE_DIR}/Engine/Physics.cpp
     ${SOURCE_DIR}/Engine/Command.h                  ${SOURCE_DIR}/Engine/Command.cpp
     ${SOURCE_DIR}/Engine/Font.h                     ${SOURCE_DIR}/Engine/Font.cpp
@@ -117,7 +117,6 @@ endif()
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
-    src/Engine/ICollisionListener.h src/Engine/ICollisionListener.cpp
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

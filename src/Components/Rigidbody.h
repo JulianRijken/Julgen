@@ -77,10 +77,10 @@ namespace jul
 
 
     private:
-        void OnCollisionBegin(b2Contact* collision, b2Fixture* otherFixture);
-        void OnCollisionEnd(b2Contact* collision, b2Fixture* otherFixture);
-        void OnCollisionPreSolve(b2Contact* collision, b2Fixture* otherFixture);
-        void OnCollisionPostSolve(b2Contact* collision, b2Fixture* otherFixture);
+        void OnCollisionBegin(Collision collision);
+        void OnCollisionEnd(Collision collision);
+        void OnCollisionPreSolve(Collision collision);
+        void OnCollisionPostSolve(Collision collision);
 
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};

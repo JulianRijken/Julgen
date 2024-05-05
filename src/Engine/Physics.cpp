@@ -108,33 +108,27 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
 
 void jul::Physics::BeginContact(b2Contact* contact)
 {
-    HandleContact(contact,
-                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
-                  { rigidbody->OnCollisionBegin(contact, otherFixture); });
+    HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionBegin(collision); });
 }
 
 void jul::Physics::EndContact(b2Contact* contact)
 {
-    HandleContact(contact,
-                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
-                  { rigidbody->OnCollisionEnd(contact, otherFixture); });
+    HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionEnd(collision); });
 }
 
 void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {
     HandleContact(contact,
-                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
-                  { rigidbody->OnCollisionPreSolve(contact, otherFixture); });
+                  [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionPreSolve(collision); });
 }
 
 void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impulse*/)
 {
     HandleContact(contact,
-                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
-                  { rigidbody->OnCollisionPostSolve(contact, otherFixture); });
+                  [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionPostSolve(collision); });
 }
 
-void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*, b2Fixture*)> callback)
+void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, Collision)> callback)
 {
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
@@ -148,9 +142,9 @@ void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbod
                 continue;
 
             if(fixture == fixtureA)
-                callback(rigidbody, contact, fixtureB);
+                callback(rigidbody, { fixtureA, fixtureB, contact });
             else if(fixture == fixtureB)
-                callback(rigidbody, contact, fixtureA);
+                callback(rigidbody, { fixtureB, fixtureA, contact });
         }
     }
 }
