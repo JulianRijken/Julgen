@@ -19,7 +19,7 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
-#include "Sound_Logging.h"
+#include "Sound_Null.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -83,7 +83,7 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
     Locator::Provide<Physics>();
-    Locator::Provide<Sound, Sound_System>();
+    Locator::Provide<Sound, Sound_Null>();
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
@@ -96,7 +96,6 @@ jul::Julgen::Julgen()
 
 jul::Julgen::~Julgen()
 {
-    // Cleanup scene before anything else!
     SceneManager::GetInstance().Destroy();
 
     ResourceManager::Destroy();

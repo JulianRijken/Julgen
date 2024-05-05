@@ -31,7 +31,7 @@ namespace jul
         void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
         void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
-        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*)> callback);
+        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*, b2Fixture*)> callback);
     };
 
 }  // namespace jul

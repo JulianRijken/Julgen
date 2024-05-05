@@ -29,6 +29,12 @@ glm::vec2 jul::Rigidbody::Velocity()
     return { x, y };
 }
 
+glm::vec2 jul::Rigidbody::LinearVelocityFromWorldPoint(glm::vec2 worldPoint)
+{
+    const b2Vec2 velocity = m_BodyPtr->GetLinearVelocityFromWorldPoint({ worldPoint.x, worldPoint.y });
+    return { velocity.x, velocity.y };
+}
+
 void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
 {
     const b2Vec2 b2Force = { force.x, force.y };
@@ -40,6 +46,7 @@ void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
 }
 
 void jul::Rigidbody::SetPosition(glm::vec2 position) { m_BodyPtr->SetTransform({ position.x, position.y }, 0.0f); }
+
 
 void jul::Rigidbody::FixedUpdate()
 {
@@ -63,26 +70,26 @@ void jul::Rigidbody::FixedUpdate()
     }
 }
 
-void jul::Rigidbody::OnCollisionBegin(b2Contact* collision)
+void jul::Rigidbody::OnCollisionBegin(b2Contact* collision, b2Fixture* otherFixture)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionBegin(collision);
+        listener->OnCollisionBegin(collision, otherFixture);
 }
 
-void jul::Rigidbody::OnCollisionEnd(b2Contact* collision)
+void jul::Rigidbody::OnCollisionEnd(b2Contact* collision, b2Fixture* otherFixture)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionEnd(collision);
+        listener->OnCollisionEnd(collision, otherFixture);
 }
 
-void jul::Rigidbody::OnCollisionPreSolve(b2Contact* collision)
+void jul::Rigidbody::OnCollisionPreSolve(b2Contact* collision, b2Fixture* otherFixture)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionPreSolve(collision);
+        listener->OnCollisionPreSolve(collision, otherFixture);
 }
 
-void jul::Rigidbody::OnCollisionPostSolve(b2Contact* collision)
+void jul::Rigidbody::OnCollisionPostSolve(b2Contact* collision, b2Fixture* otherFixture)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionPostSolve(collision);
+        listener->OnCollisionPostSolve(collision, otherFixture);
 }

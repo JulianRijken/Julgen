@@ -65,18 +65,22 @@ namespace jul
 
         glm::vec2 Positon();
         glm::vec2 Velocity();
+        glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint);
+
         void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
         void SetPosition(glm::vec2 position);
         void FixedUpdate() override;
+
+        b2Body* GetBody() { return m_BodyPtr; }
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
 
     private:
-        void OnCollisionBegin(b2Contact* collision);
-        void OnCollisionEnd(b2Contact* collision);
-        void OnCollisionPreSolve(b2Contact* collision);
-        void OnCollisionPostSolve(b2Contact* collision);
+        void OnCollisionBegin(b2Contact* collision, b2Fixture* otherFixture);
+        void OnCollisionEnd(b2Contact* collision, b2Fixture* otherFixture);
+        void OnCollisionPreSolve(b2Contact* collision, b2Fixture* otherFixture);
+        void OnCollisionPostSolve(b2Contact* collision, b2Fixture* otherFixture);
 
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};

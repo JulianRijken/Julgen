@@ -16,10 +16,10 @@ namespace jul
         ICollisionListener& operator=(const ICollisionListener&) = delete;
         ICollisionListener& operator=(ICollisionListener&&) noexcept = delete;
 
-        virtual void OnCollisionBegin(b2Contact*){};
-        virtual void OnCollisionEnd(b2Contact*){};
-        virtual void OnCollisionPreSolve(b2Contact*){};
-        virtual void OnCollisionPostSolve(b2Contact*){};
+        virtual void OnCollisionBegin(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
+        virtual void OnCollisionEnd(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
+        virtual void OnCollisionPreSolve(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
+        virtual void OnCollisionPostSolve(b2Contact* /*unused*/, b2Fixture* /*unused*/){};
 
     protected:
         ICollisionListener() = default;

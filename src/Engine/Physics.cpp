@@ -108,25 +108,33 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
 
 void jul::Physics::BeginContact(b2Contact* contact)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionBegin(contact); });
+    HandleContact(contact,
+                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
+                  { rigidbody->OnCollisionBegin(contact, otherFixture); });
 }
 
 void jul::Physics::EndContact(b2Contact* contact)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionEnd(contact); });
+    HandleContact(contact,
+                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
+                  { rigidbody->OnCollisionEnd(contact, otherFixture); });
 }
 
 void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionPreSolve(contact); });
+    HandleContact(contact,
+                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
+                  { rigidbody->OnCollisionPreSolve(contact, otherFixture); });
 }
 
 void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impulse*/)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionPostSolve(contact); });
+    HandleContact(contact,
+                  [](Rigidbody* rigidbody, b2Contact* contact, b2Fixture* otherFixture)
+                  { rigidbody->OnCollisionPostSolve(contact, otherFixture); });
 }
 
-void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*)> callback)
+void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*, b2Fixture*)> callback)
 {
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();
@@ -139,8 +147,10 @@ void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbod
             if(rigidbody == nullptr)
                 continue;
 
-            if(fixture == fixtureA || fixture == fixtureB)
-                callback(rigidbody, contact);
+            if(fixture == fixtureA)
+                callback(rigidbody, contact, fixtureB);
+            else if(fixture == fixtureB)
+                callback(rigidbody, contact, fixtureA);
         }
     }
 }
