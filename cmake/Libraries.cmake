@@ -60,7 +60,7 @@ endfunction()
 
 function(make_libs_available)
 
-    set(FETCHCONTENT_QUIET FALSE)
+    set(FETCHCONTENT_QUIET OFF)
 
     include(FetchContent)
 
@@ -100,6 +100,8 @@ function(make_libs_available)
             OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2)
 
+        set(SDL2IMAGE_JXL ON)
+        set(SDL2IMAGE_VENDORED ON)
         message(STATUS "Downloading " sdl2_image...)
         FetchContent_Declare(
             sdl2-image
@@ -110,7 +112,7 @@ function(make_libs_available)
         FetchContent_MakeAvailable(sdl2-image)
 
         # Windows requires building FreeType
-        set(SDL2TTF_VENDORED TRUE)
+        set(SDL2TTF_VENDORED ON)
 
         message(STATUS "Downloading " sdl2_ttf...)
         FetchContent_Declare(

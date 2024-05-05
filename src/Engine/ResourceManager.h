@@ -19,6 +19,8 @@ namespace jul
         static void Initialize();
         static void Destroy();
 
+        static std::filesystem::path GetAssetsPath() { return g_ContentPath; }
+
         [[nodiscard]] static Font* GetFont(const std::string& name);
         [[nodiscard]] static Sprite* GetSprite(const std::string& name);
 
