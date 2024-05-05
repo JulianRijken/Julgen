@@ -4,6 +4,8 @@
 
 void jul::SceneManager::UnloadScene(const std::string& sceneName) { m_LoadedScenes.erase(sceneName); }
 
+void jul::SceneManager::Destroy() { m_LoadedScenes.clear(); }
+
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
     return m_PrimaryScenePtr->AddGameObject(name, position);

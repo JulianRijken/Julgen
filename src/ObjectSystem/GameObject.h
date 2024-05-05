@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include <vector>
 
 #include "Object.h"
 #include "Transform.h"
@@ -65,10 +66,24 @@ namespace jul
             return nullptr;
         }
 
+        // TODO: Add template spetialization for getting the generic component
+        //       This to avoid a dynamic cast
+        template<typename ComponentType>
+            requires std::derived_from<ComponentType, Component>
+        std::vector<ComponentType*> GetComponents() const
+        {
+            std::vector<ComponentType*> components{};
+            for(auto&& componentPtr : m_Components)
+                if(auto* castedComponentPtr = dynamic_cast<ComponentType*>(componentPtr.get()))
+                    components.push_back(castedComponentPtr);
+
+            return components;
+        }
+
         // Will also check on current game object
         template<typename ComponentType>
             requires std::derived_from<ComponentType, Component>
-        ComponentType* GetComponentOnParent() const
+        ComponentType* GetComponentInParent() const
         {
             ComponentType* component = GetComponent<ComponentType>();
             if(component)
@@ -77,7 +92,27 @@ namespace jul
             Transform* parent = m_TransformPtr->GetParent();
 
             if(parent)
-                return parent->GetGameObject()->GetComponentOnParent<ComponentType>();
+                return parent->GetGameObject()->GetComponentInParent<ComponentType>();
+
+            return nullptr;
+        }
+
+        // Will also check on current game object
+        template<typename ComponentType>
+            requires std::derived_from<ComponentType, Component>
+        ComponentType* GetComponentInChildren() const
+        {
+            ComponentType* component = GetComponent<ComponentType>();
+            if(component)
+                return component;
+
+            const auto& children = m_TransformPtr->GetChildren();
+            for(auto&& child : children)
+            {
+                ComponentType* childComponent = child->GetGameObject()->GetComponentInChildren<ComponentType>();
+                if(childComponent)
+                    return childComponent;
+            }
 
             return nullptr;
         }

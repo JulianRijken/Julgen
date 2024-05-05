@@ -7,8 +7,7 @@
 
 namespace jul
 {
-
-    class Physics final : public Service
+    class Physics final : public Service, public b2ContactListener
     {
     public:
         Physics();
@@ -26,6 +25,13 @@ namespace jul
         std::unique_ptr<b2World> m_World;
         int32 m_VelocityIterations = 6;
         int32 m_PositionIterations = 2;
+
+        void BeginContact(b2Contact* contact) override;
+        void EndContact(b2Contact* contact) override;
+        void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
+        void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
+
+        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*)> callback);
     };
 
 }  // namespace jul

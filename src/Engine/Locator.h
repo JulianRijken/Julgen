@@ -52,6 +52,12 @@ namespace jul
             return std::unique_ptr<ImplementationType>(releasedPtr);
         }
 
+        template<typename ServiceType>
+        static std::unique_ptr<ServiceType> Release()
+        {
+            return Release<ServiceType, ServiceType>();
+        }
+
     private:
         static inline std::unordered_map<std::type_index, std::unique_ptr<Service>> g_Services{};
     };

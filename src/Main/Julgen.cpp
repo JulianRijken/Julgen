@@ -19,7 +19,7 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
-#include "Sound_Null.h"
+#include "Sound_Logging.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -47,8 +47,6 @@
 
 jul::Julgen::Julgen()
 {
-    Locator::Provide<Sound, Sound_Null>();
-
     PreInit();
 
 #ifdef USE_STEAMWORKS
@@ -85,14 +83,10 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
     Locator::Provide<Physics>();
-
-    Locator::Release<Sound, Sound_Null>();
     Locator::Provide<Sound, Sound_System>();
-
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
-
     EngineGUI::Initialize(m_Window, RenderManager::GetInstance().GetSDLRenderer());
     ResourceManager::Initialize();
 
@@ -102,9 +96,16 @@ jul::Julgen::Julgen()
 
 jul::Julgen::~Julgen()
 {
+    // Cleanup scene before anything else!
+    SceneManager::GetInstance().Destroy();
+
     ResourceManager::Destroy();
     EngineGUI::Destroy();
     RenderManager::GetInstance().Destroy();
+
+    Locator::Release<Sound>();
+    Locator::Release<Physics>();
+
     SDL_DestroyWindow(m_Window);
     m_Window = nullptr;
 
@@ -136,6 +137,15 @@ void jul::Julgen::Run()
 #endif
 }
 
+// Execution order:
+// > FixedUpdate
+// > Input Events
+// > Update
+// > Late Update
+// > Message Dispatch
+// > Render
+// > Cleanup
+
 void jul::Julgen::RunOneFrame()
 {
 #ifdef USE_STEAMWORKS
@@ -146,34 +156,34 @@ void jul::Julgen::RunOneFrame()
 	GameTime::Update();
 	m_Lag += GameTime::GetDeltaTime();
 
-    MessageQueue::Dispatch();
-
-    // Handle input
-    Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
-
 	// Fixed Update,
 	while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
         SceneManager::GetInstance().FixedUpdate();
-        Locator::Get<Physics>().FixedUpdate();  // TODO: Needs cache?
+        Locator::Get<Physics>().FixedUpdate();
         m_Lag -= GameTime::GetFixedDeltaTime();
 	}
 
-	// Update
+    // Handle input
+    Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
+
+    // Update
 	SceneManager::GetInstance().Update();
 	// Late Update
 	SceneManager::GetInstance().LateUpdate();
 
+    // Message Dispatch
+    MessageQueue::Dispatch();
 
-	// Render
-	RenderManager::GetInstance().Render();
+    // Render
+    RenderManager::GetInstance().Render();
 
 	// Cleans up all the objects marked for deletion
 	SceneManager::GetInstance().CleanupGameObjects();
 
 	GameTime::AddToFrameCount();
 
-	// Avoid over using resources when VSync is not on
-	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    // Avoid over using resources when VSync is not on
+    // TODO: Might need removing
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
-

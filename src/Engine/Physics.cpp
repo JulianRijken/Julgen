@@ -1,5 +1,8 @@
 #include "Physics.h"
 
+#include <fmt/core.h>
+#include <fmt/format.h>
+
 #include <memory>
 
 #include "GameTime.h"
@@ -9,6 +12,7 @@
 jul::Physics::Physics() :
     m_World(std::make_unique<b2World>(b2Vec2{ 0, -9.81f }))
 {
+    m_World->SetContactListener(this);
 }
 
 void jul::Physics::FixedUpdate()
@@ -46,11 +50,11 @@ void jul::Physics::AddRidgidbody(Rigidbody* rigidbodyPtr)
         bodyDef.fixedRotation = settings.fixedRotation;
         bodyDef.bullet = settings.avoidTunnelingOnDynamicBodies;
         bodyDef.active = settings.active;
+
+        bodyDef.userData = rigidbodyPtr;
     }
 
     rigidbodyPtr->m_BodyPtr = m_World->CreateBody(&bodyDef);
-
-    m_World->SetContactListener(rigidbodyPtr);
 }
 
 void jul::Physics::RemoveRidgidbody(Rigidbody* rigidbodyPtr) { m_World->DestroyBody(rigidbodyPtr->m_BodyPtr); }
@@ -69,6 +73,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     fixtureDef.density = settings.density;
     fixtureDef.friction = settings.friction;
     fixtureDef.restitution = settings.restitution;
+    fixtureDef.userData = colliderPtr;
 
     // If collider gets connected we can just create and return
     if(colliderPtr->m_ConnectedRigidbody)
@@ -83,6 +88,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
         const glm::vec3 transformPosition = colliderPtr->GetTransform().WorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
+        bodyDef.userData = nullptr;
         // TODO: Just the default body gets created for any non connected collider
     }
 
@@ -98,4 +104,43 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
     // body can be null when connected
     if(colliderPtr->m_BodyPtr)
         m_World->DestroyBody(colliderPtr->m_BodyPtr);
+}
+
+void jul::Physics::BeginContact(b2Contact* contact)
+{
+    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionBegin(contact); });
+}
+
+void jul::Physics::EndContact(b2Contact* contact)
+{
+    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionEnd(contact); });
+}
+
+void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
+{
+    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionPreSolve(contact); });
+}
+
+void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impulse*/)
+{
+    HandleContact(contact, [](Rigidbody* rigidbody, b2Contact* contact) { rigidbody->OnCollisionPostSolve(contact); });
+}
+
+void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, b2Contact*)> callback)
+{
+    b2Fixture* fixtureA = contact->GetFixtureA();
+    b2Fixture* fixtureB = contact->GetFixtureB();
+
+    for(b2Body* body = m_World->GetBodyList(); body != nullptr; body = body->GetNext())
+    {
+        for(b2Fixture* fixture = body->GetFixtureList(); fixture != nullptr; fixture = fixture->GetNext())
+        {
+            auto* rigidbody = static_cast<Rigidbody*>(body->GetUserData());
+            if(rigidbody == nullptr)
+                continue;
+
+            if(fixture == fixtureA || fixture == fixtureB)
+                callback(rigidbody, contact);
+        }
+    }
 }

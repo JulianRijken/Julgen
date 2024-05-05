@@ -4,7 +4,6 @@
 #include "GameTime.h"
 #include "Locator.h"
 #include "Sound.h"
-#include "Sound_Logging.h"
 #include "Sound_Null.h"
 #include "Sound_System.h"
 

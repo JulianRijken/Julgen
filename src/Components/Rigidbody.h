@@ -3,6 +3,7 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 #include <glm/vec2.hpp>
+#include <vector>
 
 #include "Component.h"
 
@@ -10,7 +11,13 @@ class b2Body;
 
 namespace jul
 {
-    class Rigidbody final : public Component, public b2ContactListener
+
+    class ICollisionListener;
+
+    struct Collision;
+    class BoxCollider;
+
+    class Rigidbody final : public Component
     {
         friend class Physics;
         friend class BoxCollider;
@@ -64,14 +71,17 @@ namespace jul
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
+
     private:
+        void OnCollisionBegin(b2Contact* collision);
+        void OnCollisionEnd(b2Contact* collision);
+        void OnCollisionPreSolve(b2Contact* collision);
+        void OnCollisionPostSolve(b2Contact* collision);
+
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};
 
-        // b2ContactListener interface
-
-        void BeginContact(b2Contact* contact) override;
-        void EndContact(b2Contact* contact) override;
+        std::vector<ICollisionListener*> m_CollisionListeners;
     };
 
 }  // namespace jul

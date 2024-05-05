@@ -27,6 +27,7 @@ namespace jul
         BoxCollider(GameObject* parentPtr, Settings setting = Settings::Default(), Rigidbody* connectedBody = nullptr);
         ~BoxCollider() override;
 
+
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
     private:

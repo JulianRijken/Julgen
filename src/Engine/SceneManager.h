@@ -57,6 +57,8 @@ namespace jul
 
         void UnloadScene(const std::string& sceneName);
 
+        void Destroy();
+
         GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
 
     private:

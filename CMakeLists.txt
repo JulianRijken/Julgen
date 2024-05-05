@@ -117,6 +117,7 @@ endif()
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
+    src/Engine/ICollisionListener.h src/Engine/ICollisionListener.cpp
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

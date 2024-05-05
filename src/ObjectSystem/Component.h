@@ -1,16 +1,17 @@
 #pragma once
-#include "Object.h"
 
+#include "Object.h"
 
 namespace jul
 {
-	class GameObject;
-	class Transform;
 
-	class Component : public Object
-	{
+    class GameObject;
+    class Transform;
 
-	public:
+    class Component : public Object
+    {
+
+    public:
         // TODO: Validate the use of macros for short hand notation
         // #define transform GetTransform()
         // #define gameobject (*GetGameObject())
@@ -31,11 +32,11 @@ namespace jul
 		virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
 
-		virtual void Awake() {}
+        virtual void Awake() {}
 
-	private:
 
-		GameObject* m_ParentGameObjectPtr{};
-	};
+    private:
+        GameObject* m_ParentGameObjectPtr{};
+    };
 }
 

@@ -5,7 +5,7 @@
 #include "Physics.h"
 
 jul::BoxCollider::BoxCollider(GameObject* parentPtr, Settings setting, Rigidbody* connectedBody) :
-    Component(parentPtr),
+    Component(parentPtr, "Box Collider"),
     m_ConnectedRigidbody(connectedBody),
     m_Settings(setting)
 {
@@ -13,7 +13,7 @@ jul::BoxCollider::BoxCollider(GameObject* parentPtr, Settings setting, Rigidbody
     if(connectedBody == nullptr)
     {
         // Try to find a rigidbody to connect to
-        m_ConnectedRigidbody = GetGameObject()->GetComponentOnParent<Rigidbody>();
+        m_ConnectedRigidbody = GetGameObject()->GetComponentInParent<Rigidbody>();
     }
 
     Locator::Get<Physics>().AddCollider(this);
