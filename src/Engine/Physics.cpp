@@ -82,7 +82,6 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
         return;
     }
 
-
     b2BodyDef bodyDef;
     {
         const glm::vec3 transformPosition = colliderPtr->GetTransform().WorldPosition();
@@ -106,16 +105,17 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
         m_World->DestroyBody(colliderPtr->m_BodyPtr);
 }
 
-jul::RayCastResult jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance)
+bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result)
 {
-    glm::vec2 normalizedDirection = glm::normalize(direction);
-    b2Vec2 b2From(from.x, from.y);
-    b2Vec2 b2To(from.x + normalizedDirection.x * distance, from.y + normalizedDirection.y * distance);
+    const glm::vec2 normalizedDirection = glm::normalize(direction);
+    const b2Vec2 b2From(from.x, from.y);
+    const b2Vec2 b2To(from.x + normalizedDirection.x * distance, from.y + normalizedDirection.y * distance);
 
-    RayCastCallback callback;
+    RayCastCallback callback{};
     m_World->RayCast(&callback, b2From, b2To);
 
-    return callback.result;
+    result = callback.result;
+    return result.hit;
 }
 
 void jul::Physics::BeginContact(b2Contact* contact)

@@ -43,6 +43,8 @@ void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
         m_BodyPtr->ApplyForceToCenter(b2Force, wake);
     else if(forceMode == ForceMode::Impulse)
         m_BodyPtr->ApplyLinearImpulseToCenter(b2Force, wake);
+    if(forceMode == ForceMode::VelocityChange)
+        m_BodyPtr->SetLinearVelocity(b2Force);
 }
 
 void jul::Rigidbody::SetPosition(glm::vec2 position) { m_BodyPtr->SetTransform({ position.x, position.y }, 0.0f); }

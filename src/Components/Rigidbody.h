@@ -26,7 +26,8 @@ namespace jul
         enum class ForceMode
         {
             Impulse,
-            Force
+            Force,
+            VelocityChange
         };
 
         /// Static: zero mass, zero velocity, may be manually moved.

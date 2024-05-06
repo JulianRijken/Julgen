@@ -17,23 +17,10 @@ namespace jul
 
     struct RayCastResult
     {
-        glm::vec2 point;
-        glm::vec2 normal;
-        float fraction;
-    };
-
-    class RayCastCallback : public b2RayCastCallback
-    {
-    public:
-        RayCastResult result;
-
-        float32 ReportFixture(b2Fixture*, const b2Vec2& point, const b2Vec2& normal, float32 fraction) override
-        {
-            result.point = glm::vec2(point.x, point.y);
-            result.normal = glm::vec2(normal.x, normal.y);
-            result.fraction = fraction;
-            return fraction;
-        }
+        glm::vec2 point{};
+        glm::vec2 normal{};
+        float distance{ 0.0f };
+        bool hit{ false };
     };
 
     class Physics final : public Service, public b2ContactListener
@@ -49,9 +36,25 @@ namespace jul
         void AddCollider(BoxCollider* colliderPtr);
         void RemoveCollider(BoxCollider* colliderPtr);
 
-        RayCastResult RayCast(glm::vec2 from, glm::vec2 direction, float distance);
+        bool RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result);
 
     private:
+        class RayCastCallback final : public b2RayCastCallback
+        {
+        public:
+            RayCastResult result;
+
+            float32 ReportFixture(b2Fixture* /*fixture*/, const b2Vec2& point, const b2Vec2& normal,
+                                  float32 fraction) override
+            {
+                result.point = glm::vec2(point.x, point.y);
+                result.normal = glm::vec2(normal.x, normal.y);
+                result.distance = fraction;
+                result.hit = true;
+                return fraction;
+            }
+        };
+
         std::unique_ptr<b2World> m_World;
         int32 m_VelocityIterations = 6;
         int32 m_PositionIterations = 2;
