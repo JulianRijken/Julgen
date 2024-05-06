@@ -77,7 +77,7 @@ jul::Julgen::Julgen()
                                 SDL_WINDOWPOS_CENTERED,
                                 GameSettings::s_WindowWidth,
                                 GameSettings::s_WindowHeight,
-                                SDL_WINDOW_OPENGL);
+                                SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(m_Window == nullptr)
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());

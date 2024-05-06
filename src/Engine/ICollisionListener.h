@@ -19,7 +19,7 @@ namespace jul
 
         virtual void OnCollisionBegin(Collision /*unused*/){};
         virtual void OnCollisionEnd(Collision /*unused*/){};
-        virtual void OnCollisionPreSolve(Collision /*unused*/){};
+        virtual void OnCollisionPreSolve(Collision /*unused*/, const b2Manifold*){};
         virtual void OnCollisionPostSolve(Collision /*unused*/){};
 
     protected:

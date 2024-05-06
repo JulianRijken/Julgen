@@ -53,13 +53,13 @@ void jul::RenderManager::Destroy()
 
 glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
 {
-    float aspectRatio = jul::GameSettings::GetAspectRatio();
+    const float aspectRatio = jul::GameSettings::GetAspectRatio();
 
     // Assuming you have a camera at the origin looking down the negative z-axis
-    glm::mat4 projectionMatrix =
+    const glm::mat4 projectionMatrix =
         glm::ortho(-orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, -1.0f, 1.0f);
 
-    glm::mat4 viewMatrix = glm::mat4(1.0f); // TODO: Implement camera
+    const glm::mat4 viewMatrix = glm::mat4(1.0f);  // TODO: Implement camera
 
     glm::vec4 clipSpacePos = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
 
@@ -70,7 +70,7 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::s_RenderWidth;  // TODO: maybe remove 0.5f
     float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GameSettings::s_RenderHeight;
 
-    return glm::vec3(x_screen, y_screen, clipSpacePos.z);
+    return { x_screen, y_screen, clipSpacePos.z };
 }
 
 
@@ -144,16 +144,16 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
     const glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
 
     SDL_Rect dstRect{};
-    dstRect.x = static_cast<int>(topLeft.x - rectSize.x * pivot.x);
-    dstRect.y = static_cast<int>(topLeft.y - rectSize.y * pivot.y);
-    dstRect.w = static_cast<int>(rectSize.x);
-    dstRect.h = static_cast<int>(rectSize.y);
+    dstRect.x = static_cast<int>(std::round(topLeft.x - rectSize.x * pivot.x));
+    dstRect.y = static_cast<int>(std::round(topLeft.y - rectSize.y * pivot.y));
+    dstRect.w = static_cast<int>(std::round(rectSize.x));
+    dstRect.h = static_cast<int>(std::round(rectSize.y));
 
     SDL_Rect srcRect{};
-    srcRect.x = static_cast<int>(srcLocation.x);
-    srcRect.y = static_cast<int>(srcLocation.y);
-    srcRect.w = static_cast<int>(cellSize.x);
-    srcRect.h = static_cast<int>(cellSize.y);
+    srcRect.x = static_cast<int>(std::round(srcLocation.x));
+    srcRect.y = static_cast<int>(std::round(srcLocation.y));
+    srcRect.w = static_cast<int>(std::round(cellSize.x));
+    srcRect.h = static_cast<int>(std::round(cellSize.y));
 
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     if (flipX and flipY)

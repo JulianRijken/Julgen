@@ -64,6 +64,17 @@ function(make_libs_available)
 
     include(FetchContent)
 
+    # Soloud is not availible as find_package
+    message(STATUS "Downloading " soloud...)
+    FetchContent_Declare(
+          soloud
+          GIT_REPOSITORY https://github.com/Casqade/soloud
+          GIT_TAG master
+          GIT_PROGRESS TRUE
+          GIT_SHALLOW TRUE
+          SOURCE_SUBDIR contrib)
+    FetchContent_MakeAvailable(soloud)
+
     if(NOT WIN32)
         find_package(glm REQUIRED)
         find_package(fmt REQUIRED)
@@ -123,18 +134,6 @@ function(make_libs_available)
             OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2-ttf)
     endif()
-
-
-    message(STATUS "Downloading " soloud...)
-    FetchContent_Declare(
-          soloud
-          GIT_REPOSITORY https://github.com/Casqade/soloud
-          GIT_TAG master
-          GIT_PROGRESS TRUE
-          GIT_SHALLOW TRUE
-          SOURCE_SUBDIR contrib)
-    FetchContent_MakeAvailable(soloud)
-
 
        if(NOT WIN32)
           target_compile_options(soloud PRIVATE -Wno-multichar)

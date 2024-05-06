@@ -106,6 +106,18 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
         m_World->DestroyBody(colliderPtr->m_BodyPtr);
 }
 
+jul::RayCastResult jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance)
+{
+    glm::vec2 normalizedDirection = glm::normalize(direction);
+    b2Vec2 b2From(from.x, from.y);
+    b2Vec2 b2To(from.x + normalizedDirection.x * distance, from.y + normalizedDirection.y * distance);
+
+    RayCastCallback callback;
+    m_World->RayCast(&callback, b2From, b2To);
+
+    return callback.result;
+}
+
 void jul::Physics::BeginContact(b2Contact* contact)
 {
     HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionBegin(collision); });
@@ -116,10 +128,11 @@ void jul::Physics::EndContact(b2Contact* contact)
     HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionEnd(collision); });
 }
 
-void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* /*oldManifold*/)
+void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
     HandleContact(contact,
-                  [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionPreSolve(collision); });
+                  [&oldManifold](Rigidbody* rigidbody, Collision collision)
+                  { rigidbody->OnCollisionPreSolve(collision, oldManifold); });
 }
 
 void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impulse*/)

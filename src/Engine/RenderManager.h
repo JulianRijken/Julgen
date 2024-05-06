@@ -44,7 +44,7 @@ namespace jul
 		SDL_Color m_ClearColor{};
 
         // TODO: Should be in the camera component
-        float m_OrthoSize = 16;
+        float m_OrthoSize = 14;
 
         inline static std::unordered_set<RenderComponent*> s_GlobalRendererPtrs{};
     };

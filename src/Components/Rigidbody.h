@@ -79,7 +79,7 @@ namespace jul
     private:
         void OnCollisionBegin(Collision collision);
         void OnCollisionEnd(Collision collision);
-        void OnCollisionPreSolve(Collision collision);
+        void OnCollisionPreSolve(Collision collision, const b2Manifold* oldManifold);
         void OnCollisionPostSolve(Collision collision);
 
         b2Body* m_BodyPtr{};  // Owned by world

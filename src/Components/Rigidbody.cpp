@@ -82,10 +82,10 @@ void jul::Rigidbody::OnCollisionEnd(Collision collision)
         listener->OnCollisionEnd(collision);
 }
 
-void jul::Rigidbody::OnCollisionPreSolve(Collision collision)
+void jul::Rigidbody::OnCollisionPreSolve(Collision collision, const b2Manifold* oldManifold)
 {
     for(auto&& listener : m_CollisionListeners)
-        listener->OnCollisionPreSolve(collision);
+        listener->OnCollisionPreSolve(collision, oldManifold);
 }
 
 void jul::Rigidbody::OnCollisionPostSolve(Collision collision)
