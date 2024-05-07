@@ -36,7 +36,7 @@ namespace jul
         void AddCollider(BoxCollider* colliderPtr);
         void RemoveCollider(BoxCollider* colliderPtr);
 
-        bool RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result);
+        static bool RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result);
 
     private:
         class RayCastCallback final : public b2RayCastCallback

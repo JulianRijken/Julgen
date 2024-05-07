@@ -68,6 +68,8 @@ namespace jul
         glm::vec2 Velocity();
         glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint);
 
+        void SetGravityScale(float scale);
+
         void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
         void SetPosition(glm::vec2 position);
         void FixedUpdate() override;

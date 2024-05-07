@@ -35,6 +35,8 @@ glm::vec2 jul::Rigidbody::LinearVelocityFromWorldPoint(glm::vec2 worldPoint)
     return { velocity.x, velocity.y };
 }
 
+void jul::Rigidbody::SetGravityScale(float scale) { m_BodyPtr->SetGravityScale(scale); }
+
 void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
 {
     const b2Vec2 b2Force = { force.x, force.y };

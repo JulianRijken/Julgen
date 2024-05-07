@@ -15,16 +15,10 @@ void jul::SpriteRenderer::SetDrawCell(glm::ivec2 drawCell)
     m_DrawCell = drawCell;
 }
 
-void jul::SpriteRenderer::SetSprite(const Sprite* spritePtr)
-{
-    m_SpritePtr = spritePtr;
-}
+void jul::SpriteRenderer::SetSprite(const Sprite* spritePtr) { m_SpritePtr = spritePtr; }
 
+const jul::Sprite* jul::SpriteRenderer::GetSprite() { return m_SpritePtr; }
 
-const jul::Sprite* jul::SpriteRenderer::GetSprite()
-{
-    return m_SpritePtr;
-}
 
 void jul::SpriteRenderer::Render() const
 {

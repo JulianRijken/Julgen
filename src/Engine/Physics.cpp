@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "GameTime.h"
+#include "Locator.h"
 #include "Rigidbody.h"
 #include "Transform.h"
 
@@ -112,7 +113,7 @@ bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, 
     const b2Vec2 b2To(from.x + normalizedDirection.x * distance, from.y + normalizedDirection.y * distance);
 
     RayCastCallback callback{};
-    m_World->RayCast(&callback, b2From, b2To);
+    Locator::Get<Physics>().m_World->RayCast(&callback, b2From, b2To);
 
     result = callback.result;
     return result.hit;

@@ -137,8 +137,8 @@ void jul::Julgen::Run()
 }
 
 // Execution order:
-// > FixedUpdate
 // > Input Events
+// > FixedUpdate
 // > Update
 // > Late Update
 // > Message Dispatch
@@ -155,16 +155,16 @@ void jul::Julgen::RunOneFrame()
 	GameTime::Update();
 	m_Lag += GameTime::GetDeltaTime();
 
-	// Fixed Update,
-	while (m_Lag >= GameTime::GetFixedDeltaTime())
+    // Handle input
+    Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
+
+    // Fixed Update,
+    while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
         SceneManager::GetInstance().FixedUpdate();
         Locator::Get<Physics>().FixedUpdate();
         m_Lag -= GameTime::GetFixedDeltaTime();
 	}
-
-    // Handle input
-    Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
 
     // Update
 	SceneManager::GetInstance().Update();
