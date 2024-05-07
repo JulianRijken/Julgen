@@ -20,3 +20,5 @@ jul::BoxCollider::BoxCollider(GameObject* parentPtr, Settings setting, Rigidbody
 }
 
 jul::BoxCollider::~BoxCollider() { Locator::Get<Physics>().RemoveCollider(this); }
+
+void jul::BoxCollider::SetRestitution(float restitution) { m_Fixture->SetRestitution(restitution); }

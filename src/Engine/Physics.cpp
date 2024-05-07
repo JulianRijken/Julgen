@@ -79,7 +79,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     // If collider gets connected we can just create and return
     if(colliderPtr->m_ConnectedRigidbody)
     {
-        colliderPtr->m_ConnectedRigidbody->m_BodyPtr->CreateFixture(&fixtureDef);
+        colliderPtr->m_Fixture = colliderPtr->m_ConnectedRigidbody->m_BodyPtr->CreateFixture(&fixtureDef);
         return;
     }
 
@@ -96,7 +96,8 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     colliderPtr->m_BodyPtr = m_World->CreateBody(&bodyDef);
 
     // Apply fixture
-    colliderPtr->m_BodyPtr->CreateFixture(&fixtureDef);
+    colliderPtr->m_Fixture = colliderPtr->m_BodyPtr->CreateFixture(&fixtureDef);
+    return;
 }
 
 void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
@@ -106,7 +107,13 @@ void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
         m_World->DestroyBody(colliderPtr->m_BodyPtr);
 }
 
-bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result)
+bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance)
+{
+    RayCastResult temp{};
+    return RayCast(from, direction, distance, temp);
+}
+
+bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, RayCastResult& result)
 {
     const glm::vec2 normalizedDirection = glm::normalize(direction);
     const b2Vec2 b2From(from.x, from.y);

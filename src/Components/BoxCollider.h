@@ -27,12 +27,16 @@ namespace jul
         BoxCollider(GameObject* parentPtr, Settings setting = Settings::Default(), Rigidbody* connectedBody = nullptr);
         ~BoxCollider() override;
 
+        void SetRestitution(float restitution);
+
+        [[nodiscard]] const b2Body& GetBody() { return *m_BodyPtr; }
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
     private:
-        b2Body* m_BodyPtr = nullptr;
-        Rigidbody* m_ConnectedRigidbody = nullptr;
+        b2Body* m_BodyPtr{ nullptr };
+        b2Fixture* m_Fixture{ nullptr };
+        Rigidbody* m_ConnectedRigidbody{ nullptr };
         Settings m_Settings{};
     };
 }  // namespace jul
