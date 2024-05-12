@@ -129,13 +129,7 @@ target_include_directories(${TARGET_NAME} PUBLIC
 )
 
 
-# Add and Link box2D
-# TODO: Set to public, idealy private, the game does not need to know about box2D
-add_subdirectory(external/Box2D-cmake)
-target_link_libraries(${TARGET_NAME} PUBLIC tobanteGaming::Box2D)
 
-
-# Link SDL
 if(MSVC)
     target_link_libraries(${TARGET_NAME} PUBLIC SDL2::SDL2main)
 endif()
@@ -143,20 +137,12 @@ target_link_libraries(${TARGET_NAME} PUBLIC
     SDL2::SDL2
     SDL2_ttf::SDL2_ttf
     SDL2_image::SDL2_image
-)
-
-target_link_libraries(${TARGET_NAME} PUBLIC
     glm::glm
-)
-
-target_link_libraries(${TARGET_NAME} PUBLIC
     fmt::fmt
+    tobanteGaming::Box2D
 )
 
-target_link_libraries(${TARGET_NAME} PRIVATE
-    soloud
-)
-
+target_link_libraries(${TARGET_NAME} PRIVATE soloud)
 
 
 

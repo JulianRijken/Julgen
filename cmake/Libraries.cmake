@@ -58,22 +58,13 @@ function(use_steamworks ENGINE_TARGET)
 endfunction()
 
 
+
+
 function(make_libs_available)
 
     set(FETCHCONTENT_QUIET OFF)
 
     include(FetchContent)
-
-    # Soloud is not availible as find_package
-    message(STATUS "Downloading " soloud...)
-    FetchContent_Declare(
-          soloud
-          GIT_REPOSITORY https://github.com/Casqade/soloud
-          GIT_TAG master
-          GIT_PROGRESS TRUE
-          GIT_SHALLOW TRUE
-          SOURCE_SUBDIR contrib)
-    FetchContent_MakeAvailable(soloud)
 
     if(NOT WIN32)
         find_package(glm REQUIRED)
@@ -135,9 +126,22 @@ function(make_libs_available)
         FetchContent_MakeAvailable(sdl2-ttf)
     endif()
 
-       if(NOT WIN32)
-          target_compile_options(soloud PRIVATE -Wno-multichar)
-      endif()
+
+    # Add and Link box2D
+    # TODO: Set to public, idealy private, the game does not need to know about box2D
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/Box2D-cmake)
+
+
+    # Setup soloud
+    # Again credits to mat for providing submodule
+    set(SOLOUD_BACKEND_NULL OFF)
+    set(SOLOUD_BACKEND_WINMM OFF)
+    set(SOLOUD_BACKEND_MINIAUDIO ON)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/soloud)
+    if(NOT MSVC)
+        target_compile_options(soloud PRIVATE -Wno-multichar)
+    endif()
+
 endfunction()
 
 function(make_vld_available)
