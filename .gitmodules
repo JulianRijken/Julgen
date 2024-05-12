@@ -1,3 +1,6 @@
 [submodule "external/soloud"]
 	path = external/soloud
 	url = https://git.allpurposem.at/mat/SoLoud-CMake.git
+[submodule "external/box2D"]
+	path = external/box2D
+	url = https://github.com/JulianRijken/Box2D-CMake-Julgen.git
