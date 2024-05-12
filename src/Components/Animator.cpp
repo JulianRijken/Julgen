@@ -5,12 +5,15 @@
 
 #include <GameTime.h>
 
-jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr) :
+jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr, const std::string& defaultAnimation) :
     Component{ parentPtr, "Animator" },
     m_SpriteRendererPtr{ spriteRendererPtr }
 {
     if(m_SpriteRendererPtr == nullptr)
         m_SpriteRendererPtr = parentPtr->GetComponent<SpriteRenderer>();
+
+    if(not defaultAnimation.empty())
+        PlayAnimation(defaultAnimation, true);
 }
 
 void jul::Animator::PlayAnimation(const std::string& name, bool looping, float startFrameTime, float speedMultiplier)

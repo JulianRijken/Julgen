@@ -10,7 +10,8 @@ namespace jul
     class Animator final : public Component
     {
     public:
-        Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr = nullptr);
+        Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr = nullptr,
+                 const std::string& defaultAnimation = {});
 
         void PlayAnimation(const std::string& name, bool looping = false, float startFrameTime = 0, float speedMultiplier = 1);
 
