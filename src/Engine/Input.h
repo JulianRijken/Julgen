@@ -56,15 +56,10 @@ namespace jul
 
     class Input final : public Singleton<Input>
     {
-
     public:
-        Input();
-        ~Input() override;
-
-        Input(const Input&) = delete;
-        Input(Input&&) noexcept = delete;
-        Input& operator=(const Input&) = delete;
-        Input& operator=(Input&&) noexcept = delete;
+        inline static constexpr float STICK_DEADZONE{ 0.15f };
+        inline static constexpr float TRIGGER_DEADZONE{ 0.05f };
+        inline static constexpr float AXIS_LIMIT{ std::numeric_limits<short>::max() };
 
         // Used as a shorthand for a function command
         template<typename... Args, typename ActionEnum>
@@ -80,10 +75,6 @@ namespace jul
         {
             GetInstance().m_InputActions.emplace(static_cast<int>(actionEnum), action);
         }
-
-        inline static float g_StickDeadzone{ 0.15f };
-        inline static float g_TriggerDeadzone{ 0.05f };
-
 
         void ProcessInput(bool& shouldQuit);
 
@@ -103,8 +94,18 @@ namespace jul
         }
 
     private:
-        class ControllerInputImpl;
-        std::unique_ptr<ControllerInputImpl> m_ImplUPtr;
+        std::vector<InputBinding> m_Binds{};
+        std::map<int, InputAction> m_InputActions{};
+        std::vector<SDL_GameController*> m_Controllers;
+
+        void HandleKeyboardContinually() const;
+        void HandleControllerContinually();
+
+        [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
+        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
+
+        void UpdateControllers();
+        SDL_GameController* GetController(int controllerIndex);
 
         template<typename DataType>
         static float NormalizeAxis(const DataType& rawAxis, float deadzone,
@@ -119,16 +120,5 @@ namespace jul
 
             return input;
         }
-
-        void HandleKeyboardContinually() const;
-        // Defined by ControllerInputImpl
-        void HandleControllerContinually();
-
-        [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
-        // Defined by ControllerInputImpl
-        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
-
-        std::vector<InputBinding> m_Binds{};
-        std::map<int, InputAction> m_InputActions{};
     };
 }

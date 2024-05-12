@@ -4,7 +4,6 @@
 
 
 #include <imgui.h>
-#include <implot.h>
 
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
@@ -13,7 +12,6 @@ void jul::EngineGUI::Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
@@ -45,6 +43,5 @@ void jul::EngineGUI::Destroy()
 {
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
-    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 }

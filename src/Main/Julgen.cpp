@@ -44,7 +44,6 @@
 #endif
 
 
-
 jul::Julgen::Julgen()
 {
     PreInit();

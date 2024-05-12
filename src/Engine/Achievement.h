@@ -5,6 +5,7 @@
 
 namespace  jul
 {
+    // TODO: Enum should be defined outside of the engine
     enum class AchievementType
     {
         Winner,

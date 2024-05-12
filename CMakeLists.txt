@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.18)
 project(Julgen)
 
 # Options
-option(USE_XINPUT "Switches between SDL and XInput" FALSE)
 option(USE_STEAMWORKS "Use steamworks SDK (must provide it in external/steamworks)" FALSE)
 option(USE_VLD "Use VLD on windows" TRUE)
 
@@ -34,12 +33,6 @@ endif()
 
 
 set(IMGUI_SOURCE_FILES
-    #https://github.com/epezent/implot
-    ${EXTERNAL_DIR}/imgui/implot.cpp
-    ${EXTERNAL_DIR}/imgui/implot_demo.cpp
-    ${EXTERNAL_DIR}/imgui/implot_items.cpp
-    ${EXTERNAL_DIR}/imgui/implot_items.cpp
-
     ${EXTERNAL_DIR}/imgui/backends/imgui_impl_sdl2
     ${EXTERNAL_DIR}/imgui/backends/imgui_impl_sdlrenderer2
 
@@ -100,18 +93,6 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Components/Rigidbody.h            ${SOURCE_DIR}/Components/Rigidbody.cpp
     ${SOURCE_DIR}/Components/BoxCollider.h          ${SOURCE_DIR}/Components/BoxCollider.cpp
 )
-
-# Switch between sld implementation and xinput implementation
-if(USE_XINPUT)
-    message("InputImplXInput is enabled")
-    list(APPEND JULGEN_SOURCE_FILES
-        ${SOURCE_DIR}/Engine/InputImplXInput.cpp)
-else()
-    message("InputImplSDL is enabled")
-    list(APPEND JULGEN_SOURCE_FILES
-        ${SOURCE_DIR}/Engine/InputImplSDL.cpp)
-endif()
-
 
 
 add_library(${TARGET_NAME} STATIC
