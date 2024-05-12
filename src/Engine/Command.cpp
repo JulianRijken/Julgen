@@ -7,7 +7,6 @@
 #include "Sound_Null.h"
 #include "Sound_System.h"
 
-
 jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm::vec3& moveDirection) :
       GameObjectCommand(gameObject),
       m_MoveSpeed(moveSpeed),
@@ -35,19 +34,6 @@ jul::UnitMoveCommand::UnitMoveCommand(GameObject* gameObject,const glm::vec3& mo
 void jul::UnitMoveCommand::Execute(InputContext /*context*/)
 {
     GetGameObject()->GetTransform().Translate(m_MoveDirection * 10.0f);
-}
-
-void jul::StickTestCommand::Execute(InputContext context)
-{
-    const auto INPUT = std::get<glm::vec2>(context.value());
-    std::cout <<  "Stick Input X: " << INPUT.x << '\n';
-    std::cout <<  "Stick Input Y: " << INPUT.y << '\n';
-}
-
-void jul::TriggerTestCommand::Execute(InputContext context)
-{
-    const auto INPUT = std::get<float>(context.value());
-    std::cout << "Trigger Input: " << INPUT << '\n';
 }
 
 void jul::MemberFunctionCommand::Execute(InputContext context) { m_Function(context); }

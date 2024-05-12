@@ -70,7 +70,13 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Font.h                     ${SOURCE_DIR}/Engine/Font.cpp
     ${SOURCE_DIR}/Engine/GameTime.h                 ${SOURCE_DIR}/Engine/GameTime.cpp
     ${SOURCE_DIR}/Engine/GUI.h                      ${SOURCE_DIR}/Engine/GUI.cpp
-    ${SOURCE_DIR}/Engine/Input.h                    ${SOURCE_DIR}/Engine/Input.cpp
+
+
+    ${SOURCE_DIR}/Engine/Input/InputContext.h
+    ${SOURCE_DIR}/Engine/Input/InputBinding.h
+    ${SOURCE_DIR}/Engine/Input/InputAction.h
+    ${SOURCE_DIR}/Engine/Input/Input.h              ${SOURCE_DIR}/Engine/Input/Input.cpp
+
     ${SOURCE_DIR}/Engine/RenderManager.h            ${SOURCE_DIR}/Engine/RenderManager.cpp
     ${SOURCE_DIR}/Engine/ResourceManager.h          ${SOURCE_DIR}/Engine/ResourceManager.cpp
     ${SOURCE_DIR}/Engine/Scene.h                    ${SOURCE_DIR}/Engine/Scene.cpp
@@ -104,17 +110,13 @@ target_include_directories(${TARGET_NAME} PUBLIC
     ${SOURCE_DIR}/Components
     ${SOURCE_DIR}/Main
     ${SOURCE_DIR}/Engine
+    ${SOURCE_DIR}/Engine/Input
     ${SOURCE_DIR}/ObjectSystem
 
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
     ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui/backends
 )
-
-# Link XInput
-if(USE_XINPUT)
-    target_link_libraries(${TARGET_NAME} PUBLIC xinput)
-endif()
 
 
 # Add and Link box2D

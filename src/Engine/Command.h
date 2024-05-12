@@ -3,14 +3,12 @@
 #include <functional>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <optional>
-#include <variant>
+
+#include "InputContext.h"
 
 namespace jul
 {
 	class GameObject;
-
-    using InputContext = std::optional<std::variant<float, glm::vec2>>;
 
     class BaseCommand
 	{
@@ -21,7 +19,7 @@ namespace jul
         BaseCommand& operator=(BaseCommand&&) noexcept = delete;
 
         virtual ~BaseCommand() = default;
-        virtual void Execute(InputContext context = std::nullopt) = 0;
+        virtual void Execute(InputContext context) = 0;
 
     protected:
         BaseCommand() = default;
@@ -63,22 +61,9 @@ namespace jul
         glm::vec3 m_MoveDirection;
     };
 
-    class StickTestCommand final : public BaseCommand
-    {
-    public:
-        void Execute(InputContext context) override;
-    };
-
-
-    class TriggerTestCommand final : public BaseCommand
-    {
-    public:
-        void Execute(InputContext context) override;
-    };
-
     class MemberFunctionCommand final : public BaseCommand
     {
-        using InputFunction = std::function<void (InputContext)>;
+        using InputFunction = std::function<void(InputContext)>;
 
     public:
         template<typename ObjectType>

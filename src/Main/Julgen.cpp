@@ -82,7 +82,7 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 
     Locator::Provide<Physics>();
-    Locator::Provide<Sound, Sound_Null>();
+    Locator::Provide<Sound, Sound_System>();
 
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();

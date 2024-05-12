@@ -2,58 +2,21 @@
 
 #include <SDL.h>
 #include <SDL_keycode.h>
+
 #include <algorithm>
+#include <glm/vec2.hpp>
 #include <map>
 #include <memory>
+#include <optional>
 #include <vector>
 
-#include "Singleton.h"
 #include "Command.h"
+#include "InputAction.h"
+#include "InputBinding.h"
+#include "Singleton.h"
 
 namespace jul
 {
-    struct InputAction
-    {
-        std::vector<SDL_Scancode> keyboardButtons;
-        std::vector<SDL_GameControllerButton> controllerButtons;
-        std::vector<SDL_GameControllerAxis> controllerAxis;
-
-        [[nodiscard]] bool HasKeyboardKey(SDL_Scancode compareKey) const
-        {
-            return std::ranges::count(keyboardButtons, compareKey) > 0;
-        }
-
-        [[nodiscard]] bool HasControllerButton(SDL_GameControllerButton compareButton) const
-        {
-            return std::ranges::count(controllerButtons, compareButton) > 0;
-        }
-
-        [[nodiscard]] bool HasControllerAxis(SDL_GameControllerAxis compareAxis) const
-        {
-            return std::ranges::count(controllerAxis, compareAxis) > 0;
-        }
-    };
-
-    enum class ButtonState
-    {
-        Down,
-        Up,
-        Held
-    };
-
-    struct InputBinding
-    {
-        ButtonState state;
-        int controllerIndex;
-        bool allowKeyboard;
-        InputAction acton;
-        std::unique_ptr<BaseCommand> command;
-
-        bool TryExecuteController(ButtonState checkButtonState, int checkControllerIndex,
-                                  SDL_GameControllerButton compareButton) const;
-        bool TryExecuteKeyboard(ButtonState checkButtonState, SDL_Scancode compareKey) const;
-    };
-
     class Input final : public Singleton<Input>
     {
     public:
@@ -63,11 +26,10 @@ namespace jul
 
         // Used as a shorthand for a function command
         template<typename... Args, typename ActionEnum>
-        static void Bind(ActionEnum actionEnum, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
-                         Args&&... args)
+        static void Bind(ActionEnum actionEnum, int controllerIndex, bool allowKeyboard, Args&&... args)
         {
             GetInstance().RegisterCommand<MemberFunctionCommand>(
-                static_cast<int>(actionEnum), buttonState, controllerIndex, allowKeyboard, args...);
+                static_cast<int>(actionEnum), controllerIndex, allowKeyboard, args...);
         }
 
         template<typename ActionEnum>
@@ -80,14 +42,12 @@ namespace jul
 
         template<typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
-        static void RegisterCommand(int actionName, ButtonState buttonState, int controllerIndex, bool allowKeyboard,
-                                    Args&&... args)
+        static void RegisterCommand(int actionName, int controllerIndex, bool allowKeyboard, Args&&... args)
         {
             Input& inputInstance = GetInstance();
 
             assert(inputInstance.m_InputActions.contains(actionName) && "Action Does Not Exist");
-            inputInstance.m_Binds.emplace_back(buttonState,
-                                               controllerIndex,
+            inputInstance.m_Binds.emplace_back(controllerIndex,
                                                allowKeyboard,
                                                inputInstance.m_InputActions.at(actionName),
                                                std::make_unique<CommandType>(args...));
@@ -98,8 +58,7 @@ namespace jul
         std::map<int, InputAction> m_InputActions{};
         std::vector<SDL_GameController*> m_Controllers;
 
-        void HandleKeyboardContinually() const;
-        void HandleControllerContinually();
+        void HandleControllerAxis(const SDL_GameControllerAxis& axis);
 
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
