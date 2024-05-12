@@ -3,7 +3,7 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 #include <glm/vec2.hpp>
-#include <vector>
+#include <unordered_set>
 
 #include "Component.h"
 
@@ -56,7 +56,7 @@ namespace jul
             static Settings Default() { return {}; }
         };
 
-        Rigidbody(GameObject* parentPtr, Settings setting = Settings::Default());
+        Rigidbody(GameObject* parentPtr, const Settings& settings = Settings::Default());
         ~Rigidbody() override;
 
         Rigidbody(const Rigidbody&) = delete;
@@ -64,20 +64,26 @@ namespace jul
         Rigidbody& operator=(const Rigidbody&) = delete;
         Rigidbody& operator=(Rigidbody&&) noexcept = delete;
 
-        glm::vec2 Positon();
+        glm::vec2 Position();
         glm::vec2 Velocity();
-        glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint);
+        glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint) const;
 
         void SetGravityScale(float scale);
 
         void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
-        void SetPosition(glm::vec2 position);
+        void SetPosition(glm::vec2 position) const;
         void FixedUpdate() override;
+        void SetMode(Mode mode);
+        void SetVelocity(glm::vec2 velocity) const;
 
-        b2Body* GetBody() { return m_BodyPtr; }
+        [[nodiscard]] b2Body* GetBody() const { return m_BodyPtr; }
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
+        // void AddCollisionListener(ICollisionListener* collisionListenerPtr);
+        // void RemoveCollisionListener(ICollisionListener* collisionListenerPtr);
+
+        void UpdateCollisionListeners();
 
     private:
         void OnCollisionBegin(Collision collision);
@@ -88,7 +94,10 @@ namespace jul
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};
 
-        std::vector<ICollisionListener*> m_CollisionListeners;
+        Mode m_ModeFlag{};
+
+
+        std::unordered_set<ICollisionListener*> m_CollisionListeners;
     };
 
 }  // namespace jul

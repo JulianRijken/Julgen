@@ -149,7 +149,7 @@ void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impul
                   [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionPostSolve(collision); });
 }
 
-void jul::Physics::HandleContact(b2Contact* contact, std::function<void(Rigidbody*, Collision)> callback)
+void jul::Physics::HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback)
 {
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();

@@ -28,8 +28,9 @@ namespace jul
         ~BoxCollider() override;
 
         void SetRestitution(float restitution);
+        void SetSensor(bool sensor);
 
-        [[nodiscard]] const b2Body& GetBody() { return *m_BodyPtr; }
+        [[nodiscard]] const b2Body& GetBody() const { return *m_BodyPtr; }
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
@@ -38,5 +39,6 @@ namespace jul
         b2Fixture* m_Fixture{ nullptr };
         Rigidbody* m_ConnectedRigidbody{ nullptr };
         Settings m_Settings{};
+        bool m_ActiveFlag{ true };
     };
 }  // namespace jul

@@ -32,8 +32,6 @@ namespace jul
 		virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
 
-        virtual void Awake() {}
-
 
     private:
         GameObject* m_ParentGameObjectPtr{};

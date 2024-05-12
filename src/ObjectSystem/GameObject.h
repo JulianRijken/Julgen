@@ -44,10 +44,6 @@ namespace jul
             auto& addedComponent =
                 m_Components.emplace_back(std::make_unique<ComponentType>(this, std::forward<Args>(args)...));
 
-            // TODO: Awake is currently redundant and should be only called at the end of the frame to allow
-            // components to find each other
-            addedComponent->Awake();
-
             return reinterpret_cast<ComponentType*>(addedComponent.get());
         }
 
@@ -56,7 +52,7 @@ namespace jul
         void DestroyComponent(Component* component) { component->Destroy(); }
 
         template<typename ComponentType>
-            requires std::derived_from<ComponentType, Component>
+        // requires std::derived_from<ComponentType, Component> // TODO: Removed to allow Interfaces to work
         ComponentType* GetComponent() const
         {
             for(const auto& componentPtr : m_Components)

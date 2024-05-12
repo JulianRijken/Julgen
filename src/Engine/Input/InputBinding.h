@@ -1,9 +1,10 @@
-#include <bits/unique_ptr.h>
+#pragma once
 #include <Command.h>
+
+#include <memory>
 
 #include "InputAction.h"
 
-#pragma once
 
 namespace jul
 {

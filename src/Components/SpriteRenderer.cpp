@@ -3,7 +3,7 @@
 #include "Transform.h"
 #include "RenderManager.h"
 
-jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, Sprite* sprite, int renderLayer, glm::ivec2 drawCell) :
+jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, const Sprite* sprite, int renderLayer, const glm::ivec2& drawCell) :
     RenderComponent(parentPtr, "SpriteRenderer", renderLayer),
     m_DrawCell(drawCell)
 {
@@ -17,7 +17,7 @@ void jul::SpriteRenderer::SetDrawCell(glm::ivec2 drawCell)
 
 void jul::SpriteRenderer::SetSprite(const Sprite* spritePtr) { m_SpritePtr = spritePtr; }
 
-const jul::Sprite* jul::SpriteRenderer::GetSprite() { return m_SpritePtr; }
+const jul::Sprite* jul::SpriteRenderer::GetSprite() const { return m_SpritePtr; }
 
 
 void jul::SpriteRenderer::Render() const

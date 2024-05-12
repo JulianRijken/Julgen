@@ -12,7 +12,6 @@ namespace jul
     {
         b2Fixture* thisFixture;
         b2Fixture* otherFixture;
-
         b2Contact* contact;
     };
 
@@ -22,6 +21,7 @@ namespace jul
         glm::vec2 normal{};
         float distance{ 0.0f };
         bool hit{ false };
+        BoxCollider* hitCollider{};
     };
 
     class Physics final : public Service, public b2ContactListener
@@ -46,13 +46,14 @@ namespace jul
         public:
             RayCastResult result;
 
-            float32 ReportFixture(b2Fixture* /*fixture*/, const b2Vec2& point, const b2Vec2& normal,
+            float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal,
                                   float32 fraction) override
             {
                 result.point = glm::vec2(point.x, point.y);
                 result.normal = glm::vec2(normal.x, normal.y);
                 result.distance = fraction;
                 result.hit = true;
+                result.hitCollider = static_cast<BoxCollider*>(fixture->GetUserData());
                 return fraction;
             }
         };
@@ -66,7 +67,7 @@ namespace jul
         void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
         void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
-        void HandleContact(b2Contact* contact, std::function<void(Rigidbody*, Collision)> callback);
+        void HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback);
     };
 
 }  // namespace jul

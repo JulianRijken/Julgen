@@ -15,7 +15,7 @@ namespace jul
 
         void PlayAnimation(const std::string& name, bool looping = false, float startFrameTime = 0, float speedMultiplier = 1);
 
-        // TODO: Also, here we use string comparison for playing, this should be addressed
+        // TODO: Also, here we use string comparison for playing, this might need a rework to enums
         [[nodiscard]] bool  IsPlaying() const { return m_IsPlaying; }
         [[nodiscard]] bool  IsActiveAnimation(const std::string& name) const {return m_ActiveAnimationName == name;}
         [[nodiscard]] float GetFrameTime() const { return m_FrameTime; }

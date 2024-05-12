@@ -47,7 +47,8 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
                 if(event.key.repeat)
                     continue;
 
-                bind.TryExecuteKeyboard(buttonState, event.key.keysym.scancode);
+                if(bind.TryExecuteKeyboard(buttonState, event.key.keysym.scancode))
+                    continue;
             }
             return true;
     }
@@ -56,7 +57,7 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
 
 bool jul::Input::HandleControllerEvent(const SDL_Event& event)
 {
-    int controllerIndex = static_cast<int>(event.jdevice.which);
+    const int controllerIndex = static_cast<int>(event.jdevice.which);
     if(not SDL_IsGameController(controllerIndex))
         return false;
 
