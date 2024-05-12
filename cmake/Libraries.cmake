@@ -129,7 +129,7 @@ function(make_libs_available)
 
     # Add and Link box2D
     # TODO: Set to public, idealy private, the game does not need to know about box2D
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/Box2D-cmake)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/Box2D)
 
 
     # Setup soloud
