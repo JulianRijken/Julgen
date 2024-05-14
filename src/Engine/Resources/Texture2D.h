@@ -5,9 +5,6 @@ struct SDL_Texture;
 
 namespace jul
 {
-	/**
-	 * Simple RAII wrapper for an SDL_Texture
-	 */
 	class Texture2D final
 	{
 	public:

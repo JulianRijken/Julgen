@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "Font.h"
+#include <SDL_ttf.h>
 
 TTF_Font* jul::Font::GetFont() const
 {

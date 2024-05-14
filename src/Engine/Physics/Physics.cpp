@@ -22,13 +22,13 @@ void jul::Physics::FixedUpdate()
 }
 
 
-void jul::Physics::AddRidgidbody(Rigidbody* rigidbodyPtr)
+void jul::Physics::AddRigidbody(Rigidbody* rigidbodyPtr)
 {
     b2BodyDef bodyDef;  // Define body for Rigidbody based on settings
     {
         const Rigidbody::Settings& settings = rigidbodyPtr->GetSettings();
 
-        // Make sure positons is set correct on init
+        // Make sure positions is set correct on init
         const glm::vec3 transformPosition = rigidbodyPtr->GetTransform().WorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
@@ -58,12 +58,11 @@ void jul::Physics::AddRidgidbody(Rigidbody* rigidbodyPtr)
     rigidbodyPtr->m_BodyPtr = m_World->CreateBody(&bodyDef);
 }
 
-void jul::Physics::RemoveRidgidbody(Rigidbody* rigidbodyPtr) { m_World->DestroyBody(rigidbodyPtr->m_BodyPtr); }
+void jul::Physics::RemoveRigidbody(const Rigidbody* rigidbodyPtr) { m_World->DestroyBody(rigidbodyPtr->m_BodyPtr); }
 
 void jul::Physics::AddCollider(BoxCollider* colliderPtr)
 {
     const BoxCollider::Settings& settings = colliderPtr->GetSettings();
-
 
     // Collider
     b2PolygonShape boxShape;
@@ -100,7 +99,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     return;
 }
 
-void jul::Physics::RemoveCollider(BoxCollider* colliderPtr)
+void jul::Physics::RemoveCollider(const BoxCollider* colliderPtr)
 {
     // body can be null when connected
     if(colliderPtr->m_BodyPtr)
@@ -128,28 +127,28 @@ bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, 
 
 void jul::Physics::BeginContact(b2Contact* contact)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionBegin(collision); });
+    HandleContact(contact, [](const Rigidbody* rigidbody, const Collision& collision) { rigidbody->OnCollisionBegin(collision); });
 }
 
 void jul::Physics::EndContact(b2Contact* contact)
 {
-    HandleContact(contact, [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionEnd(collision); });
+    HandleContact(contact, [](const Rigidbody* rigidbody, const Collision& collision) { rigidbody->OnCollisionEnd(collision); });
 }
 
 void jul::Physics::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
     HandleContact(contact,
-                  [&oldManifold](Rigidbody* rigidbody, Collision collision)
+                  [&oldManifold](const Rigidbody* rigidbody, const Collision& collision)
                   { rigidbody->OnCollisionPreSolve(collision, oldManifold); });
 }
 
 void jul::Physics::PostSolve(b2Contact* contact, const b2ContactImpulse* /*impulse*/)
 {
     HandleContact(contact,
-                  [](Rigidbody* rigidbody, Collision collision) { rigidbody->OnCollisionPostSolve(collision); });
+                  [](const Rigidbody* rigidbody, const Collision& collision) { rigidbody->OnCollisionPostSolve(collision); });
 }
 
-void jul::Physics::HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback)
+void jul::Physics::HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback) const
 {
     b2Fixture* fixtureA = contact->GetFixtureA();
     b2Fixture* fixtureB = contact->GetFixtureB();

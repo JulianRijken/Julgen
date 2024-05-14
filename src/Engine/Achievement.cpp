@@ -19,7 +19,7 @@
 
 void jul::Achievement::Initialize()
 {
-    // TODO: Achevements should be part of the game and not the engine unless abstracted further
+    // TODO: Achievements should be part of the game and not the engine unless abstracted further
     // MessageQueue::AddListener(MessageType::PlayerScoreChanged,this,&Achievement::OnScoreChange);
 }
 

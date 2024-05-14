@@ -36,7 +36,7 @@ void jul::GameObject::CleanupComponents()
 		if ((*iterator)->IsBeingDestroyed())
 			iterator = m_Components.erase(iterator);
 		else
-			iterator++;
+			++iterator;
 	}
 }
 

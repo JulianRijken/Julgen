@@ -14,7 +14,7 @@ namespace jul
         std::vector<std::any> arguments;
     };
 
-    class MessageQueue
+    class MessageQueue final
     {
         using Listener = std::pair<void*, std::function<void(const Message&)>>;
 

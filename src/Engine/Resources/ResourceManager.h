@@ -35,7 +35,7 @@ namespace jul
             int soundId = static_cast<int>(soundType);
 
             if(not g_SoundPathsUPtrMap.contains(soundId))
-                throw std::runtime_error("Getting non binded sound");
+                throw std::runtime_error("Sound Not Bound");
 
             if(g_SoundUPtrMap.contains(soundId))
                 return g_SoundUPtrMap[soundId].get();

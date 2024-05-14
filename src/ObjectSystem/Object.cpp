@@ -2,8 +2,6 @@
 
 void jul::Object::Destroy() { m_BeingDestroyed = true; }
 
-jul::Object::Object(const std::string& name) :
-    m_BeingDestroyed(false),
-    m_Name(name)
-{
-}
+jul::Object::Object(std::string name) :
+    m_Name(std::move(name))
+{}

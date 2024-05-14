@@ -62,7 +62,7 @@ namespace jul
             return nullptr;
         }
 
-        // TODO: Add template spetialization for getting the generic component
+        // TODO: Add template specialization for getting the generic component
         //       This to avoid a dynamic cast
         template<typename ComponentType>
             requires std::derived_from<ComponentType, Component>
@@ -81,13 +81,10 @@ namespace jul
             requires std::derived_from<ComponentType, Component>
         ComponentType* GetComponentInParent() const
         {
-            ComponentType* component = GetComponent<ComponentType>();
-            if(component)
+            if(ComponentType* component = GetComponent<ComponentType>())
                 return component;
 
-            Transform* parent = m_TransformPtr->GetParent();
-
-            if(parent)
+            if(const Transform* parent = m_TransformPtr->GetParent())
                 return parent->GetGameObject()->GetComponentInParent<ComponentType>();
 
             return nullptr;
@@ -98,15 +95,13 @@ namespace jul
             requires std::derived_from<ComponentType, Component>
         ComponentType* GetComponentInChildren() const
         {
-            ComponentType* component = GetComponent<ComponentType>();
-            if(component)
+            if(ComponentType* component = GetComponent<ComponentType>())
                 return component;
 
             const auto& children = m_TransformPtr->GetChildren();
             for(auto&& child : children)
             {
-                ComponentType* childComponent = child->GetGameObject()->GetComponentInChildren<ComponentType>();
-                if(childComponent)
+                if(ComponentType* childComponent = child->GetGameObject()->GetComponentInChildren<ComponentType>())
                     return childComponent;
             }
 

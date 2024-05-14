@@ -1,43 +1,39 @@
 #include "Scene.h"
-
 #include "GameObject.h"
 
 
-using namespace jul;
-
-
-Scene::Scene(const std::string& name) :
-m_Name(name)
+jul::Scene::Scene(std::string name) :
+m_Name(std::move(name))
 {
 }
 
-GameObject* Scene::AddGameObject(const std::string& name, const glm::vec3& position)
+jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position)
 {
     m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, position));
     return m_GameObjectsInSceneSPtr.back().get();
 }
 
-void Scene::Update() const
+void jul::Scene::Update() const
 {
 	for(const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
 		gameObject->Update();
 }
 
-void Scene::LateUpdate() const
+void jul::Scene::LateUpdate() const
 {
 	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
 		gameObject->LateUpdate();
 }
 
-void Scene::FixedUpdate() const
+void jul::Scene::FixedUpdate() const
 {
-	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
+	for (const std::unique_ptr<jul::GameObject>& gameObject : m_GameObjectsInSceneSPtr)
 		gameObject->FixedUpdate();
 }
 
-void Scene::CleanupGameObjects()
+void jul::Scene::CleanupGameObjects()
 {
-	// We propagate the destroy !only at the end of the frame!
+	// We propagate the destroy, only at the end of the frame!
 	// This is very important:
 	// - If we propagate the destroy immediately, we might end up destroying a game object whos parent has changes after calling the destroy
 	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
@@ -59,7 +55,7 @@ void Scene::CleanupGameObjects()
 		if ((*iterator)->IsBeingDestroyed())
 			iterator = m_GameObjectsInSceneSPtr.erase(iterator);
 		else
-			iterator++;
+			++iterator;
 	}
 }
 

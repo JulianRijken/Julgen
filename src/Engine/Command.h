@@ -19,7 +19,7 @@ namespace jul
         BaseCommand& operator=(BaseCommand&&) noexcept = delete;
 
         virtual ~BaseCommand() = default;
-        virtual void Execute(InputContext context) = 0;
+        virtual void Execute(const InputContext& context) = 0;
 
     protected:
         BaseCommand() = default;
@@ -44,7 +44,7 @@ namespace jul
 	{
 	public:
         MoveCommand(GameObject* gameObject, float moveSpeed, const glm::vec3& moveDirection);
-        void Execute(InputContext context) override;
+        void Execute(const InputContext& context) override;
 
     private:
         float m_MoveSpeed;
@@ -55,7 +55,7 @@ namespace jul
     {
     public:
         UnitMoveCommand(GameObject* gameObject, const glm::vec3& moveDirection);
-        void Execute(InputContext context) override;
+        void Execute(const InputContext& context) override;
 
     private:
         glm::vec3 m_MoveDirection;
@@ -77,7 +77,8 @@ namespace jul
                     (object->*memberFunction)(context);
                 })
         {}
-        void Execute(InputContext context) override;
+
+        void Execute(const InputContext& context) override;
 
     private:
         InputFunction m_Function;
@@ -86,6 +87,6 @@ namespace jul
     class MuteGameCommand final : public BaseCommand
     {
     public:
-        void Execute(InputContext context) override;
+        void Execute(const InputContext& context) override;
     };
 }

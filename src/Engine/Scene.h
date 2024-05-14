@@ -13,7 +13,7 @@ namespace jul
         friend class SceneManager;
 
     public:
-        Scene(const std::string& name);
+        explicit Scene(std::string name);
         ~Scene() = default;
 
         GameObject* AddGameObject(const std::string& name, const glm::vec3& position);

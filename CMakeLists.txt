@@ -28,7 +28,7 @@ make_libs_available()
 if(WIN32)
     if(USE_VLD)
     make_vld_available()
-endif()
+    endif()
 endif()
 
 

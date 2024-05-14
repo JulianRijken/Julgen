@@ -55,7 +55,7 @@ bool jul::Input::HandleKeyboardEvent(const SDL_Event& event) const
     return false;
 }
 
-bool jul::Input::HandleControllerEvent(const SDL_Event& event)
+bool jul::Input::HandleControllerEvent(const SDL_Event& event) const
 {
     const int controllerIndex = static_cast<int>(event.jdevice.which);
     if(not SDL_IsGameController(controllerIndex))
@@ -85,7 +85,7 @@ bool jul::Input::HandleControllerEvent(const SDL_Event& event)
     return false;
 }
 
-void jul::Input::HandleControllerAxis(const SDL_GameControllerAxis& axis)
+void jul::Input::HandleControllerAxis(const SDL_GameControllerAxis& axis) const
 {
     for(auto&& bind : m_Binds)
     {
@@ -157,7 +157,7 @@ void jul::Input::UpdateControllers()
     }
 }
 
-SDL_GameController* jul::Input::GetController(int controllerIndex)
+SDL_GameController* jul::Input::GetController(int controllerIndex) const
 {
 
     // Check if controller is out of bounds

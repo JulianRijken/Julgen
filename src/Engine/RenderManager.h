@@ -46,7 +46,7 @@ namespace jul
         // TODO: Should be in the camera component
         float m_OrthoSize = 14;
 
-        inline static std::unordered_set<RenderComponent*> s_GlobalRendererPtrs{};
+        inline static std::unordered_set<RenderComponent*> g_RendererPtrs{};
     };
 }
 

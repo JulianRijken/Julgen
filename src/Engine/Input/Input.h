@@ -50,7 +50,7 @@ namespace jul
             inputInstance.m_Binds.emplace_back(controllerIndex,
                                                allowKeyboard,
                                                inputInstance.m_InputActions.at(actionName),
-                                               std::make_unique<CommandType>(args...));
+                                               std::make_unique<CommandType>(std::forward<Args>(args)...));
         }
 
     private:
@@ -58,19 +58,18 @@ namespace jul
         std::map<int, InputAction> m_InputActions{};
         std::vector<SDL_GameController*> m_Controllers;
 
-        void HandleControllerAxis(const SDL_GameControllerAxis& axis);
+        void HandleControllerAxis(const SDL_GameControllerAxis& axis) const;
 
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
-        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event);
+        [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event) const;
 
         void UpdateControllers();
-        SDL_GameController* GetController(int controllerIndex);
+        SDL_GameController* GetController(int controllerIndex) const;
 
         template<typename DataType>
         static float NormalizeAxis(const DataType& rawAxis, float deadzone,
                                    std::optional<float> axisLimit = std::nullopt)
         {
-            // Oh my god this axisLimit.value_or is the sickes syntax I have ever seen!
             float input(static_cast<float>(rawAxis) /
                         static_cast<float>(axisLimit.value_or(std::numeric_limits<DataType>::max())));
             input = std::clamp(input, -1.0f, 1.0f);

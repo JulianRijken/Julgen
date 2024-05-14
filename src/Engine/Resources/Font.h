@@ -1,13 +1,11 @@
 #pragma once
 #include <SDL_ttf.h>
-
 #include <string>
+
 
 namespace jul
 {
-    /**
-     * Simple RAII wrapper for a _TTF_Font
-     */
+
     class Font final
 	{
 	public:

@@ -56,7 +56,7 @@ jul::Julgen::Julgen()
 #endif
 
 #ifdef WIN32
-    if(GameSettings::s_ShowConsole)
+    if(GameSettings::g_ShowConsole)
     {
         if(AllocConsole() == TRUE)
         {
@@ -71,11 +71,11 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
 
-    m_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
+    m_Window = SDL_CreateWindow(GameSettings::g_WindowTitle.c_str(),
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
-                                GameSettings::s_WindowWidth,
-                                GameSettings::s_WindowHeight,
+                                GameSettings::g_WindowWidth,
+                                GameSettings::g_WindowHeight,
                                 SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(m_Window == nullptr)

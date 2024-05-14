@@ -31,11 +31,11 @@ namespace jul
 
         void FixedUpdate();
 
-        void AddRidgidbody(Rigidbody* rigidbodyPtr);
-        void RemoveRidgidbody(Rigidbody* rigidbodyPtr);
+        void AddRigidbody(Rigidbody* rigidbodyPtr);
+        void RemoveRigidbody(const Rigidbody* rigidbodyPtr);
 
         void AddCollider(BoxCollider* colliderPtr);
-        void RemoveCollider(BoxCollider* colliderPtr);
+        void RemoveCollider(const BoxCollider* colliderPtr);
 
         static bool RayCast(glm::vec2 from, glm::vec2 direction, float distance);
         static bool RayCast(glm::vec2 from, glm::vec2 direction, float distance, jul::RayCastResult& result);
@@ -67,7 +67,7 @@ namespace jul
         void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
         void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
-        void HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback);
+        void HandleContact(b2Contact* contact, const std::function<void(Rigidbody*, Collision)>& callback) const;
     };
 
 }  // namespace jul

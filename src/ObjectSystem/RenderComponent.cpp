@@ -3,14 +3,14 @@
 #include "RenderManager.h"
 
 
-jul::RenderComponent::RenderComponent(GameObject* parent, const std::string& name, int renderLayer) :
-	Component( parent, name ),
+jul::RenderComponent::RenderComponent(GameObject* parentPtr, const std::string& name, int renderLayer) :
+	Component( parentPtr, name ),
 	m_RenderLayer( renderLayer )
 {
-	 RenderManager::s_GlobalRendererPtrs.insert(this);
+	 RenderManager::g_RendererPtrs.insert(this);
 }
 
 jul::RenderComponent::~RenderComponent()
 {
-	RenderManager::s_GlobalRendererPtrs.erase(this);
+	RenderManager::g_RendererPtrs.erase(this);
 }

@@ -24,7 +24,7 @@ namespace jul
             static Settings Default() { return {}; }
         };
 
-        BoxCollider(GameObject* parentPtr, Settings setting = Settings::Default(), Rigidbody* connectedBody = nullptr);
+        BoxCollider(GameObject* parentPtr, const Settings& setting = Settings::Default(), Rigidbody* connectedBody = nullptr);
         ~BoxCollider() override;
 
         void SetRestitution(float restitution);

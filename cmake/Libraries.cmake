@@ -1,5 +1,5 @@
 
-# Credits to Matias https://allpurposem.at/ for providing help with steamworks setup
+# Credits to Matias https://allpurposem.at/ for providing help with steamworks cmake setup
 function(use_steamworks ENGINE_TARGET)
     set(STEAMWORKS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/steamworks")
 

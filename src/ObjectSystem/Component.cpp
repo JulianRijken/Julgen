@@ -2,11 +2,11 @@
 #include "GameObject.h"
 
 
-jul::Component::Component(GameObject* parent, const std::string& name) :
+jul::Component::Component(GameObject* parentPtr, const std::string& name) :
 	Object(name),
-	m_ParentGameObjectPtr(parent)
+	m_ParentGameObjectPtr(parentPtr)
 {
-	assert(parent);
+	assert(parentPtr);
 }
 
 jul::Transform& jul::Component::GetTransform() const { return m_ParentGameObjectPtr->GetTransform(); }

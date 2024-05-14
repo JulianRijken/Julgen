@@ -11,10 +11,10 @@
 
 
 
-jul::TextRenderer::TextRenderer(GameObject* parent,const std::string& text, Font* font, int renderLayer, bool useAllUpper) :
+jul::TextRenderer::TextRenderer(GameObject* parent, std::string text, Font* font, int renderLayer, bool useAllUpper) :
       RenderComponent(parent, "TextRenderer", renderLayer),
       m_UseAllCaps(useAllUpper),
-      m_Text(text),
+      m_Text(std::move(text)),
       m_FontSPtr(font)
 {
 	UpdateText();

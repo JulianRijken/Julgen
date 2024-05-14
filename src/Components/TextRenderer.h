@@ -16,7 +16,7 @@ namespace jul
 	{
 	public:
 
-        TextRenderer(GameObject* parent,const std::string& text, Font* font, int renderLayer = 0, bool useAllUpper = false);
+        TextRenderer(GameObject* parent, std::string text, Font* font, int renderLayer = 0, bool useAllUpper = false);
 
 		void SetText(const std::string& text); 
 		void SetColor(const SDL_Color& color);
