@@ -44,8 +44,9 @@ jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
     return nullptr;
 }
 
-jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, unsigned size)
+jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, int size)
 {
+    assert(size > 0);
     const auto fullPath = g_ContentPath / filePath;
     return g_FontUPtrMap.emplace(assetName, std::make_unique<Font>(fullPath.string(), size)).first->second.get();
 }

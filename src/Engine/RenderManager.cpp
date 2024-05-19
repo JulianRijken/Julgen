@@ -157,7 +157,7 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
     srcRect.h = static_cast<int>(std::round(cellSize.y));
 
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    if (flipX and flipY)
+    if(flipX and flipY)
         flip = static_cast<SDL_RendererFlip>(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
     else if(flipX)
         flip = SDL_FLIP_HORIZONTAL;

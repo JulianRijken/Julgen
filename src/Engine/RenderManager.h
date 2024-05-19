@@ -28,7 +28,8 @@ namespace jul
         void RenderTexture(const Texture2D& texture, float x, float y) const;
         void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
         void RenderTexture(const Texture2D& texture, const glm::vec2 drawLocation, const glm::vec2 srcLocation,
-                           const glm::ivec2 cellSize, int pixelsPerUnit, glm::vec2 pivot, bool flipX, bool flipY) const;
+                           const glm::ivec2 cellSize, int pixelsPerUnit, glm::vec2 pivot, bool flipX = false,
+                           bool flipY = false) const;
 
         [[nodiscard]] SDL_Renderer* GetSDLRenderer() const { return m_RendererPtr; };
         [[nodiscard]] const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }

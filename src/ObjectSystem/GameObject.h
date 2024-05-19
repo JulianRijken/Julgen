@@ -12,7 +12,7 @@ namespace jul
     class GameObject final : public Object
     {
     public:
-        GameObject(const std::string& name, const glm::vec3& position);
+        GameObject(const std::string& name, const glm::vec3& position = {});
 
         [[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 

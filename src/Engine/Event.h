@@ -22,8 +22,6 @@ namespace jul
             m_ListenerFunctions.emplace_back(nullptr, [function](EventArgs... args) { function(args...); });
         }
 
-        // void AddListener(FunctionType function) { m_ListenerFunctions.push_back({ nullptr, function }); }
-
         template<typename ObjectType>
         void AddListener(ObjectType* object, void (ObjectType::*memberFunction)(EventArgs...))
         {
