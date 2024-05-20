@@ -8,9 +8,9 @@
 #include <thread>
 
 #include "Achievement.h"
+#include "EngineGUI.h"
 #include "GameSettings.h"
 #include "GameTime.h"
-#include "GUI.h"
 #include "Input.h"
 #include "Locator.h"
 #include "MessageQueue.h"
@@ -19,7 +19,7 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
-#include "Sound_Null.h"
+#include "TweenEngine.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -137,10 +137,11 @@ void jul::Julgen::Run()
 
 // Execution order:
 // > Input Events
-// > FixedUpdate
+// > Fixed Update
 // > Update
-// > Late Update
 // > Message Dispatch
+// > Tween Update
+// > Late Update
 // > Render
 // > Cleanup
 
@@ -167,11 +168,16 @@ void jul::Julgen::RunOneFrame()
 
     // Update
 	SceneManager::GetInstance().Update();
-	// Late Update
-	SceneManager::GetInstance().LateUpdate();
 
     // Message Dispatch
     MessageQueue::Dispatch();
+
+    // Tween Update
+    TweenEngine::GetInstance().Update();
+
+    // Late Update
+    SceneManager::GetInstance().LateUpdate();
+
 
     // Render
     RenderManager::GetInstance().Render();

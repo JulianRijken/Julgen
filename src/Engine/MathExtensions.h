@@ -97,9 +97,9 @@ namespace jul::math
         return b + (a - b) * glm::exp2(-deltaTime / h);
     }
 
-    template<typename Type>
+    template<typename Type, typename DeltaType>
         requires std::integral<Type> or std::floating_point<Type>
-    Type MoveTowards(const Type& a, const Type& b, float maxDelta)
+    Type MoveTowards(const Type& a, const Type& b, DeltaType maxDelta)
     {
         if(std::fabs(b - a) <= maxDelta)
             return b;

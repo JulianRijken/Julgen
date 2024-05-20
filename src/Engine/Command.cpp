@@ -16,7 +16,7 @@ jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm:
 void jul::MoveCommand::Execute(const InputContext& /*context*/)
 {
     const glm::vec3 VELOCITY = normalize(m_MoveDirection) * m_MoveSpeed;
-    GetGameObject()->GetTransform().Translate(VELOCITY * GameTime::GetDeltaTimeF());
+    GetGameObject()->GetTransform().Translate(VELOCITY * GameTime::GetDeltaTime<float>());
 }
 
 

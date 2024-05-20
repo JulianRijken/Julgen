@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#include "GUI.h"
+#include "EngineGUI.h"
 
 // TODO: Maybe have should quit be a return value?
 void jul::Input::ProcessInput(bool& shouldQuit)

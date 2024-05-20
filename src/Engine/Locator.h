@@ -10,7 +10,6 @@ namespace jul
 {
     class Locator final
     {
-        friend class Julgen;
 
     public:
         // When using an existing service

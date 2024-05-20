@@ -1,12 +1,9 @@
-#include "GUI.h"
-
-#include <SDL_render.h>
-
+#include "EngineGUI.h"
 
 #include <imgui.h>
-
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
+#include <SDL_render.h>
 
 void jul::EngineGUI::Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 {

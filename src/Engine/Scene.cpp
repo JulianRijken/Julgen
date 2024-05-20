@@ -9,7 +9,7 @@ m_Name(std::move(name))
 
 jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position)
 {
-    m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, position));
+    m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, this, position));
     return m_GameObjectsInSceneSPtr.back().get();
 }
 

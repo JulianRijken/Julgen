@@ -10,11 +10,11 @@ void jul::GameTime::Update()
     };
 
     // Calculate delta time
-    const auto CURRENT_TIME = std::chrono::high_resolution_clock::now();
-    g_DeltaTime = std::min(g_MaxDeltaTime, std::chrono::duration<double>(CURRENT_TIME - s_LastTime).count());
-    s_LastTime = CURRENT_TIME;
+    const auto currentTime = std::chrono::high_resolution_clock::now();
+    g_DeltaTime = std::min(g_MaxDeltaTime, std::chrono::duration<double>(currentTime - s_LastTime).count());
+    s_LastTime = currentTime;
 
-	// Update elapsed time
+    // Update elapsed time
     g_ElapsedTime += g_DeltaTime;
 
     // Calculate average fps

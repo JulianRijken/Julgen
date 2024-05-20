@@ -8,12 +8,16 @@
 
 namespace jul
 {
+    class Scene;
+
     class GameObject final : public Object
     {
     public:
-        GameObject(const std::string& name, const glm::vec3& position = {});
+        GameObject(const std::string& name, Scene* scene, const glm::vec3& position = {});
 
         [[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
+
+        [[nodiscard]] Scene& GetScene() const { return *m_Scene; }
 
         // Sets current game object to be destroyed
         // Including the components
@@ -115,6 +119,7 @@ namespace jul
         }
 
     private:
+        Scene* m_Scene;
         Transform* m_TransformPtr;
         std::vector<std::unique_ptr<Component>> m_Components{};
     };

@@ -18,7 +18,7 @@ jul::Physics::Physics() :
 
 void jul::Physics::FixedUpdate()
 {
-    m_World->Step(jul::GameTime::GetFixedDeltaTimeF(), m_VelocityIterations, m_PositionIterations);
+    m_World->Step(jul::GameTime::GetFixedDeltaTime<float>(), m_VelocityIterations, m_PositionIterations);
 }
 
 

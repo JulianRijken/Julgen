@@ -1,9 +1,9 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-
-jul::GameObject::GameObject(const std::string& name, const glm::vec3& position) :
-	Object(name)
+jul::GameObject::GameObject(const std::string& name, Scene* scene, const glm::vec3& position) :
+    Object(name),
+    m_Scene(scene)
 {
     m_TransformPtr = dynamic_cast<Transform*>(m_Components.emplace_back(std::make_unique<Transform>(this,position)).get());
 }

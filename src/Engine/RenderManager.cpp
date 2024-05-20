@@ -10,8 +10,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "EngineGUI.h"
 #include "GameSettings.h"
-#include "GUI.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
 #include "Transform.h"
