@@ -1,8 +1,9 @@
 #pragma once
 #include <glm/vec3.hpp>
-#include <list>
 #include <memory>
 #include <string>
+#include <vector>
+
 
 namespace jul
 {
@@ -27,7 +28,7 @@ namespace jul
 
 
         std::string m_Name;
-        std::list<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
+        std::vector<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
     };
 
 }  // namespace jul

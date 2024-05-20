@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <list>
 #include <memory>
 #include <vector>
 
@@ -117,6 +116,6 @@ namespace jul
 
     private:
         Transform* m_TransformPtr;
-        std::list<std::unique_ptr<Component>> m_Components{};
+        std::vector<std::unique_ptr<Component>> m_Components{};
     };
 }  // namespace jul

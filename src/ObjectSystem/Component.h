@@ -25,7 +25,7 @@ namespace jul
         [[nodiscard]] Transform& GetTransform() const;
 
         virtual void Update() {}
-		virtual void LateUpdate() {}
+        virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
 
 

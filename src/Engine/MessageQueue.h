@@ -24,14 +24,14 @@ namespace jul
         template<typename MessageType>
         static void Broadcast(MessageType messageType, std::vector<std::any>&& args = {})
         {
-            m_Messages.push({ static_cast<int>(messageType), std::move(args) });
+            g_Messages.push({ static_cast<int>(messageType), std::move(args) });
         }
 
         template<typename ObjectType, typename MessageType>
         static void AddListener(MessageType eventType, ObjectType* object,
                                 void (ObjectType::*memberFunction)(const Message&))
         {
-            m_MessageListeners.insert({
+            g_MessageListeners.insert({
                 static_cast<int>(eventType),
                 {object, [=](const Message& message) { (object->*memberFunction)(message); }}
             });
@@ -40,13 +40,13 @@ namespace jul
         template<typename ObjectType>
         static void RemoveListenerInstance(ObjectType* object)
         {
-            std::erase_if(m_MessageListeners, [=](const auto& other) { return other.second.first == object; });
+            std::erase_if(g_MessageListeners, [=](const auto& other) { return other.second.first == object; });
         }
 
         static void Dispatch();
 
-        static inline std::unordered_multimap<int, Listener> m_MessageListeners{};
-        static inline std::queue<Message> m_Messages{};
+        static inline std::unordered_multimap<int, Listener> g_MessageListeners{};
+        static inline std::queue<Message> g_Messages{};
     };
 
 }  // namespace jul
