@@ -14,9 +14,9 @@ namespace jul
         Object& operator=(const Object&) = delete;
         Object& operator=(Object&&) noexcept = delete;
 
-        [[nodiscard]] const std::string& GetName() const { return m_Name; }
+        [[nodiscard]] inline const std::string& GetName() const { return m_Name; }
 
-        [[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
+        [[nodiscard]] inline bool IsBeingDestroyed() const { return m_BeingDestroyed; }
 
         virtual void Destroy();
 

@@ -167,7 +167,7 @@ void jul::Julgen::RunOneFrame()
 	}
 
     // Update
-	SceneManager::GetInstance().Update();
+    SceneManager::GetInstance().Update();
 
     // Message Dispatch
     MessageQueue::Dispatch();

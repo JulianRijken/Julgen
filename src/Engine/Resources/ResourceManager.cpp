@@ -69,8 +69,8 @@ jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
     const auto fullPath = g_ContentPath / filePath;
     SDL_Texture* texture = IMG_LoadTexture(RenderManager::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
 
-	if (texture == nullptr)
-		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+    if(texture == nullptr)
+        throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 
 
     return g_LoadedTextureUPtrs.emplace_back(std::make_unique<Texture2D>(texture)).get();

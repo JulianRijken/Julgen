@@ -1,6 +1,8 @@
 #pragma once
 #include <GameObject.h>
 
+#include <queue>
+
 #include "Singleton.h"
 #include "Tween.h"
 #include "TweenInstance.h"
@@ -20,6 +22,7 @@ namespace jul
 
     private:
         std::vector<std::unique_ptr<TweenInstance>> m_ActiveTweens{};
+        std::queue<std::pair<Tween, GameObject*>> m_QueuedTweens{};
     };
 
 }  // namespace jul

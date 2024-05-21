@@ -1,5 +1,8 @@
 #include "Transform.h"
+
 #include <algorithm>
+
+#include "GameObject.h"
 
 
 jul::Transform::Transform(GameObject* parent,const glm::vec3& position) :
@@ -38,8 +41,11 @@ void jul::Transform::SetLocalPosition(float x, float y, float z)
 }
 void jul::Transform::SetLocalPosition(const glm::vec3& position)
 {
-	m_LocalPosition = position;
-	SetTransformDirty();
+    if(m_LocalPosition == position)
+        return;
+
+    m_LocalPosition = position;
+    SetTransformDirty();
 }
 
 void jul::Transform::SetWorldPosition(float x, float y, float z)
@@ -93,6 +99,7 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 	}
 
 	SetTransformDirty();
+    GetGameObject()->SetActiveDirty();
 }
 
 bool jul::Transform::IsChild(Transform* checkChildPtr) const

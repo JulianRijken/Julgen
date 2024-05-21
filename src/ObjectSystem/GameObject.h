@@ -15,9 +15,15 @@ namespace jul
     public:
         GameObject(const std::string& name, Scene* scene, const glm::vec3& position = {});
 
-        [[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
+        [[nodiscard]] inline Transform& GetTransform() const { return *m_TransformPtr; }
 
-        [[nodiscard]] Scene& GetScene() const { return *m_Scene; }
+        [[nodiscard]] inline Scene& GetScene() const { return *m_ScenePtr; }
+
+        [[nodiscard]] bool IsActiveInHierarchy();
+
+        [[nodiscard]] inline bool IsActiveSelf() const { return m_ActiveSelf; }
+
+        void SetActive(bool active);
 
         // Sets current game object to be destroyed
         // Including the components
@@ -41,13 +47,13 @@ namespace jul
             if constexpr(std::is_same_v<ComponentType, Transform>)
             {
                 std::cerr << "Not allowed to add transform to game object\n";
-                return reinterpret_cast<ComponentType*>(m_TransformPtr);
+                return static_cast<ComponentType*>(m_TransformPtr);
             }
 
             auto& addedComponent =
                 m_Components.emplace_back(std::make_unique<ComponentType>(this, std::forward<Args>(args)...));
 
-            return reinterpret_cast<ComponentType*>(addedComponent.get());
+            return static_cast<ComponentType*>(addedComponent.get());
         }
 
         // Calls Destroy on the component
@@ -118,9 +124,16 @@ namespace jul
             return GetComponent<ComponentType>() != nullptr;
         }
 
+        void SetActiveDirty();
+
     private:
-        Scene* m_Scene;
-        Transform* m_TransformPtr;
+        void UpdateActiveInHierarchy();
+
+        bool m_ActiveDirty{ true };
+        bool m_ActiveSelf{ true };         // Primary Data
+        bool m_ActiveInHierarchy{ true };  // Derived Data
+        Scene* m_ScenePtr{ nullptr };
+        Transform* m_TransformPtr{ nullptr };
         std::vector<std::unique_ptr<Component>> m_Components{};
     };
 }  // namespace jul

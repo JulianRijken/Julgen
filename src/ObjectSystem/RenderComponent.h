@@ -26,7 +26,6 @@ class RenderComponent : public Component
         virtual void UpdateGUI() {}
 
     private:
-        bool m_Visible{ true };
         int m_RenderLayer{};
     };
 }

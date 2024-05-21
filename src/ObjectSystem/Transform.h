@@ -42,15 +42,16 @@ namespace jul
 		bool IsChild(Transform* checkChildPtr) const;
 
 	private:
+        void UpdateWorldPosition();
+        void SetTransformDirty();
 
-		bool m_TransformDirty{true};
-		glm::vec3 m_LocalPosition{};
-		glm::vec3 m_WorldPosition{};
+        bool m_TransformDirty{ true };
+        glm::vec3 m_LocalPosition{};  // Primary Data
+        glm::vec3 m_WorldPosition{};  // Derived Data
 
-		Transform* m_ParentPtr{nullptr};
-		std::unordered_set<Transform*> m_ChildPtrs{};
+        Transform* m_ParentPtr{ nullptr };
 
-		void UpdateWorldPosition();
-		void SetTransformDirty();
-	};
+        // TODO: Perform performance tests on the use of unordered_set instead of vector
+        std::unordered_set<Transform*> m_ChildPtrs{};
+    };
 }

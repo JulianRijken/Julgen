@@ -11,6 +11,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include "EngineGUI.h"
+#include "GameObject.h"
 #include "GameSettings.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
@@ -92,7 +93,7 @@ void jul::RenderManager::Render() const
 
 void jul::RenderManager::RenderObjects() const
 {
-	auto renderers = std::vector(g_RendererPtrs.begin(), g_RendererPtrs.end());
+    auto renderers = std::vector(g_RendererPtrs.begin(), g_RendererPtrs.end());
 
     const auto compareDistance = [](const RenderComponent* a, const RenderComponent* b)
 		{
@@ -104,8 +105,16 @@ void jul::RenderManager::RenderObjects() const
 			return a->GetRenderLayer() < b->GetRenderLayer();
 		};
 
-	std::ranges::sort(renderers, compareDistance);
-	std::ranges::stable_sort(renderers, compareLayer);
+
+    const auto isActive = std::ranges::remove_if(renderers,
+                                                 [](const RenderComponent* rendererPtr)
+                                                 { return not rendererPtr->GetGameObject()->IsActiveInHierarchy(); })
+                              .begin();
+
+    renderers.resize(std::distance(renderers.begin(), isActive));
+
+    std::ranges::sort(renderers, compareDistance);
+    std::ranges::stable_sort(renderers, compareLayer);
 
     for (const RenderComponent* renderer : renderers)
 		renderer->Render();
