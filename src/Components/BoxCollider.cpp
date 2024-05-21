@@ -4,7 +4,7 @@
 #include "Locator.h"
 #include "Physics.h"
 
-jul::BoxCollider::BoxCollider(GameObject* parentPtr, Settings setting, Rigidbody* connectedBody) :
+jul::BoxCollider::BoxCollider(GameObject* parentPtr, const Settings& setting, Rigidbody* connectedBody) :
     Component(parentPtr, "Box Collider"),
     m_ConnectedRigidbody(connectedBody),
     m_Settings(setting)

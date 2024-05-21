@@ -1,11 +1,28 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-
-jul::GameObject::GameObject(const std::string& name, const glm::vec3& position) :
-	Object(name)
+jul::GameObject::GameObject(const std::string& name, Scene* scene, const glm::vec3& position) :
+    Object(name),
+    m_ScenePtr(scene)
 {
     m_TransformPtr = dynamic_cast<Transform*>(m_Components.emplace_back(std::make_unique<Transform>(this,position)).get());
+}
+
+bool jul::GameObject::IsActiveInHierarchy()
+{
+    if(m_ActiveDirty)
+        UpdateActiveInHierarchy();
+
+    return m_ActiveInHierarchy;
+}
+
+void jul::GameObject::SetActive(bool active)
+{
+    if(active == m_ActiveSelf)
+        return;
+
+    m_ActiveSelf = active;
+    SetActiveDirty();
 }
 
 
@@ -36,9 +53,10 @@ void jul::GameObject::CleanupComponents()
 		if ((*iterator)->IsBeingDestroyed())
 			iterator = m_Components.erase(iterator);
 		else
-			iterator++;
+			++iterator;
 	}
 }
+
 
 void jul::GameObject::Update() const
 {
@@ -58,4 +76,23 @@ void jul::GameObject::FixedUpdate() const
 		component->FixedUpdate();
 }
 
+void jul::GameObject::UpdateActiveInHierarchy()
+{
+    auto* parentPtr = m_TransformPtr->GetParent();
 
+    if(parentPtr == nullptr)
+        m_ActiveInHierarchy = m_ActiveSelf;
+    else
+        m_ActiveInHierarchy = m_ActiveSelf and parentPtr->GetGameObject()->IsActiveInHierarchy();
+
+    m_ActiveDirty = false;
+}
+
+void jul::GameObject::SetActiveDirty()
+{
+    m_ActiveDirty = true;
+
+    for(Transform* childPtr : m_TransformPtr->GetChildren())
+        if(not childPtr->GetGameObject()->m_ActiveDirty)
+            childPtr->GetGameObject()->SetActiveDirty();
+}

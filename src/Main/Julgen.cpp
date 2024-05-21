@@ -8,9 +8,9 @@
 #include <thread>
 
 #include "Achievement.h"
+#include "EngineGUI.h"
 #include "GameSettings.h"
 #include "GameTime.h"
-#include "GUI.h"
 #include "Input.h"
 #include "Locator.h"
 #include "MessageQueue.h"
@@ -19,7 +19,7 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "Sound.h"
-#include "Sound_Null.h"
+#include "TweenEngine.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -56,7 +56,7 @@ jul::Julgen::Julgen()
 #endif
 
 #ifdef WIN32
-    if(GameSettings::s_ShowConsole)
+    if(GameSettings::g_ShowConsole)
     {
         if(AllocConsole() == TRUE)
         {
@@ -71,11 +71,11 @@ jul::Julgen::Julgen()
         throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
 
-    m_Window = SDL_CreateWindow(GameSettings::s_WindowTitle.c_str(),
+    m_Window = SDL_CreateWindow(GameSettings::g_WindowTitle.c_str(),
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
-                                GameSettings::s_WindowWidth,
-                                GameSettings::s_WindowHeight,
+                                GameSettings::g_WindowWidth,
+                                GameSettings::g_WindowHeight,
                                 SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(m_Window == nullptr)
@@ -137,10 +137,11 @@ void jul::Julgen::Run()
 
 // Execution order:
 // > Input Events
-// > FixedUpdate
+// > Fixed Update
 // > Update
-// > Late Update
 // > Message Dispatch
+// > Tween Update
+// > Late Update
 // > Render
 // > Cleanup
 
@@ -166,12 +167,17 @@ void jul::Julgen::RunOneFrame()
 	}
 
     // Update
-	SceneManager::GetInstance().Update();
-	// Late Update
-	SceneManager::GetInstance().LateUpdate();
+    SceneManager::GetInstance().Update();
 
     // Message Dispatch
     MessageQueue::Dispatch();
+
+    // Tween Update
+    TweenEngine::GetInstance().Update();
+
+    // Late Update
+    SceneManager::GetInstance().LateUpdate();
+
 
     // Render
     RenderManager::GetInstance().Render();

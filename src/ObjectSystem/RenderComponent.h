@@ -9,7 +9,7 @@ class RenderComponent : public Component
 		friend class RenderManager;
 
 	public:
-        RenderComponent(GameObject* parent, const std::string& name = "RenderComponent", int renderLayer = 0);
+        RenderComponent(GameObject* parentPtr, const std::string& name = "RenderComponent", int renderLayer = 0);
         ~RenderComponent() override;
 
         RenderComponent(RenderComponent&&) = delete;
@@ -23,11 +23,9 @@ class RenderComponent : public Component
 
 	protected:
         virtual void Render() const {}
-
         virtual void UpdateGUI() {}
 
     private:
-        bool m_Visible{ true };
         int m_RenderLayer{};
     };
 }

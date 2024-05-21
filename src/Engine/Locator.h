@@ -10,7 +10,6 @@ namespace jul
 {
     class Locator final
     {
-        friend class Julgen;
 
     public:
         // When using an existing service
@@ -34,18 +33,18 @@ namespace jul
             Provide<ServiceType, ServiceType>(std::forward<Args>(args)...);
         }
 
-        // TODO: Implement null service or error handeling
+        // TODO: Implement null service or error handling
         template<typename ServiceType>
         static ServiceType& Get()
         {
-            auto service{ g_Services.find(typeid(ServiceType)) };
+            const auto service{ g_Services.find(typeid(ServiceType)) };
             return *dynamic_cast<ServiceType*>(service->second.get());
         }
 
         template<typename ServiceType, typename ImplementationType>
         static std::unique_ptr<ImplementationType> Release()
         {
-            auto node{ g_Services.extract(typeid(ServiceType)) };
+            const auto node{ g_Services.extract(typeid(ServiceType)) };
 
             auto* releasedPtr = dynamic_cast<ImplementationType*>(node.mapped().release());
 

@@ -28,7 +28,6 @@ void jul::Animator::PlayAnimation(const std::string& name, bool looping, float s
 }
 
 
-
 void jul::Animator::SetLooping(bool isLooping)
 {
 	m_IsLooping = isLooping;
@@ -47,9 +46,12 @@ void jul::Animator::Update()
 
     if (m_IsPlaying)
 	{
-        m_FrameTime += GameTime::GetDeltaTimeF() * (m_ActiveAnimation->framesPerSecond / static_cast<float>(m_ActiveAnimation->frameCount)) * m_SpeedMultiplier;
+        m_FrameTime += GameTime::GetDeltaTime<float>() *
+                       (static_cast<float>(m_ActiveAnimation->framesPerSecond) /
+                        static_cast<float>(m_ActiveAnimation->frameCount)) *
+                       m_SpeedMultiplier;
 
-		if(m_IsLooping)
+        if(m_IsLooping)
         {
             m_FrameTime = jul::math::ClampLoop01(m_FrameTime);
         }

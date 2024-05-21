@@ -10,9 +10,9 @@
 
 #include "Sound_System.h"
 
-////////////////////
-/// WAVE file setup
-////////////////////
+///////////////////////
+/// WAVE file setup ///
+///////////////////////
 namespace jul
 {
     class SoundWave::SoundWave_Impl
@@ -35,9 +35,9 @@ jul::SoundWave::SoundWave(const std::string& fullPath) :
 
 jul::SoundWave::~SoundWave() = default;  // Required for implementation
 
-/////////////////////////
-/// System implementation
-/////////////////////////
+/////////////////////////////
+/// System implementation ///
+/////////////////////////////
 namespace jul
 {
     class Sound_System::System_Impl
@@ -91,7 +91,7 @@ namespace jul
                 m_QueuedSounds.pop();
                 m_QueueMutex.unlock();
 
-                SoundWave* sampleToPlay{ ResourceManager::GetSound(soundIndexToPlay) };
+                const SoundWave* sampleToPlay{ ResourceManager::GetSound(soundIndexToPlay) };
                 soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
             }
 

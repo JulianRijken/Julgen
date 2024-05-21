@@ -13,22 +13,22 @@ jul::Rigidbody::Rigidbody(GameObject* parentPtr, const Settings& settings) :
     m_Settings(settings),
     m_ModeFlag(settings.mode)
 {
-    Locator::Get<Physics>().AddRidgidbody(this);
+    Locator::Get<Physics>().AddRigidbody(this);
 }
 
 jul::Rigidbody::~Rigidbody()
 {
     m_CollisionListeners.clear();
-    Locator::Get<Physics>().RemoveRidgidbody(this);
+    Locator::Get<Physics>().RemoveRigidbody(this);
 }
 
-glm::vec2 jul::Rigidbody::Position()
+glm::vec2 jul::Rigidbody::Position() const
 {
     auto [x, y] = m_BodyPtr->GetPosition();
     return { x, y };
 }
 
-glm::vec2 jul::Rigidbody::Velocity()
+glm::vec2 jul::Rigidbody::Velocity() const
 {
     auto [x, y] = m_BodyPtr->GetLinearVelocity();
     return { x, y };
@@ -90,6 +90,7 @@ void jul::Rigidbody::SetVelocity(glm::vec2 velocity) const { m_BodyPtr->SetLinea
 void jul::Rigidbody::UpdateCollisionListeners()
 {
     // TODO: Use dirty flag/caching to avoid this call every collision!
+    // Better yet use binding when adding the collider and removing
     // THIS IS HORRIBLE AND SLOW CODE PLEASE FIX THIS AS FAST AS POSSIBLE!
     // If this is still here, there was no time :(
     const std::vector<Component*> components = GetGameObject()->GetComponents<Component>();
@@ -112,25 +113,25 @@ void jul::Rigidbody::UpdateCollisionListeners()
 // }
 
 
-void jul::Rigidbody::OnCollisionBegin(Collision collision)
+void jul::Rigidbody::OnCollisionBegin(const Collision& collision) const
 {
     for(auto&& listener : m_CollisionListeners)
         listener->OnCollisionBegin(collision);
 }
 
-void jul::Rigidbody::OnCollisionEnd(Collision collision)
+void jul::Rigidbody::OnCollisionEnd(const Collision& collision) const
 {
     for(auto&& listener : m_CollisionListeners)
         listener->OnCollisionEnd(collision);
 }
 
-void jul::Rigidbody::OnCollisionPreSolve(Collision collision, const b2Manifold* oldManifold)
+void jul::Rigidbody::OnCollisionPreSolve(const Collision& collision, const b2Manifold* oldManifold) const
 {
     for(auto&& listener : m_CollisionListeners)
         listener->OnCollisionPreSolve(collision, oldManifold);
 }
 
-void jul::Rigidbody::OnCollisionPostSolve(Collision collision)
+void jul::Rigidbody::OnCollisionPostSolve(const Collision& collision) const
 {
     for(auto&& listener : m_CollisionListeners)
         listener->OnCollisionPostSolve(collision);

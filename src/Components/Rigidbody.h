@@ -64,8 +64,8 @@ namespace jul
         Rigidbody& operator=(const Rigidbody&) = delete;
         Rigidbody& operator=(Rigidbody&&) noexcept = delete;
 
-        glm::vec2 Position();
-        glm::vec2 Velocity();
+        glm::vec2 Position() const;
+        glm::vec2 Velocity() const;
         glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint) const;
 
         void SetGravityScale(float scale);
@@ -80,23 +80,18 @@ namespace jul
 
         [[nodiscard]] const Settings& GetSettings() const { return m_Settings; }
 
-        // void AddCollisionListener(ICollisionListener* collisionListenerPtr);
-        // void RemoveCollisionListener(ICollisionListener* collisionListenerPtr);
-
         void UpdateCollisionListeners();
 
     private:
-        void OnCollisionBegin(Collision collision);
-        void OnCollisionEnd(Collision collision);
-        void OnCollisionPreSolve(Collision collision, const b2Manifold* oldManifold);
-        void OnCollisionPostSolve(Collision collision);
+        void OnCollisionBegin(const Collision& collision) const;
+        void OnCollisionEnd(const Collision& collision) const;
+        void OnCollisionPreSolve(const Collision& collision, const b2Manifold* oldManifold) const;
+        void OnCollisionPostSolve(const Collision& collision) const;
 
         b2Body* m_BodyPtr{};  // Owned by world
         Settings m_Settings{};
 
         Mode m_ModeFlag{};
-
-
         std::unordered_set<ICollisionListener*> m_CollisionListeners;
     };
 

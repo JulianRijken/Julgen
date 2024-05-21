@@ -44,8 +44,9 @@ jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
     return nullptr;
 }
 
-jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, unsigned size)
+jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, int size)
 {
+    assert(size > 0);
     const auto fullPath = g_ContentPath / filePath;
     return g_FontUPtrMap.emplace(assetName, std::make_unique<Font>(fullPath.string(), size)).first->second.get();
 }
@@ -68,8 +69,8 @@ jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
     const auto fullPath = g_ContentPath / filePath;
     SDL_Texture* texture = IMG_LoadTexture(RenderManager::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
 
-	if (texture == nullptr)
-		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+    if(texture == nullptr)
+        throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 
 
     return g_LoadedTextureUPtrs.emplace_back(std::make_unique<Texture2D>(texture)).get();

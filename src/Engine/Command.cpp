@@ -13,10 +13,10 @@ jul::MoveCommand::MoveCommand(GameObject* gameObject, float moveSpeed,const glm:
       m_MoveDirection(moveDirection)
 {}
 
-void jul::MoveCommand::Execute(InputContext /*context*/)
+void jul::MoveCommand::Execute(const InputContext& /*context*/)
 {
     const glm::vec3 VELOCITY = normalize(m_MoveDirection) * m_MoveSpeed;
-    GetGameObject()->GetTransform().Translate(VELOCITY * GameTime::GetDeltaTimeF());
+    GetGameObject()->GetTransform().Translate(VELOCITY * GameTime::GetDeltaTime<float>());
 }
 
 
@@ -31,14 +31,14 @@ jul::UnitMoveCommand::UnitMoveCommand(GameObject* gameObject,const glm::vec3& mo
       m_MoveDirection(moveDirection)
 {}
 
-void jul::UnitMoveCommand::Execute(InputContext /*context*/)
+void jul::UnitMoveCommand::Execute(const InputContext& /*context*/)
 {
     GetGameObject()->GetTransform().Translate(m_MoveDirection * 10.0f);
 }
 
-void jul::MemberFunctionCommand::Execute(InputContext context) { m_Function(context); }
+void jul::MemberFunctionCommand::Execute(const InputContext& context) { m_Function(context); }
 
-void jul::MuteGameCommand::Execute(InputContext /*context*/)
+void jul::MuteGameCommand::Execute(const InputContext& /*context*/)
 {
     auto* currentSystem = &Locator::Get<Sound>();
     if(dynamic_cast<Sound_Null*>(currentSystem))

@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "glm/exponential.hpp"
+
 
 namespace jul::math
 {
@@ -52,9 +54,8 @@ namespace jul::math
         return std::clamp(value, static_cast<Type>(0), static_cast<Type>(1));
     };
 
-
     template<typename Type>
-        requires std::integral<Type> || std::floating_point<Type>
+        requires std::integral<Type> or std::floating_point<Type>
     constexpr Type ClampLoop(Type value, Type min, Type max)
     {
         if(min == max)
@@ -80,9 +81,29 @@ namespace jul::math
     }
 
     template<typename Type>
-        requires std::integral<Type> || std::floating_point<Type>
+        requires std::integral<Type> or std::floating_point<Type>
     constexpr Type ClampLoop01(Type value)
     {
         return ClampLoop(value, static_cast<Type>(0), static_cast<Type>(1));
     };
+
+    template<typename Type>
+        requires std::integral<Type> or std::floating_point<Type>
+    Type LerpSmooth(const Type& a, const Type& b, float deltaTime, float duration)
+    {
+        // half life (2)
+        const float h{ -duration / glm::log2(1.0f / 1000.0f) };
+
+        return b + (a - b) * glm::exp2(-deltaTime / h);
+    }
+
+    template<typename Type, typename DeltaType>
+        requires std::integral<Type> or std::floating_point<Type>
+    Type MoveTowards(const Type& a, const Type& b, DeltaType maxDelta)
+    {
+        if(std::fabs(b - a) <= maxDelta)
+            return b;
+
+        return a + std::copysign(maxDelta, b - a);
+    }
 }

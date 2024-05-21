@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+
 namespace jul
 {
     class Object
@@ -20,10 +21,10 @@ namespace jul
         virtual void Destroy();
 
     protected:
-        Object(const std::string& name = "Object");
+        Object(std::string name = "Object");
 
     private:
-        bool m_BeingDestroyed{};
+        bool m_BeingDestroyed{false};
         std::string m_Name{};
     };
 }  // namespace jul

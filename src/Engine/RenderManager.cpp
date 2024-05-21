@@ -10,8 +10,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "EngineGUI.h"
+#include "GameObject.h"
 #include "GameSettings.h"
-#include "GUI.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
 #include "Transform.h"
@@ -38,7 +39,7 @@ void jul::RenderManager::Initialize(SDL_Window* window)
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 
-    SDL_RenderSetLogicalSize(m_RendererPtr,GameSettings::s_RenderWidth,GameSettings::s_RenderHeight);
+    SDL_RenderSetLogicalSize(m_RendererPtr,GameSettings::g_RenderWidth,GameSettings::g_RenderHeight);
 }
 
 
@@ -51,6 +52,7 @@ void jul::RenderManager::Destroy()
     m_RendererPtr = nullptr;
 }
 
+// TODO: Yes a shader and proper rendering would be nice haha
 glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
 {
     const float aspectRatio = jul::GameSettings::GetAspectRatio();
@@ -59,7 +61,7 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     const glm::mat4 projectionMatrix =
         glm::ortho(-orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, -1.0f, 1.0f);
 
-    const glm::mat4 viewMatrix = glm::mat4(1.0f);  // TODO: Implement camera
+    constexpr glm::mat4 viewMatrix = glm::mat4(1.0f);  // TODO: Implement camera
 
     glm::vec4 clipSpacePos = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
 
@@ -67,8 +69,8 @@ glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
     clipSpacePos /= clipSpacePos.w;
 
     // Convert to clip screen space
-    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * jul::GameSettings::s_RenderWidth;  // TODO: maybe remove 0.5f
-    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * jul::GameSettings::s_RenderHeight;
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * static_cast<float>(jul::GameSettings::g_RenderWidth);  // TODO: maybe remove 0.5f
+    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * static_cast<float>(jul::GameSettings::g_RenderHeight);
 
     return { x_screen, y_screen, clipSpacePos.z };
 }
@@ -91,7 +93,7 @@ void jul::RenderManager::Render() const
 
 void jul::RenderManager::RenderObjects() const
 {
-	auto renderers = std::vector(s_GlobalRendererPtrs.begin(), s_GlobalRendererPtrs.end());
+    auto renderers = std::vector(g_RendererPtrs.begin(), g_RendererPtrs.end());
 
     const auto compareDistance = [](const RenderComponent* a, const RenderComponent* b)
 		{
@@ -103,8 +105,16 @@ void jul::RenderManager::RenderObjects() const
 			return a->GetRenderLayer() < b->GetRenderLayer();
 		};
 
-	std::ranges::sort(renderers, compareDistance);
-	std::ranges::stable_sort(renderers, compareLayer);
+
+    const auto isActive = std::ranges::remove_if(renderers,
+                                                 [](const RenderComponent* rendererPtr)
+                                                 { return not rendererPtr->GetGameObject()->IsActiveInHierarchy(); })
+                              .begin();
+
+    renderers.resize(std::distance(renderers.begin(), isActive));
+
+    std::ranges::sort(renderers, compareDistance);
+    std::ranges::stable_sort(renderers, compareLayer);
 
     for (const RenderComponent* renderer : renderers)
 		renderer->Render();
@@ -156,7 +166,7 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
     srcRect.h = static_cast<int>(std::round(cellSize.y));
 
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    if (flipX and flipY)
+    if(flipX and flipY)
         flip = static_cast<SDL_RendererFlip>(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
     else if(flipX)
         flip = SDL_FLIP_HORIZONTAL;

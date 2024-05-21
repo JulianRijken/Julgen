@@ -3,11 +3,11 @@
 #include "Transform.h"
 #include "RenderManager.h"
 
-jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, const Sprite* sprite, int renderLayer, const glm::ivec2& drawCell) :
+jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, const Sprite* spritePtr, int renderLayer, const glm::ivec2& drawCell) :
     RenderComponent(parentPtr, "SpriteRenderer", renderLayer),
     m_DrawCell(drawCell)
 {
-    SetSprite(sprite);
+    SetSprite(spritePtr);
 }
 
 void jul::SpriteRenderer::SetDrawCell(glm::ivec2 drawCell)

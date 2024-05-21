@@ -10,7 +10,7 @@ namespace jul
 	class SpriteRenderer final : public RenderComponent
 	{
 	public:
-        SpriteRenderer(GameObject* parent, const Sprite* sprite = nullptr, int renderLayer = 0,
+        SpriteRenderer(GameObject* parentPtr, const Sprite* spritePtr = nullptr, int renderLayer = 0,
                        const glm::ivec2& drawCell = {});
 
         void SetDrawCell(glm::ivec2 drawCell);

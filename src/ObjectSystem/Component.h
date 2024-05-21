@@ -12,11 +12,7 @@ namespace jul
     {
 
     public:
-        // TODO: Validate the use of macros for short hand notation
-        // #define transform GetTransform()
-        // #define gameobject (*GetGameObject())
-
-        explicit Component(GameObject* parent = nullptr, const std::string& name = "Component");
+        explicit Component(GameObject* parentPtr = nullptr, const std::string& name = "Component");
         ~Component() override = default;
 
         Component(const Component&) = delete;
@@ -29,7 +25,7 @@ namespace jul
         [[nodiscard]] Transform& GetTransform() const;
 
         virtual void Update() {}
-		virtual void LateUpdate() {}
+        virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
 
 

@@ -17,10 +17,10 @@ namespace jul
         ICollisionListener& operator=(const ICollisionListener&) = delete;
         ICollisionListener& operator=(ICollisionListener&&) noexcept = delete;
 
-        virtual void OnCollisionBegin(Collision /*unused*/){};
-        virtual void OnCollisionEnd(Collision /*unused*/){};
-        virtual void OnCollisionPreSolve(Collision /*unused*/, const b2Manifold*){};
-        virtual void OnCollisionPostSolve(Collision /*unused*/){};
+        virtual void OnCollisionBegin(const Collision& /*unused*/){}
+        virtual void OnCollisionEnd(const Collision& /*unused*/){}
+        virtual void OnCollisionPreSolve(const Collision& /*unused*/, const b2Manifold*){}
+        virtual void OnCollisionPostSolve(const Collision& /*unused*/){}
 
     protected:
         ICollisionListener() = default;
