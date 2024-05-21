@@ -116,6 +116,7 @@ set(JULGEN_SOURCE_FILES
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
+    src/Engine/Tweening/EaseFunction.h
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

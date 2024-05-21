@@ -15,13 +15,13 @@ namespace jul
     public:
         GameObject(const std::string& name, Scene* scene, const glm::vec3& position = {});
 
-        [[nodiscard]] inline Transform& GetTransform() const { return *m_TransformPtr; }
+        [[nodiscard]] Transform& GetTransform() const { return *m_TransformPtr; }
 
-        [[nodiscard]] inline Scene& GetScene() const { return *m_ScenePtr; }
+        [[nodiscard]] Scene& GetScene() const { return *m_ScenePtr; }
 
         [[nodiscard]] bool IsActiveInHierarchy();
 
-        [[nodiscard]] inline bool IsActiveSelf() const { return m_ActiveSelf; }
+        [[nodiscard]] bool IsActiveSelf() const { return m_ActiveSelf; }
 
         void SetActive(bool active);
 

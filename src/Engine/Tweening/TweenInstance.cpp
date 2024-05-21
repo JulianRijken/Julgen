@@ -1,7 +1,5 @@
 #include "TweenInstance.h"
 
-#include <cmath>
-
 #include "GameTime.h"
 #include "Tween.h"
 
@@ -19,8 +17,7 @@ void jul::TweenInstance::Update()
         m_Tween.onStart = {};  // Remove start function as soon as called
     }
 
-    const float deltaTime =
-        m_Tween.igunoreTimeScale ? GameTime::GetUnScaledDeltaTime<float>() : GameTime::GetDeltaTime<float>();
+    const double deltaTime = m_Tween.igunoreTimeScale ? GameTime::GetUnScaledDeltaTime() : GameTime::GetDeltaTime();
     m_Time += deltaTime;
 
     if(m_Time >= m_Tween.duration)
@@ -31,12 +28,15 @@ void jul::TweenInstance::Update()
 
 
     // TODO: Add ease function in to the mix (linear now)
-    const float easedTime = std::lerp(m_Tween.from, m_Tween.to, m_Time / m_Tween.duration);
+    const double alpha = m_Time / m_Tween.duration;
+    const double easedTime = EaseFunction::Evaluate(alpha, m_Tween.easeFunction);
+    const double interpolatedValue = std::lerp(m_Tween.from, m_Tween.to, easedTime);
+
 
     // TODO: Should never not be set, but might not be needed
     // in the future when adding specific tweens like a positon tween
     if(m_Tween.onUpdate)
-        m_Tween.onUpdate(easedTime);
+        m_Tween.onUpdate(interpolatedValue);
 
     if(m_HasReachedEnd)
     {

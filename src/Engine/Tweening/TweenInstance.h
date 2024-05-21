@@ -17,7 +17,7 @@ namespace jul
     private:
         bool m_IsDecommissioned{ false };
         bool m_HasReachedEnd{ false };
-        float m_Time{};
+        double m_Time{};
 
         Tween m_Tween;
         GameObject* m_Target{ nullptr };
