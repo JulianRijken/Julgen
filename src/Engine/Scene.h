@@ -24,10 +24,13 @@ namespace jul
         void LateUpdate() const;
 		void FixedUpdate() const;
 
-		void CleanupGameObjects();
+        void CleanupGameObjects();
+
+        void MarkForUnload();
 
 
         std::string m_Name;
+        bool m_BeingUnloaded{ false };
         std::vector<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
     };
 

@@ -25,11 +25,21 @@ void jul::TweenEngine::Update()
 
 void jul::TweenEngine::Start(Tween&& tween, GameObject* target)
 {
+    // Before starting we check if the target is not already getting destroyed
+    // this is to prevent starting a tween in a destroy of another tween
+    if(target->IsBeingDestroyed())
+    {
+        if(tween.onEnd)
+            tween.onEnd();
+
+        return;
+    }
+
     GetInstance().m_QueuedTweens.emplace(std::move(tween), target);
 }
 
 void jul::TweenEngine::Start(const Tween& tween, GameObject* target)
 {
     Tween tweenCopy = tween;
-    GetInstance().m_QueuedTweens.emplace(std::move(tweenCopy), target);
+    Start(std::move(tweenCopy), target);
 }

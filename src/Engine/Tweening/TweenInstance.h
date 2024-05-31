@@ -1,16 +1,19 @@
 #pragma once
+#include "Event.h"
 #include "Tween.h"
 
 namespace jul
 {
     class GameObject;
 
-    class TweenInstance
+    class TweenInstance : public EventListener
     {
     public:
         TweenInstance(Tween&& tween, GameObject* target);
 
         [[nodiscard]] bool IsDecommisioned() const { return m_IsDecommissioned; }
+
+        void OnTargetDestroyed();
 
         void Update();
 

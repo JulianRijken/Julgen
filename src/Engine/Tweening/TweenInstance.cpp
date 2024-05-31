@@ -1,5 +1,6 @@
 #include "TweenInstance.h"
 
+#include "GameObject.h"
 #include "GameTime.h"
 #include "Tween.h"
 
@@ -7,6 +8,16 @@ jul::TweenInstance::TweenInstance(Tween&& tween, GameObject* target) :
     m_Tween(std::move(tween)),
     m_Target(target)
 {
+    // Sets target to nullptr when detroyed
+    m_Target->GetOnDestroyedEvent().AddListener(this, &TweenInstance::OnTargetDestroyed);
+}
+
+void jul::TweenInstance::OnTargetDestroyed()
+{
+    if(m_Tween.onEnd)
+        m_Tween.onEnd();
+
+    m_IsDecommissioned = true;
 }
 
 void jul::TweenInstance::Update()

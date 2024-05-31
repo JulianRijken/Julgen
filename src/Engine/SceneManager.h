@@ -1,14 +1,16 @@
 #pragma once
+#include <functional>
 #include <glm/vec3.hpp>
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 #include "GameObject.h"
 #include "Julgen.h"
 #include "Scene.h"
 #include "Singleton.h"
-
 
 namespace jul
 {
@@ -21,54 +23,48 @@ namespace jul
 
     class SceneManager final : public Singleton<SceneManager>
     {
-        // Required to call update
-        friend void Julgen::RunOneFrame();
+        friend class Julgen;
 
     public:
-        // TODO Loading scenes is currently done via functions
-        //      this would ideally be done via file loading
-        template<typename LoadSceneFunction>
-        void LoadScene(const std::string& name, LoadSceneFunction loadScene,
-                       SceneLoadMode loadMode = SceneLoadMode::Override)
+        // Binds the scene to a string allowing it to be loaded based on a name
+        void BindScene(const std::string& name, std::function<void(Scene&)>&& sceneFunction)
         {
-            if(loadMode == SceneLoadMode::Override)
-            {
-                // Unload all loaded scenes
-                m_LoadedScenes.clear();
-            }
-
-            // Remove old scene if it has the same name
-            if(m_LoadedScenes.contains(name))
-                m_LoadedScenes.erase(name);
-
-            // Set new loaded scene as active
-            auto newSceneUPtr = std::make_unique<Scene>(name);
-
-            if(loadMode == SceneLoadMode::Override)
-                m_PrimaryScenePtr = newSceneUPtr.get();
-
-            if constexpr(std::is_invocable_v<LoadSceneFunction, Scene&>)
-                loadScene(*newSceneUPtr);
-            else
-                loadScene();
-
-            m_LoadedScenes[name] = std::move(newSceneUPtr);
+            m_SceneBinds[name] = std::move(sceneFunction);
         }
 
-        void UnloadScene(const std::string& sceneName);
+        // TODO Loading scenes is currently done via functions
+        //      this would ideally be done via file loading
+        void LoadScene(const std::string& name, SceneLoadMode loadMode = SceneLoadMode::Override)
+        {
+            if(loadMode == SceneLoadMode::Override)
+                m_ScenesToLoad.clear();
 
-        void Destroy();
+            m_ScenesToLoad.emplace_back(name, loadMode);
+        }
 
         GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
+
 
     private:
         void Update();
         void LateUpdate();
         void FixedUpdate();
 
+
+        void Destroy();
+
         void CleanupGameObjects();
+        void CleanupScenes();
+
+        void MarkScenesForUnload();
+        void LoadScenesSetToLoad();
 
         Scene* m_PrimaryScenePtr{};
-        std::unordered_map<std::string, std::unique_ptr<Scene>> m_LoadedScenes{};
+
+        // These scenes will be loaded at the end of the frame
+        std::vector<std::pair<std::string, SceneLoadMode>> m_ScenesToLoad{};
+
+        std::vector<std::unique_ptr<Scene>> m_LoadedScenes{};
+        std::unordered_map<std::string, std::function<void(Scene&)>> m_SceneBinds{};
     };
 }

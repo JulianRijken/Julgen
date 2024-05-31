@@ -11,13 +11,13 @@ namespace jul
         friend void Julgen::RunOneFrame();
 
     private:
-        // Privates put up front for the templates pfff
+        // Privates put up front for the templates
 
         static void Update();
 
         static void AddToFrameCount() { g_FrameCount++; }
 
-        inline static double g_MaxDeltaTime{ 1.0 / 30.0 };
+        inline static constexpr double MAX_DELTA_TIME{ 1.0 / 30.0 };
         inline static double g_FixedDeltaTime{ 1.0 / 120.0 };
 
         inline static int g_FrameCount{ 0 };
@@ -25,9 +25,11 @@ namespace jul
         inline static double g_DeltaTime{ 0.0 };
         inline static double g_TimeScale{ 1.0 };
 
-        inline static std::deque<double> g_FpsDeque{};
+        inline static int g_FramesCountedSinceLastAverage{ 0 };
+        inline static double g_FpsUpdateTimer{ 0 };
+        inline static double g_AccumulatedDeltaTime{ 0 };
         inline static double g_AverageFps{ 0 };
-        inline static constexpr int AMOUNT_OF_FRAMES_TO_AVERAGE{ 60 };
+        inline static constexpr double SMOOTH_FPS_UPDATE_RATE{ 1.0 };
 
     public:
         GameTime() = delete;

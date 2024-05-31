@@ -98,7 +98,7 @@ jul::Julgen::~Julgen()
     SceneManager::GetInstance().Destroy();
 
     ResourceManager::Destroy();
-    EngineGUI::Destroy();
+    EngineGUI::Destory();
     RenderManager::GetInstance().Destroy();
 
     Locator::Release<Sound>();
@@ -178,16 +178,15 @@ void jul::Julgen::RunOneFrame()
     // Late Update
     SceneManager::GetInstance().LateUpdate();
 
-
     // Render
     RenderManager::GetInstance().Render();
 
-	// Cleans up all the objects marked for deletion
-	SceneManager::GetInstance().CleanupGameObjects();
+    // Scene Cleanup and Loading
+    SceneManager::GetInstance().MarkScenesForUnload();
+    SceneManager::GetInstance().CleanupGameObjects();
+    SceneManager::GetInstance().CleanupScenes();
+    SceneManager::GetInstance().LoadScenesSetToLoad();
 
-	GameTime::AddToFrameCount();
 
-    // Avoid over using resources when VSync is not on
-    // TODO: Might need removing
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    GameTime::AddToFrameCount();
 }

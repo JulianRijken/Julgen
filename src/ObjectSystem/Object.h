@@ -1,13 +1,15 @@
 #pragma once
 #include <string>
 
+#include "Event.h"
+
 
 namespace jul
 {
     class Object
     {
     public:
-        virtual ~Object() = default;
+        virtual ~Object();
 
         Object(const Object&) = delete;
         Object(Object&&) noexcept = delete;
@@ -18,6 +20,8 @@ namespace jul
 
         [[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
 
+        [[nodiscard]] Event<>& GetOnDestroyedEvent() { return m_OnDestroyedEvent; }
+
         virtual void Destroy();
 
     protected:
@@ -26,5 +30,7 @@ namespace jul
     private:
         bool m_BeingDestroyed{false};
         std::string m_Name{};
+
+        Event<> m_OnDestroyedEvent{};
     };
 }  // namespace jul

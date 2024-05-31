@@ -8,6 +8,7 @@ jul::GameObject::GameObject(const std::string& name, Scene* scene, const glm::ve
     m_TransformPtr = dynamic_cast<Transform*>(m_Components.emplace_back(std::make_unique<Transform>(this,position)).get());
 }
 
+
 bool jul::GameObject::IsActiveInHierarchy()
 {
     if(m_ActiveDirty)
@@ -30,8 +31,8 @@ void jul::GameObject::Destroy()
 {
 	Object::Destroy();
 
-	for (const auto& component : m_Components)
-		component->Destroy();
+    for(const auto& component : m_Components)
+        component->Destroy();
 }
 
 void jul::GameObject::PropagateDestroy() const

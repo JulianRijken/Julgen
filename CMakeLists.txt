@@ -140,16 +140,20 @@ target_include_directories(${TARGET_NAME} PUBLIC
 if(MSVC)
     target_link_libraries(${TARGET_NAME} PUBLIC SDL2::SDL2main)
 endif()
+
 target_link_libraries(${TARGET_NAME} PUBLIC
-    SDL2::SDL2
-    SDL2_ttf::SDL2_ttf
-    SDL2_image::SDL2_image
     glm::glm
     fmt::fmt
-    tobanteGaming::Box2D
+
+    tobanteGaming::Box2D #TODO:  Needs to also be PRIVATE once abstraction finished
+    SDL2::SDL2 # TODO: SDL is still needed for Input and color, could also be abstacted
+    SDL2_ttf::SDL2_ttf
+    SDL2_image::SDL2_image
 )
 
-target_link_libraries(${TARGET_NAME} PRIVATE soloud)
+target_link_libraries(${TARGET_NAME} PRIVATE
+    soloud
+)
 
 
 

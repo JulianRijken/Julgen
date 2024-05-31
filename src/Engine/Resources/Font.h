@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL_ttf.h>
+
 #include <string>
 
 
@@ -7,8 +8,8 @@ namespace jul
 {
 
     class Font final
-	{
-	public:
+    {
+    public:
         [[nodiscard]] TTF_Font* GetFont() const;
         explicit Font(const std::string& fullPath, int size);
         ~Font();
@@ -23,5 +24,5 @@ namespace jul
     private:
         int m_Size;
         TTF_Font* m_Font;
-	};
+    };
 }  // namespace jul

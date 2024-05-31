@@ -67,9 +67,9 @@ namespace jul
 
     public:
         template<typename ObjectType>
-        MemberFunctionCommand(ObjectType* object, void (ObjectType::*memberFunction)(InputContext)) :
+        MemberFunctionCommand(ObjectType* object, void (ObjectType::*memberFunction)(const InputContext&)) :
             m_Function(
-                [object, memberFunction](InputContext context)
+                [object, memberFunction](const InputContext& context)
                 {
                     if(memberFunction == nullptr)
                         return;

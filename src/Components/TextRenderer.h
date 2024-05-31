@@ -1,10 +1,11 @@
 #pragma once
+#include <SDL_pixels.h>
+
 #include <glm/vec2.hpp>
 #include <memory>
 #include <string>
 
 #include "RenderComponent.h"
-#include "SDL_pixels.h"
 
 namespace jul
 {
@@ -28,7 +29,7 @@ namespace jul
 		void Render() const override;
 		void UpdateText();
 
-        SDL_Color m_TextColor{255,255,255,255};
+        SDL_Color m_TextColor{ 255, 255, 255, 255 };
         SDL_Color m_LastDrawnColor{255,255,255,255};
         std::string m_Text{};
         std::string m_LastDrawnText{};

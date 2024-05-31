@@ -12,7 +12,7 @@ namespace jul
         EngineGUI() = delete;
 
         static void Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
-        static void Destroy();
+        static void Destory();
         static void NewFrame();
         static void EndFrame();
         static bool ProcessEvent(const SDL_Event* event);

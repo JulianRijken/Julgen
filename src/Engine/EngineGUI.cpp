@@ -36,7 +36,7 @@ void jul::EngineGUI::EndFrame()
 bool jul::EngineGUI::ProcessEvent(const SDL_Event* event) { return ImGui_ImplSDL2_ProcessEvent(event); }
 
 
-void jul::EngineGUI::Destroy()
+void jul::EngineGUI::Destory()
 {
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
