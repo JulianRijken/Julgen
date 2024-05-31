@@ -10,11 +10,11 @@ namespace jul::math
 
     // TODO: For the random stuff consider std::rand or random number generator
     //       this also to make it thread safe
-    template<typename Type>
+    template<typename Type = double>
         requires std::floating_point<Type>
     constexpr Type RandomValue()
     {
-        return static_cast<float>(rand() % RAND_MAX) / static_cast<float>(RAND_MAX);
+        return static_cast<Type>(rand() % RAND_MAX) / static_cast<Type>(RAND_MAX);
     };
 
     template<typename Type>
@@ -105,5 +105,17 @@ namespace jul::math
             return b;
 
         return a + std::copysign(maxDelta, b - a);
+    }
+
+    template<typename Type>
+        requires std::floating_point<Type>
+    constexpr Type MapWave(const Type time, const Type min, const Type max, const Type repeatTime, const Type startTime)
+    {
+        const Type amplitude{ (max - min) / 2.0f };
+        const Type intercept{ min + amplitude };
+        const Type pulsation{ 2 * std::numbers::pi_v<Type> / repeatTime };
+        const Type phase{ 2 * std::numbers::pi_v<Type> * startTime };
+
+        return amplitude * std::sin(pulsation * time + phase) + intercept;
     }
 }

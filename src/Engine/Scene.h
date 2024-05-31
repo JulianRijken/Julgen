@@ -17,7 +17,8 @@ namespace jul
         explicit Scene(std::string name);
         ~Scene() = default;
 
-        GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {});
+        GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {},
+                                  const GameObject* parent = nullptr);
 
     private:
         void Update() const;

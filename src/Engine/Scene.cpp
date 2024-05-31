@@ -7,9 +7,13 @@ m_Name(std::move(name))
 {
 }
 
-jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position)
+jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position, const GameObject* parent)
 {
     m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, this, position));
+
+    if(parent != nullptr)
+        m_GameObjectsInSceneSPtr.back().get()->GetTransform().SetParent(&parent->GetTransform());
+
     return m_GameObjectsInSceneSPtr.back().get();
 }
 

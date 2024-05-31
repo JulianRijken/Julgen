@@ -81,7 +81,7 @@ namespace jul
                     return SineOutLerp(time);
                     break;
                 case Type::SineInOut:
-                    return SineInLerp(time);
+                    return SineInOutLerp(time);
                     break;
                 case Type::BounceIn:
                     return BounceInLerp(time);
