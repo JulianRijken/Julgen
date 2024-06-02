@@ -52,3 +52,5 @@ void jul::MuteGameCommand::Execute(const InputContext& /*context*/)
         Locator::Provide<Sound, Sound_Null>();
     }
 }
+
+void jul::EventCommand::Execute(const InputContext& context) { m_Event.Invoke(context); }

@@ -4,6 +4,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "Event.h"
 #include "InputContext.h"
 
 namespace jul
@@ -82,6 +83,21 @@ namespace jul
 
     private:
         InputFunction m_Function;
+    };
+
+    class EventCommand final : public BaseCommand
+    {
+    public:
+        template<typename... Args>
+        EventCommand(Args&&... args)
+        {
+            m_Event.AddListener(std::forward<Args>(args)...);
+        }
+
+        void Execute(const InputContext& context) override;
+
+    private:
+        Event<const InputContext&> m_Event{};
     };
 
     class MuteGameCommand final : public BaseCommand

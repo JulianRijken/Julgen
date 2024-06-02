@@ -2,7 +2,6 @@
 #include <functional>
 #include <glm/vec3.hpp>
 #include <memory>
-#include <queue>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -34,12 +33,12 @@ namespace jul
 
         // TODO Loading scenes is currently done via functions
         //      this would ideally be done via file loading
-        void LoadScene(const std::string& name, SceneLoadMode loadMode = SceneLoadMode::Override)
+        static void LoadScene(const std::string& name, SceneLoadMode loadMode = SceneLoadMode::Override)
         {
             if(loadMode == SceneLoadMode::Override)
-                m_ScenesToLoad.clear();
+                GetInstance().m_ScenesToLoad.clear();
 
-            m_ScenesToLoad.emplace_back(name, loadMode);
+            GetInstance().m_ScenesToLoad.emplace_back(name, loadMode);
         }
 
         GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;

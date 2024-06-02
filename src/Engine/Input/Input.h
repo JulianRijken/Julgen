@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "Command.h"
+#include "Event.h"
 #include "InputAction.h"
 #include "InputBinding.h"
 #include "Singleton.h"
@@ -24,32 +25,32 @@ namespace jul
         inline static constexpr float TRIGGER_DEADZONE{ 0.05f };
         inline static constexpr float AXIS_LIMIT{ std::numeric_limits<short>::max() };
 
+        // Exclusivly called by engine
+        void ProcessInput(bool& shouldQuit);
+
         // Used as a shorthand for a function command
         template<typename... Args, typename ActionEnum>
         static void Bind(ActionEnum actionEnum, int controllerIndex, bool allowKeyboard, Args&&... args)
         {
-            GetInstance().RegisterCommand<MemberFunctionCommand>(
-                static_cast<int>(actionEnum), controllerIndex, allowKeyboard, args...);
+            GetInstance().RegisterCommand<EventCommand>(
+                static_cast<int>(actionEnum), controllerIndex, allowKeyboard, std::forward<Args>(args)...);
         }
 
         template<typename ActionEnum>
         static void AddAction(ActionEnum actionEnum, InputAction&& action)
         {
-            GetInstance().m_InputActions.emplace(static_cast<int>(actionEnum), action);
+            GetInstance().m_InputActions.emplace(static_cast<int>(actionEnum), std::move(action));
         }
-
-        void ProcessInput(bool& shouldQuit);
 
         template<typename CommandType, typename... Args>
             requires std::derived_from<CommandType, BaseCommand>
         static void RegisterCommand(int actionName, int controllerIndex, bool allowKeyboard, Args&&... args)
         {
-            Input& inputInstance = GetInstance();
+            assert(GetInstance().m_InputActions.contains(actionName) && "Action Does Not Exist");
 
-            assert(inputInstance.m_InputActions.contains(actionName) && "Action Does Not Exist");
-            inputInstance.m_Binds.emplace_back(controllerIndex,
+            GetInstance().m_Binds.emplace_back(controllerIndex,
                                                allowKeyboard,
-                                               inputInstance.m_InputActions.at(actionName),
+                                               GetInstance().m_InputActions.at(actionName),
                                                std::make_unique<CommandType>(std::forward<Args>(args)...));
         }
 
@@ -58,13 +59,12 @@ namespace jul
         std::map<int, InputAction> m_InputActions{};
         std::vector<SDL_GameController*> m_Controllers;
 
-        void HandleControllerAxis(const SDL_GameControllerAxis& axis) const;
-
         [[nodiscard]] bool HandleKeyboardEvent(const SDL_Event& event) const;
         [[nodiscard]] bool HandleControllerEvent(const SDL_Event& event) const;
+        [[nodiscard]] SDL_GameController* GetController(int controllerIndex) const;
 
+        void HandleControllerAxis(const SDL_GameControllerAxis& axis) const;
         void UpdateControllers();
-        SDL_GameController* GetController(int controllerIndex) const;
 
         template<typename DataType>
         static float NormalizeAxis(const DataType& rawAxis, float deadzone,

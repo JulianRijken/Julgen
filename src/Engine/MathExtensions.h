@@ -3,7 +3,8 @@
 #include <algorithm>
 
 #include "glm/exponential.hpp"
-
+#include "glm/ext/quaternion_common.hpp"
+#include "glm/vec3.hpp"
 
 namespace jul::math
 {
@@ -88,13 +89,11 @@ namespace jul::math
     };
 
     template<typename Type>
-        requires std::integral<Type> or std::floating_point<Type>
-    Type LerpSmooth(const Type& a, const Type& b, float deltaTime, float duration)
+    Type LerpSmooth(const Type& a, const Type& b, double duration, double deltaTime)
     {
-        // half life (2)
-        const float h{ -duration / glm::log2(1.0f / 1000.0f) };
+        const double h{ -duration / glm::log2(1.0 / 100.0) };
 
-        return b + (a - b) * glm::exp2(-deltaTime / h);
+        return glm::mix(b, a, glm::exp2(-deltaTime / h));
     }
 
     template<typename Type, typename DeltaType>
