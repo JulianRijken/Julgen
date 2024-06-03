@@ -109,8 +109,10 @@ void jul::TextRenderer::UpdateText()
         if(surf->w > totalWidth)
             totalWidth = surf->w;
 
-        totalHeight += surf->h + m_LineSpacing * m_FontSPtr->GetSize();
+        totalHeight += surf->h;
     }
+
+    totalHeight += std::max(0.0, m_LineSpacing * m_FontSPtr->GetSize() * (static_cast<int>(lines.size()) - 1));
 
     // Create a surface for the final texture
     SDL_Surface* finalSurface =
