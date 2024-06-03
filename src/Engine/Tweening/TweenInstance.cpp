@@ -5,11 +5,10 @@
 #include "Tween.h"
 
 jul::TweenInstance::TweenInstance(Tween&& tween, Object* target) :
+    m_IsHalting(tween.delay > 0),
     m_Tween(std::move(tween)),
     m_Target(target)
 {
-    m_IsHalting = tween.delay > 0;
-
     // Sets target to nullptr when detroyed
     m_Target->GetOnDestroyedEvent().AddListener(this, &TweenInstance::OnTargetDestroyed);
 }
@@ -37,7 +36,7 @@ void jul::TweenInstance::Update()
             return;
 
         // Compensate for overshot;
-        m_Tween.duration = -m_Tween.delay;
+        m_Tween.duration += m_Tween.delay;
 
         m_IsHalting = false;
     }
@@ -49,6 +48,10 @@ void jul::TweenInstance::Update()
     }
 
     m_Time += deltaTime;
+
+    // Yes, deltatime can go below 0
+    // when we change time scale :)
+    m_Time = std::max(0.0, m_Time);
 
     if(m_Time >= m_Tween.duration)
     {

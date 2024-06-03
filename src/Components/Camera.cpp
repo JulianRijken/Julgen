@@ -23,7 +23,7 @@ glm::mat4 jul::Camera::GetViewPorjection() const
     const glm::mat4 projection =
         glm::ortho(-m_OrthoSize * m_AspectRatio, m_OrthoSize * m_AspectRatio, -m_OrthoSize, m_OrthoSize, -1.0f, 1.0f);
 
-    const glm::mat4 view = glm::translate(glm::mat4(1.0f), GetTransform().GetWorldPosition());
+    const glm::mat4 view = glm::translate(glm::mat4(1.0f), -GetTransform().GetWorldPosition());
 
     return projection * view;
 }
