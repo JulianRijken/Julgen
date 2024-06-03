@@ -10,9 +10,10 @@
 #include "Transform.h"
 
 jul::TextRenderer::TextRenderer(GameObject* parent, std::string text, Font* font, int renderLayer, glm::vec2 alighnment,
-                                bool useAllUpper) :
+                                bool useAllUpper, double lineSpacing) :
     RenderComponent(parent, "TextRenderer", renderLayer),
     m_UseAllCaps(useAllUpper),
+    m_LineSpacing(lineSpacing),
     m_Text(std::move(text)),
     m_FontSPtr(font),
     m_Alighnment(alighnment)
@@ -79,20 +80,70 @@ void jul::TextRenderer::UpdateText()
                                });
     }
 
-    auto* const surf = TTF_RenderText_Blended(m_FontSPtr->GetFont(), text.c_str(), m_TextColor);
-    if(surf == nullptr)
-        throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+    // Split text into lines
+    std::vector<std::string> lines;
+    size_t start = 0;
+    size_t end = text.find('\n');
+    while(end != std::string::npos)
+    {
+        lines.push_back(text.substr(start, end - start));
+        start = end + 1;
+        end = text.find('\n', start);
+    }
+    lines.push_back(text.substr(start));
 
+    // Variables to hold the total width and height of the final texture
+    int totalWidth = 0;
+    int totalHeight = 0;
+    std::vector<SDL_Surface*> surfaces;
 
-    auto* texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), surf);
+    // Render each line
+    for(const auto& line : lines)
+    {
+        auto* const surf = TTF_RenderText_Blended(m_FontSPtr->GetFont(), line.c_str(), m_TextColor);
+        if(surf == nullptr)
+            throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+
+        surfaces.push_back(surf);
+
+        if(surf->w > totalWidth)
+            totalWidth = surf->w;
+
+        totalHeight += surf->h + m_LineSpacing * m_FontSPtr->GetSize();
+    }
+
+    // Create a surface for the final texture
+    SDL_Surface* finalSurface =
+        SDL_CreateRGBSurface(0, totalWidth, totalHeight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+    if(finalSurface == nullptr)
+    {
+        for(auto* surf : surfaces)
+            SDL_FreeSurface(surf);
+
+        throw std::runtime_error(std::string("Create RGB surface failed: ") + SDL_GetError());
+    }
+
+    // Copy each line surface onto the final surface
+    int currentY = 0;
+    for(auto* surf : surfaces)
+    {
+        // Allows text to center even new lines
+        const int xOffset = (totalWidth - surf->w) * m_Alighnment.x;
+
+        SDL_Rect dstRect = { xOffset, currentY, surf->w, surf->h };
+        SDL_BlitSurface(surf, nullptr, finalSurface, &dstRect);
+        currentY += surf->h + m_LineSpacing * m_FontSPtr->GetSize();
+        SDL_FreeSurface(surf);
+    }
+
+    // Create the final texture from the final surface
+    auto* texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), finalSurface);
+    SDL_FreeSurface(finalSurface);
+
     if(texture == nullptr)
         throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 
-
-    SDL_FreeSurface(surf);
     m_TextTextureUPtr = std::make_unique<Texture2D>(texture);
-
-
     m_LastDrawnText = m_Text;
     m_LastDrawnColor = m_TextColor;
 };
