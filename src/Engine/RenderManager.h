@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #include <unordered_set>
 
+#include "Camera.h"
 #include "Singleton.h"
 
 
@@ -15,15 +16,18 @@ namespace jul
 
     class RenderManager final : public Singleton<RenderManager>
     {
+        // TOOD: Required for adding them to the set
+        // should ultimatly be adressed and removed when adding propper rendering
         friend class RenderComponent;
+        friend class Camera;
 
-	public:
+    public:
+        void Initialize(SDL_Window* window);
+        void Destroy();
 
-		void Initialize(SDL_Window* window);
-		void Destroy();
 
-
-		void Render() const;
+        void Render() const;
+        void UpdateCamera();
 
         void RenderTexture(const Texture2D& texture, float x, float y) const;
         void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
@@ -37,17 +41,19 @@ namespace jul
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 	private:
+        [[nodiscard]] glm::vec3 WorldToScreen(const glm::vec3& worldPos) const;
 
-		void RenderObjects() const;
+        void RenderObjects() const;
 
         SDL_Renderer* m_RendererPtr{};
         SDL_Window* m_WindowPtr{};
 		SDL_Color m_ClearColor{};
 
-        // TODO: Should be in the camera component
-        float m_OrthoSize = 14;
+        Camera* m_ActiveCamera{ nullptr };
+
 
         inline static std::unordered_set<RenderComponent*> g_RendererPtrs{};
+        inline static std::unordered_set<Camera*> g_Cameras{};
     };
 }
 

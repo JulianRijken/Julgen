@@ -1,18 +1,23 @@
 #include "TweenInstance.h"
 
-#include "GameObject.h"
 #include "GameTime.h"
+#include "Object.h"
 #include "Tween.h"
 
-jul::TweenInstance::TweenInstance(Tween&& tween, GameObject* target) :
+jul::TweenInstance::TweenInstance(Tween&& tween, Object* target) :
     m_Tween(std::move(tween)),
     m_Target(target)
 {
+    m_IsHalting = tween.delay > 0;
+
     // Sets target to nullptr when detroyed
     m_Target->GetOnDestroyedEvent().AddListener(this, &TweenInstance::OnTargetDestroyed);
 }
 
-void jul::TweenInstance::OnTargetDestroyed()
+
+void jul::TweenInstance::OnTargetDestroyed() { Cancel(); }
+
+void jul::TweenInstance::Cancel()
 {
     if(m_Tween.onEnd)
         m_Tween.onEnd();
@@ -20,15 +25,29 @@ void jul::TweenInstance::OnTargetDestroyed()
     m_IsDecommissioned = true;
 }
 
+
 void jul::TweenInstance::Update()
 {
+    const double deltaTime = m_Tween.igunoreTimeScale ? GameTime::GetUnScaledDeltaTime() : GameTime::GetDeltaTime();
+
+    if(m_IsHalting)
+    {
+        m_Tween.delay -= deltaTime;
+        if(m_Tween.delay > 0)
+            return;
+
+        // Compensate for overshot;
+        m_Tween.duration = -m_Tween.delay;
+
+        m_IsHalting = false;
+    }
+
     if(m_Tween.onStart)
     {
         m_Tween.onStart();
         m_Tween.onStart = {};  // Remove start function as soon as called
     }
 
-    const double deltaTime = m_Tween.igunoreTimeScale ? GameTime::GetUnScaledDeltaTime() : GameTime::GetDeltaTime();
     m_Time += deltaTime;
 
     if(m_Time >= m_Tween.duration)

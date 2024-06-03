@@ -18,7 +18,7 @@ namespace jul
         ~Scene() = default;
 
         GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {},
-                                  const GameObject* parent = nullptr);
+                                  const GameObject* parent = nullptr, bool worldPositionStays = true);
 
     private:
         void Update() const;

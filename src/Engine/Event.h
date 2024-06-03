@@ -6,7 +6,7 @@
 
 namespace jul
 {
-    class EventListener;
+    class IEventListener;
 
     class BaseEvent
     {
@@ -19,28 +19,28 @@ namespace jul
         BaseEvent& operator=(BaseEvent&&) = delete;
         BaseEvent& operator=(const BaseEvent&) = delete;
 
-        virtual void RemoveListener(EventListener* listener) = 0;
+        virtual void RemoveListener(IEventListener* listener) = 0;
     };
 
-    class EventListener
+    class IEventListener
     {
         template<typename... EventArgs>
         friend class Event;
 
     public:
-        virtual ~EventListener()
+        virtual ~IEventListener()
         {
             for(auto* event : m_BindedEvents)
                 event->RemoveListener(this);
         }
 
-        EventListener(EventListener&&) = delete;
-        EventListener(const EventListener&) = delete;
-        EventListener& operator=(EventListener&&) = delete;
-        EventListener& operator=(const EventListener&) = delete;
+        IEventListener(IEventListener&&) = delete;
+        IEventListener(const IEventListener&) = delete;
+        IEventListener& operator=(IEventListener&&) = delete;
+        IEventListener& operator=(const IEventListener&) = delete;
 
     protected:
-        EventListener() = default;
+        IEventListener() = default;
 
     private:
         void AddEvent(BaseEvent* event) { m_BindedEvents.insert(event); }
@@ -76,10 +76,10 @@ namespace jul
         }
 
         template<typename ObjectType>
-            requires std::derived_from<ObjectType, EventListener>
+            requires std::derived_from<ObjectType, IEventListener>
         void AddListener(ObjectType* object, void (ObjectType::*memberFunction)(EventArgs...))
         {
-            auto* listener = static_cast<EventListener*>(object);
+            auto* listener = static_cast<IEventListener*>(object);
             listener->AddEvent(this);
             m_EventListeners.insert(listener);
 
@@ -96,7 +96,7 @@ namespace jul
 
 
     private:
-        void RemoveListener(EventListener* listener) override
+        void RemoveListener(IEventListener* listener) override
         {
             m_EventListeners.erase(listener);
 
@@ -108,6 +108,6 @@ namespace jul
         }
 
         std::vector<FunctionBind> m_FunctionBinds{};
-        std::unordered_set<EventListener*> m_EventListeners{};
+        std::unordered_set<IEventListener*> m_EventListeners{};
     };
 }  // namespace jul

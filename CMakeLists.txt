@@ -117,6 +117,7 @@ add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
     src/Engine/Tweening/EaseFunction.h
+    src/Components/Camera.h src/Components/Camera.cpp
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

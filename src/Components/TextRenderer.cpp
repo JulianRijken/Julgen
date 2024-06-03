@@ -48,7 +48,7 @@ void jul::TextRenderer::Render() const
 {
     if(m_TextTextureUPtr != nullptr)
     {
-        const glm::vec2& pos = GetTransform().WorldPosition();
+        const glm::vec2& pos = GetTransform().GetWorldPosition();
         auto textureSize = m_TextTextureUPtr->GetSize();
 
 
@@ -59,16 +59,18 @@ void jul::TextRenderer::Render() const
 
 void jul::TextRenderer::UpdateText()
 {
-	if (m_Text.empty())
-	{
+    if(m_Text.empty())
+    {
         m_TextTextureUPtr = nullptr;
         return;
     }
 
     std::string text = m_Text;
-	if (m_UseAllCaps)
-	{
-        std::ranges::transform(text.begin(), text.end(), text.begin(),
+    if(m_UseAllCaps)
+    {
+        std::ranges::transform(text.begin(),
+                               text.end(),
+                               text.begin(),
                                [](const char character)
                                {
                                    // MSVC doesn't like std::toupper without static_cast
@@ -83,8 +85,8 @@ void jul::TextRenderer::UpdateText()
 
 
     auto* texture = SDL_CreateTextureFromSurface(RenderManager::GetInstance().GetSDLRenderer(), surf);
-    if (texture == nullptr)
-		throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
+    if(texture == nullptr)
+        throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 
 
     SDL_FreeSurface(surf);

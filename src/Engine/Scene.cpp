@@ -7,12 +7,13 @@ m_Name(std::move(name))
 {
 }
 
-jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position, const GameObject* parent)
+jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position, const GameObject* parent,
+                                           bool worldPositionStays)
 {
     m_GameObjectsInSceneSPtr.emplace_back(std::make_unique<GameObject>(name, this, position));
 
     if(parent != nullptr)
-        m_GameObjectsInSceneSPtr.back().get()->GetTransform().SetParent(&parent->GetTransform());
+        m_GameObjectsInSceneSPtr.back().get()->GetTransform().SetParent(&parent->GetTransform(), worldPositionStays);
 
     return m_GameObjectsInSceneSPtr.back().get();
 }
@@ -46,8 +47,7 @@ void jul::Scene::CleanupGameObjects()
 
     // Clean up individual components from game objects
     for(auto&& gameObject : m_GameObjectsInSceneSPtr)
-        if(gameObject->IsBeingDestroyed())
-            gameObject->CleanupComponents();
+        gameObject->CleanupComponents();
 
     // Remove all game objects that are set to be destroyed
     for(auto iterator = m_GameObjectsInSceneSPtr.begin(); iterator != m_GameObjectsInSceneSPtr.end();)

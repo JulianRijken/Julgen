@@ -23,7 +23,13 @@ void jul::TweenEngine::Update()
     }
 }
 
-void jul::TweenEngine::Start(Tween&& tween, GameObject* target)
+bool jul::TweenEngine::HasActiveTweens(Object* target)
+{
+    return std::ranges::any_of(GetInstance().m_ActiveTweens,
+                               [target](const auto& tween) { return target == tween->GetTarget(); });
+}
+
+void jul::TweenEngine::Start(Tween&& tween, Object* target)
 {
     // Before starting we check if the target is not already getting destroyed
     // this is to prevent starting a tween in a destroy of another tween
@@ -38,8 +44,15 @@ void jul::TweenEngine::Start(Tween&& tween, GameObject* target)
     GetInstance().m_QueuedTweens.emplace(std::move(tween), target);
 }
 
-void jul::TweenEngine::Start(const Tween& tween, GameObject* target)
+void jul::TweenEngine::Start(const Tween& tween, Object* target)
 {
     Tween tweenCopy = tween;
     Start(std::move(tweenCopy), target);
+}
+
+void jul::TweenEngine::Cancel(Object* target)
+{
+    for(auto& tween : GetInstance().m_ActiveTweens)
+        if(tween->GetTarget() == target)
+            tween->Cancel();
 }

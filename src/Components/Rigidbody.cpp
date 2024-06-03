@@ -13,6 +13,7 @@ jul::Rigidbody::Rigidbody(GameObject* parentPtr, const Settings& settings) :
     m_Settings(settings),
     m_ModeFlag(settings.mode)
 {
+    GetTransform().SetRigidbody(this);
     Locator::Get<Physics>().AddRigidbody(this);
 }
 
@@ -54,13 +55,14 @@ void jul::Rigidbody::AddForce(glm::vec2 force, ForceMode forceMode, bool wake)
         m_BodyPtr->SetLinearVelocity(b2Force);
 }
 
-void jul::Rigidbody::SetPosition(glm::vec2 position) const { m_BodyPtr->SetTransform({ position.x, position.y }, 0.0f); }
+void jul::Rigidbody::SetPosition(glm::vec2 position) const
+{
+    m_BodyPtr->SetTransform({ position.x, position.y }, 0.0f);
+}
 
 
 void jul::Rigidbody::FixedUpdate()
 {
-    // TODO: This now happens after the internal fixed update
-    //       should not just overwrite this is for testing
     const auto position = m_BodyPtr->GetPosition();
     const glm::vec3 targetPosition = { position.x, position.y, 0 };
     GetTransform().SetWorldPosition(targetPosition);

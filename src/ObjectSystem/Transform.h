@@ -1,15 +1,16 @@
 #pragma once
-#include <unordered_set>
 #include <glm/glm.hpp>
+#include <unordered_set>
 
 #include "Component.h"
+#include "Rigidbody.h"
 
 namespace jul
 {
-	class Transform final : public Component
-	{
+    class Transform final : public Component, public IEventListener
+    {
 
-	public:
+    public:
         Transform(GameObject* parent, const glm::vec3& position = { 0,0,0 });
         ~Transform() override;
 
@@ -18,14 +19,15 @@ namespace jul
         Transform& operator=(const Transform&) = delete;
         Transform& operator=(Transform&&) noexcept = delete;
 
-		[[nodiscard]] const glm::vec3& WorldPosition();
-		[[nodiscard]] const glm::vec3& LocalPosition() const { return m_LocalPosition; }
+        [[nodiscard]] const glm::vec3& GetWorldPosition();
 
-		[[nodiscard]] Transform* GetParent() const { return m_ParentPtr; }
+        [[nodiscard]] const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
 
-		// There is no way to get a child by index because the children are stored in a set
-		// Use GetChildren() and iterate through the set if you need to access children by index
-		[[nodiscard]] int GetChildCount() const { return static_cast<int>(m_ChildPtrs.size()); }
+        [[nodiscard]] Transform* GetParent() const { return m_ParentPtr; }
+
+        // There is no way to get a child by index because the children are stored in a set
+        // Use GetChildren() and iterate through the set if you need to access children by index
+        [[nodiscard]] int GetChildCount() const { return static_cast<int>(m_ChildPtrs.size()); }
 		[[nodiscard]] const std::unordered_set<Transform*>& GetChildren() const { return m_ChildPtrs; }
 
 		void SetLocalPosition(float x, float y, float z);
@@ -41,13 +43,22 @@ namespace jul
 
 		bool IsChild(Transform* checkChildPtr) const;
 
-	private:
+        // Used by transform to force update physics position
+        void SetRigidbody(Rigidbody* rigidbody);
+
+    private:
         void UpdateWorldPosition();
         void SetTransformDirty();
+        void OnRigidbodyDestroyed();
 
         bool m_TransformDirty{ true };
         glm::vec3 m_LocalPosition{};  // Primary Data
         glm::vec3 m_WorldPosition{};  // Derived Data
+
+        // Transform needs acces to the optional rigidbody
+        // this is because it needs to update the physics positions
+        // when setting the position manually
+        Rigidbody* m_Rigidbody{ nullptr };
 
         Transform* m_ParentPtr{ nullptr };
 

@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "GameObject.h"
+#include "Rigidbody.h"
 
 
 jul::Transform::Transform(GameObject* parent,const glm::vec3& position) :
@@ -25,8 +26,7 @@ jul::Transform::~Transform()
 	}
 }
 
-
-const glm::vec3& jul::Transform::WorldPosition()
+const glm::vec3& jul::Transform::GetWorldPosition()
 {
 	if (m_TransformDirty)
 		UpdateWorldPosition();
@@ -46,6 +46,9 @@ void jul::Transform::SetLocalPosition(const glm::vec3& position)
 
     m_LocalPosition = position;
     SetTransformDirty();
+
+    if(m_Rigidbody)
+        m_Rigidbody->SetPosition(GetWorldPosition());
 }
 
 void jul::Transform::SetWorldPosition(float x, float y, float z)
@@ -57,7 +60,7 @@ void jul::Transform::SetWorldPosition(const glm::vec3& position)
 	if (m_ParentPtr == nullptr)
 		SetLocalPosition(position);
 	else
-		SetLocalPosition(position - m_ParentPtr->WorldPosition());
+        SetLocalPosition(position - m_ParentPtr->GetWorldPosition());
 }
 
 
@@ -84,21 +87,21 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 		m_ParentPtr->m_ChildPtrs.erase(this);
 
 		if (worldPositionStays)
-			m_LocalPosition += m_ParentPtr->WorldPosition();
-	}
+            m_LocalPosition += m_ParentPtr->GetWorldPosition();
+    }
 
-	m_ParentPtr = newParentPtr;
+    m_ParentPtr = newParentPtr;
 
-	// Add to new parent
+    // Add to new parent
     if (m_ParentPtr != nullptr)
 	{
 		m_ParentPtr->m_ChildPtrs.insert(this);
 
 		if (worldPositionStays)
-			m_LocalPosition -= m_ParentPtr->WorldPosition();
-	}
+            m_LocalPosition -= m_ParentPtr->GetWorldPosition();
+    }
 
-	SetTransformDirty();
+    SetTransformDirty();
     GetGameObject()->SetActiveDirty();
 }
 
@@ -112,15 +115,24 @@ bool jul::Transform::IsChild(Transform* checkChildPtr) const
     });
 }
 
+void jul::Transform::SetRigidbody(Rigidbody* rigidbody)
+{
+    // There can't be more than one rigidbody
+    assert(m_Rigidbody == nullptr);
+
+    rigidbody->GetOnDestroyedEvent().AddListener(this, &Transform::OnRigidbodyDestroyed);
+    m_Rigidbody = rigidbody;
+}
+
 
 void jul::Transform::UpdateWorldPosition()
 {
 	if(m_ParentPtr == nullptr)
 		m_WorldPosition = m_LocalPosition;
 	else
-		m_WorldPosition = m_LocalPosition + m_ParentPtr->WorldPosition();
+        m_WorldPosition = m_LocalPosition + m_ParentPtr->GetWorldPosition();
 
-	m_TransformDirty = false;
+    m_TransformDirty = false;
 }
 
 void jul::Transform::SetTransformDirty()
@@ -132,3 +144,4 @@ void jul::Transform::SetTransformDirty()
 			childPtr->SetTransformDirty();
 }
 
+void jul::Transform::OnRigidbodyDestroyed() { m_Rigidbody = nullptr; }

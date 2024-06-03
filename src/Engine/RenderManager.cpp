@@ -6,6 +6,7 @@
 #include <glm/vec3.hpp>
 #include <stdexcept>
 #include <vector>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -52,52 +53,57 @@ void jul::RenderManager::Destroy()
     m_RendererPtr = nullptr;
 }
 
-// TODO: Yes a shader and proper rendering would be nice haha
-glm::vec3 WorldToScreen(const glm::vec3& worldPos, float orthoSize)
-{
-    const float aspectRatio = jul::GameSettings::GetAspectRatio();
-
-    // Assuming you have a camera at the origin looking down the negative z-axis
-    const glm::mat4 projectionMatrix =
-        glm::ortho(-orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, -1.0f, 1.0f);
-
-    constexpr glm::mat4 viewMatrix = glm::mat4(1.0f);  // TODO: Implement camera
-
-    glm::vec4 clipSpacePos = projectionMatrix * viewMatrix * glm::vec4(worldPos, 1.0f);
-
-    // Perspective division
-    clipSpacePos /= clipSpacePos.w;
-
-    // Convert to clip screen space
-    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f * static_cast<float>(jul::GameSettings::g_RenderWidth);  // TODO: maybe remove 0.5f
-    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * static_cast<float>(jul::GameSettings::g_RenderHeight);
-
-    return { x_screen, y_screen, clipSpacePos.z };
-}
-
-
 
 void jul::RenderManager::Render() const
 {
-	const SDL_Color& color = GetBackgroundColor();
+    if(m_ActiveCamera == nullptr)
+    {
+        std::cerr << "No camera to render with" << std::endl;
+        return;
+    }
+
+    const SDL_Color& color = GetBackgroundColor();
     SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a);
     SDL_RenderClear(m_RendererPtr);
+
     EngineGUI::NewFrame();
-    {
-        RenderObjects();
-    }
+
+    RenderObjects();
+
     EngineGUI::EndFrame();
+
     SDL_RenderPresent(m_RendererPtr);
 }
 
+void jul::RenderManager::UpdateCamera()
+{
+    if(g_Cameras.empty())
+    {
+        m_ActiveCamera = nullptr;
+    }
+    else
+    {
+        auto cameras = std::vector(g_Cameras.begin(), g_Cameras.end());
+        m_ActiveCamera = *std::ranges::max_element(
+            cameras, [](const Camera* a, const Camera* b) { return a->GetPriority() > b->GetPriority(); });
+    }
+}
 
 void jul::RenderManager::RenderObjects() const
 {
+
+    ////////////////////////////////////////////////////////////////////////
+    /// TODO: RENDERING NEEDS OVERHULL USING SHADERS AND PROPPER METHODS ///
+    /// NOT THIS HORRIBLE CPU SORTING EVERY FRAME :)                     ///
+    ////////////////////////////////////////////////////////////////////////
+    // Sort cameras by priority
+
+
     auto renderers = std::vector(g_RendererPtrs.begin(), g_RendererPtrs.end());
 
     const auto compareDistance = [](const RenderComponent* a, const RenderComponent* b)
 		{
-			return a->GetTransform().WorldPosition().z > b->GetTransform().WorldPosition().z;
+			return a->GetTransform().GetWorldPosition().z > b->GetTransform().GetWorldPosition().z;
 		};
 
     const auto compareLayer = [](const RenderComponent* a, const RenderComponent* b)
@@ -148,10 +154,10 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
                                        glm::vec2 pivot, bool flipX, bool flipY) const
 {
 
-    const glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f), m_OrthoSize);
+    const glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f));
     const glm::vec2 cellSizeWorld = { static_cast<float>(cellSize.x) / static_cast<float>(pixelsPerUnit),
                                       -(static_cast<float>(cellSize.y) / static_cast<float>(pixelsPerUnit)) };
-    const glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f), m_OrthoSize) - topLeft;
+    const glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f)) - topLeft;
 
     SDL_Rect dstRect{};
     dstRect.x = static_cast<int>(std::round(topLeft.x - rectSize.x * pivot.x));
@@ -176,4 +182,22 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
 
     const SDL_Point center{};  // Not needed
     SDL_RenderCopyEx(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect,0.0f,&center,flip);
+}
+
+// Converts from world to screen pixels
+glm::vec3 jul::RenderManager::WorldToScreen(const glm::vec3& worldPos) const
+{
+    assert(m_ActiveCamera);
+
+    glm::vec4 clipSpacePos = m_ActiveCamera->GetViewPorjection() * glm::vec4(worldPos, 1.0f);
+
+    // Perspective division
+    clipSpacePos /= clipSpacePos.w;
+
+    // Convert to clip screen space
+    float x_screen = (clipSpacePos.x + 1.0f) * 0.5f *
+                     static_cast<float>(jul::GameSettings::g_RenderWidth);  // TODO: maybe remove 0.5f
+    float y_screen = (1.0f - clipSpacePos.y) * 0.5f * static_cast<float>(jul::GameSettings::g_RenderHeight);
+
+    return { x_screen, y_screen, clipSpacePos.z };
 }

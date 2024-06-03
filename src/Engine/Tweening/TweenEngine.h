@@ -16,13 +16,16 @@ namespace jul
     public:
         void Update();
 
+        [[nodiscard]] static bool HasActiveTweens(Object* target);
+
         // TODO: Think about returning a tween handle to stop and pause
-        static void Start(Tween&& tween, GameObject* target);
-        static void Start(const Tween& tween, GameObject* target);
+        static void Start(Tween&& tween, Object* target);
+        static void Start(const Tween& tween, Object* target);
+        static void Cancel(Object* target);
 
     private:
         std::vector<std::unique_ptr<TweenInstance>> m_ActiveTweens{};
-        std::queue<std::pair<Tween, GameObject*>> m_QueuedTweens{};
+        std::queue<std::pair<Tween, Object*>> m_QueuedTweens{};
     };
 
 }  // namespace jul

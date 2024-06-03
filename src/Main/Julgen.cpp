@@ -90,6 +90,11 @@ jul::Julgen::Julgen()
     ResourceManager::Initialize();
 
     GameStart();
+
+    // Allow default scene to load before the game loop
+    // required as scenes only load at the end of the frame
+    SceneManager::GetInstance().LoadScenesSetToLoad();
+
     Run();
 }
 
@@ -179,6 +184,7 @@ void jul::Julgen::RunOneFrame()
     SceneManager::GetInstance().LateUpdate();
 
     // Render
+    RenderManager::GetInstance().UpdateCamera();
     RenderManager::GetInstance().Render();
 
     // Scene Cleanup and Loading

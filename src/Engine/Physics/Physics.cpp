@@ -29,7 +29,7 @@ void jul::Physics::AddRigidbody(Rigidbody* rigidbodyPtr)
         const Rigidbody::Settings& settings = rigidbodyPtr->GetSettings();
 
         // Make sure positions is set correct on init
-        const glm::vec3 transformPosition = rigidbodyPtr->GetTransform().WorldPosition();
+        const glm::vec3 transformPosition = rigidbodyPtr->GetTransform().GetWorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
         const Rigidbody::Mode mode = settings.mode;
@@ -84,7 +84,7 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
 
     b2BodyDef bodyDef;
     {
-        const glm::vec3 transformPosition = colliderPtr->GetTransform().WorldPosition();
+        const glm::vec3 transformPosition = colliderPtr->GetTransform().GetWorldPosition();
         bodyDef.position.Set(transformPosition.x, transformPosition.y);
 
         bodyDef.userData = nullptr;
