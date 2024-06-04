@@ -20,7 +20,11 @@ namespace jul
         GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {},
                                   const GameObject* parent = nullptr, bool worldPositionStays = true);
 
+        // Unloads whole scene
         void Unload();
+
+        // Removes all game objects from the scene
+        void Clean();
 
     private:
         void Update() const;

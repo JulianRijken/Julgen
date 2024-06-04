@@ -62,11 +62,16 @@ void jul::Scene::Unload()
     if(m_BeingUnloaded)
         return;
 
-    for(auto&& gameObject : m_GameObjectsInSceneSPtr)
+    Clean();
+
+    m_BeingUnloaded = true;
+}
+
+void jul::Scene::Clean()
+{
+    for(auto& gameObject : m_GameObjectsInSceneSPtr)
     {
         gameObject->Destroy();
         gameObject->PropagateDestroy();
     }
-
-    m_BeingUnloaded = true;
 }
