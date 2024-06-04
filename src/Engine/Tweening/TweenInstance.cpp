@@ -18,7 +18,7 @@ void jul::TweenInstance::OnTargetDestroyed() { Cancel(); }
 
 void jul::TweenInstance::Cancel()
 {
-    if(m_Tween.onEnd)
+    if(m_Tween.onEnd and m_Tween.invokeWhenDestroyed)
         m_Tween.onEnd();
 
     m_IsDecommissioned = true;

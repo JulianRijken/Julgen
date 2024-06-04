@@ -2,6 +2,18 @@
 
 #include <fmt/format.h>
 
+void jul::SceneManager::LoadScene(const std::string& name, SceneLoadMode loadMode)
+{
+    if(loadMode == SceneLoadMode::Override)
+        GetInstance().m_ScenesToLoad.clear();
+
+    GetInstance().m_ScenesToLoad.emplace_back(name, loadMode);
+}
+
+void jul::SceneManager::BindScene(const std::string& name, std::function<void(Scene&)>&& sceneFunction)
+{
+    m_SceneBinds[name] = std::move(sceneFunction);
+}
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
 {
@@ -66,7 +78,11 @@ void jul::SceneManager::LoadScenesSetToLoad()
     if(m_ScenesToLoad.empty())
         return;
 
-    for(auto&& [name, loadMode] : m_ScenesToLoad)
+    auto scenesToLoadLocal = m_ScenesToLoad;
+    m_ScenesToLoad.clear();
+
+
+    for(auto&& [name, loadMode] : scenesToLoadLocal)
     {
         if(not m_SceneBinds.contains(name))
             throw std::runtime_error(fmt::format("Scene {} has not been binded when loading", name));
@@ -84,5 +100,12 @@ void jul::SceneManager::LoadScenesSetToLoad()
         m_LoadedScenes.emplace_back(std::move(newSceneUPtr));
     }
 
-    m_ScenesToLoad.clear();
+    // Wouw our user actually loaded a scene during the loading of the scene
+    if(not m_ScenesToLoad.empty())
+    {
+        MarkScenesForUnload();
+        CleanupGameObjects();
+        CleanupScenes();
+        LoadScenesSetToLoad();
+    }
 }

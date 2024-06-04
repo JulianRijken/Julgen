@@ -35,7 +35,7 @@ void jul::TweenEngine::Start(Tween&& tween, Object* target)
     // this is to prevent starting a tween in a destroy of another tween
     if(target->IsBeingDestroyed())
     {
-        if(tween.onEnd)
+        if(tween.onEnd and tween.invokeWhenDestroyed)
             tween.onEnd();
 
         return;

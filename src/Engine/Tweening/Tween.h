@@ -17,6 +17,7 @@ namespace jul
         double to = 1.0;
         double duration = 1.0;
         bool igunoreTimeScale = false;
+        bool invokeWhenDestroyed = true;
         EaseFunction::Type easeFunction = EaseFunction::Type::Linear;
 
         std::function<void()> onStart = {};

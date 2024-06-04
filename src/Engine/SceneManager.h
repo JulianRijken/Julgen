@@ -26,29 +26,17 @@ namespace jul
 
     public:
         // Binds the scene to a string allowing it to be loaded based on a name
-        void BindScene(const std::string& name, std::function<void(Scene&)>&& sceneFunction)
-        {
-            m_SceneBinds[name] = std::move(sceneFunction);
-        }
-
-        // TODO Loading scenes is currently done via functions
-        //      this would ideally be done via file loading
-        static void LoadScene(const std::string& name, SceneLoadMode loadMode = SceneLoadMode::Override)
-        {
-            if(loadMode == SceneLoadMode::Override)
-                GetInstance().m_ScenesToLoad.clear();
-
-            GetInstance().m_ScenesToLoad.emplace_back(name, loadMode);
-        }
+        void BindScene(const std::string& name, std::function<void(Scene&)>&& sceneFunction);
 
         GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
+
+        static void LoadScene(const std::string& name, SceneLoadMode loadMode = SceneLoadMode::Override);
 
 
     private:
         void Update();
         void LateUpdate();
         void FixedUpdate();
-
 
         void Destroy();
 
