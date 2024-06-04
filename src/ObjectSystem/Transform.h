@@ -28,16 +28,16 @@ namespace jul
         // There is no way to get a child by index because the children are stored in a set
         // Use GetChildren() and iterate through the set if you need to access children by index
         [[nodiscard]] int GetChildCount() const { return static_cast<int>(m_ChildPtrs.size()); }
-		[[nodiscard]] const std::unordered_set<Transform*>& GetChildren() const { return m_ChildPtrs; }
+        [[nodiscard]] const std::unordered_set<Transform*>& GetChildren() const { return m_ChildPtrs; }
 
-		void SetLocalPosition(float x, float y, float z);
-		void SetLocalPosition(const glm::vec3& position);
+        void SetLocalPosition(double x, double y, double z);
+        void SetLocalPosition(const glm::vec3& position);
 
-		void SetWorldPosition(float x, float y, float z);
-		void SetWorldPosition(const glm::vec3& position);
+        void SetWorldPosition(double x, double y, double z);
+        void SetWorldPosition(const glm::vec3& position);
 
-		void Translate(float x, float y, float z);
-		void Translate(const glm::vec3& translation);
+        void Translate(double x, double y, double z);
+        void Translate(const glm::vec3& translation);
 
 		void SetParent(Transform* newParentPtr, bool worldPositionStays = true);
 

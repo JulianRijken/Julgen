@@ -39,19 +39,19 @@ namespace jul
         // clang-format off
 
         template<typename Type = decltype(g_FrameCount)>
-        [[nodiscard]] static inline Type GetFrameCount() { return g_FrameCount; }
+        [[nodiscard]] static inline Type GetFrameCount() { return static_cast<Type>(g_FrameCount); }
 
         template<typename Type = decltype(g_ElapsedTime)>
-        [[nodiscard]] static inline Type GetElapsedTime() { return g_ElapsedTime; }
+        [[nodiscard]] static inline Type GetElapsedTime() { return static_cast<Type>(g_ElapsedTime); }
 
         template<typename Type = decltype(1.0 / g_DeltaTime)>
-        [[nodiscard]] static inline Type GetFps() { return 1.0 / g_DeltaTime; }
+        [[nodiscard]] static inline Type GetFps() { return static_cast<Type>(1.0 / g_DeltaTime); }
 
         template<typename Type = decltype(g_AverageFps)>
-        [[nodiscard]] static inline Type GetSmoothFps() { return g_AverageFps; }
+        [[nodiscard]] static inline Type GetSmoothFps() { return static_cast<Type>(g_AverageFps); }
 
         template<typename Type = decltype(g_TimeScale)>
-        [[nodiscard]] static inline Type GetTimeScale() { return g_TimeScale; }
+        [[nodiscard]] static inline Type GetTimeScale() { return static_cast<Type>(g_TimeScale); }
 
         template<typename Type = decltype(g_DeltaTime)>
         [[nodiscard]] static inline Type GetUnScaledDeltaTime() { return static_cast<Type>(g_DeltaTime); }

@@ -2,17 +2,26 @@
 
 #include <fmt/format.h>
 
-void jul::SceneManager::LoadScene(const std::string& name, SceneLoadMode loadMode)
+void jul::SceneManager::LoadScene(int id, SceneLoadMode loadMode)
 {
     if(loadMode == SceneLoadMode::Override)
-        GetInstance().m_ScenesToLoad.clear();
+        m_ScenesToLoad.clear();
 
-    GetInstance().m_ScenesToLoad.emplace_back(name, loadMode);
+    m_ScenesToLoad.emplace_back(id, loadMode);
 }
 
-void jul::SceneManager::BindScene(const std::string& name, std::function<void(Scene&)>&& sceneFunction)
+jul::Scene* jul::SceneManager::FindScene(int id)
 {
-    m_SceneBinds[name] = std::move(sceneFunction);
+    for(const auto& scene : m_LoadedScenes)
+        if(scene->m_Id == id)
+            return scene.get();
+
+    return nullptr;
+}
+
+void jul::SceneManager::BindScene(int id, std::function<void(Scene&)>&& sceneFunction)
+{
+    m_SceneBinds[id] = std::move(sceneFunction);
 }
 
 jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
@@ -82,19 +91,19 @@ void jul::SceneManager::LoadScenesSetToLoad()
     m_ScenesToLoad.clear();
 
 
-    for(auto&& [name, loadMode] : scenesToLoadLocal)
+    for(auto&& [id, loadMode] : scenesToLoadLocal)
     {
-        if(not m_SceneBinds.contains(name))
-            throw std::runtime_error(fmt::format("Scene {} has not been binded when loading", name));
+        if(not m_SceneBinds.contains(id))
+            throw std::runtime_error(fmt::format("Scene {} has not been binded when loading", id));
 
-        auto newSceneUPtr = std::make_unique<Scene>(name);
+        auto newSceneUPtr = std::make_unique<Scene>(id);
 
         // There should only ever be one override when loading here
         if(loadMode == SceneLoadMode::Override)
             m_PrimaryScenePtr = newSceneUPtr.get();
 
         // Call load function
-        m_SceneBinds[name](*newSceneUPtr);
+        m_SceneBinds[id](*newSceneUPtr);
 
         // Store scene
         m_LoadedScenes.emplace_back(std::move(newSceneUPtr));

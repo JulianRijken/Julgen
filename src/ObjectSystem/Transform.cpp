@@ -34,11 +34,7 @@ const glm::vec3& jul::Transform::GetWorldPosition()
 	return m_WorldPosition;
 }
 
-
-void jul::Transform::SetLocalPosition(float x, float y, float z)
-{
-	SetLocalPosition({ x,y,z });
-}
+void jul::Transform::SetLocalPosition(double x, double y, double z) { SetLocalPosition({ x, y, z }); }
 void jul::Transform::SetLocalPosition(const glm::vec3& position)
 {
     if(m_LocalPosition == position)
@@ -51,10 +47,7 @@ void jul::Transform::SetLocalPosition(const glm::vec3& position)
         m_Rigidbody->SetPosition(GetWorldPosition());
 }
 
-void jul::Transform::SetWorldPosition(float x, float y, float z)
-{
-	SetWorldPosition({ x,y,z });
-}
+void jul::Transform::SetWorldPosition(double x, double y, double z) { SetWorldPosition({ x, y, z }); }
 void jul::Transform::SetWorldPosition(const glm::vec3& position)
 {
 	if (m_ParentPtr == nullptr)
@@ -63,11 +56,7 @@ void jul::Transform::SetWorldPosition(const glm::vec3& position)
         SetLocalPosition(position - m_ParentPtr->GetWorldPosition());
 }
 
-
-void jul::Transform::Translate(float x, float y, float z)
-{
-	Translate({ x,y,z });
-}
+void jul::Transform::Translate(double x, double y, double z) { Translate({ x, y, z }); }
 
 void jul::Transform::Translate(const glm::vec3& translation)
 {

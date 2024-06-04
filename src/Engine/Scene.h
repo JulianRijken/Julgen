@@ -14,7 +14,7 @@ namespace jul
         friend class SceneManager;
 
     public:
-        explicit Scene(std::string name);
+        explicit Scene(int id);
         ~Scene() = default;
 
         GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {},
@@ -33,7 +33,7 @@ namespace jul
 
         void CleanupGameObjects();
 
-        std::string m_Name;
+        int m_Id;
         bool m_BeingUnloaded{ false };
         std::vector<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
     };
