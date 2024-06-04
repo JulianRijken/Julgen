@@ -31,15 +31,20 @@ bool jul::TweenEngine::HasActiveTweens(Object* target)
 
 void jul::TweenEngine::Start(Tween&& tween, Object* target)
 {
+    if(target == nullptr)
+    {
+        std::cerr << "Starting tween on nullptr object" << std::endl;
+        return;
+    }
+
     // Before starting we check if the target is not already getting destroyed
     // this is to prevent starting a tween in a destroy of another tween
-    if(tween.onEnd)
+    if(target->IsBeingDestroyed() or (tween.delay + tween.duration <= 0))
     {
-        if((target->IsBeingDestroyed() and tween.invokeWhenDestroyed) or (tween.delay + tween.duration <= 0))
-        {
+        if(tween.invokeWhenDestroyed and tween.onEnd)
             tween.onEnd();
-            return;
-        }
+
+        return;
     }
 
     GetInstance().m_QueuedTweens.emplace(std::move(tween), target);
