@@ -1,9 +1,8 @@
 #include "Scene.h"
 #include "GameObject.h"
 
-
-jul::Scene::Scene(std::string name) :
-m_Name(std::move(name))
+jul::Scene::Scene(int id) :
+    m_Id(id)
 {
 }
 

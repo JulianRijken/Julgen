@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <numbers>
 
 #include "glm/exponential.hpp"
 #include "glm/ext/quaternion_common.hpp"
