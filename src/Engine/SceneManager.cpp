@@ -29,7 +29,7 @@ void jul::SceneManager::FixedUpdate()
 void jul::SceneManager::Destroy()
 {
     for(auto&& scene : m_LoadedScenes)
-        scene->MarkForUnload();
+        scene->Unload();
 
     CleanupGameObjects();
     CleanupScenes();
@@ -43,7 +43,7 @@ void jul::SceneManager::MarkScenesForUnload()
     // If the first scene is set to override all scenes should be unloaded
     if(m_ScenesToLoad.front().second == SceneLoadMode::Override)
         for(auto&& scene : m_LoadedScenes)
-            scene->MarkForUnload();
+            scene->Unload();
 }
 
 void jul::SceneManager::CleanupGameObjects()

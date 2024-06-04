@@ -20,15 +20,14 @@ namespace jul
         GameObject* AddGameObject(const std::string& name, const glm::vec3& position = {},
                                   const GameObject* parent = nullptr, bool worldPositionStays = true);
 
+        void Unload();
+
     private:
         void Update() const;
         void LateUpdate() const;
 		void FixedUpdate() const;
 
         void CleanupGameObjects();
-
-        void MarkForUnload();
-
 
         std::string m_Name;
         bool m_BeingUnloaded{ false };

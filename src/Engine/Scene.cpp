@@ -41,12 +41,12 @@ void jul::Scene::CleanupGameObjects()
 	// We propagate the destroy, only at the end of the frame!
 	// This is very important:
 	// - If we propagate the destroy immediately, we might end up destroying a game object whos parent has changes after calling the destroy
-    for(auto&& gameObject : m_GameObjectsInSceneSPtr)
+    for(auto& gameObject : m_GameObjectsInSceneSPtr)
         if(gameObject->IsBeingDestroyed())
             gameObject->PropagateDestroy();
 
     // Clean up individual components from game objects
-    for(auto&& gameObject : m_GameObjectsInSceneSPtr)
+    for(auto& gameObject : m_GameObjectsInSceneSPtr)
         gameObject->CleanupComponents();
 
     // Remove all game objects that are set to be destroyed
@@ -57,10 +57,16 @@ void jul::Scene::CleanupGameObjects()
             ++iterator;
 }
 
-void jul::Scene::MarkForUnload()
+void jul::Scene::Unload()
 {
+    if(m_BeingUnloaded)
+        return;
+
     for(auto&& gameObject : m_GameObjectsInSceneSPtr)
+    {
         gameObject->Destroy();
+        gameObject->PropagateDestroy();
+    }
 
     m_BeingUnloaded = true;
 }
