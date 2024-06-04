@@ -112,7 +112,8 @@ void jul::TextRenderer::UpdateText()
         totalHeight += surf->h;
     }
 
-    totalHeight += std::max(0.0, m_LineSpacing * m_FontSPtr->GetSize() * (static_cast<int>(lines.size()) - 1));
+    totalHeight +=
+        std::max(0, static_cast<int>(m_LineSpacing * m_FontSPtr->GetSize()) * (static_cast<int>(lines.size()) - 1));
 
     // Create a surface for the final texture
     SDL_Surface* finalSurface =
@@ -130,11 +131,11 @@ void jul::TextRenderer::UpdateText()
     for(auto* surf : surfaces)
     {
         // Allows text to center even new lines
-        const int xOffset = (totalWidth - surf->w) * m_Alighnment.x;
+        const int xOffset = static_cast<int>((totalWidth - surf->w) * m_Alighnment.x);
 
         SDL_Rect dstRect = { xOffset, currentY, surf->w, surf->h };
         SDL_BlitSurface(surf, nullptr, finalSurface, &dstRect);
-        currentY += surf->h + m_LineSpacing * m_FontSPtr->GetSize();
+        currentY += surf->h + static_cast<int>(m_LineSpacing * m_FontSPtr->GetSize());
         SDL_FreeSurface(surf);
     }
 

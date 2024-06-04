@@ -57,10 +57,10 @@ namespace jul
         [[nodiscard]] static inline Type GetUnScaledDeltaTime() { return static_cast<Type>(g_DeltaTime); }
 
         template<typename Type = decltype(g_DeltaTime * g_TimeScale)>
-        [[nodiscard]] static inline Type GetDeltaTime() { return g_DeltaTime * g_TimeScale; }
+        [[nodiscard]] static inline Type GetDeltaTime() { return static_cast<Type>(g_DeltaTime * g_TimeScale); }
 
         template<typename Type = decltype(g_FixedDeltaTime)>
-        [[nodiscard]] static inline Type GetFixedDeltaTime() { return g_FixedDeltaTime; }
+        [[nodiscard]] static inline Type GetFixedDeltaTime() { return static_cast<Type>(g_FixedDeltaTime); }
 
         // clang-format on
     };

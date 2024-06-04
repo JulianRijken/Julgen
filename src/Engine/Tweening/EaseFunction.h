@@ -22,24 +22,21 @@ namespace jul
 
         using enum Type;
 
-        static constexpr double LinearLerp(double time) { return time; }
+        static double LinearLerp(double time) { return time; }
 
-        static constexpr double SineInLerp(double time) { return 1.0 - std::cos((time * std::numbers::pi) / 2.0); }
+        static double SineInLerp(double time) { return 1.0 - std::cos((time * std::numbers::pi) / 2.0); }
 
-        static constexpr double SineOutLerp(double time) { return std::sin((time * std::numbers::pi) / 2.0f); }
+        static double SineOutLerp(double time) { return std::sin((time * std::numbers::pi) / 2.0f); }
 
-        static constexpr double SineInOutLerp(double time)
-        {
-            return -(std::cos(std::numbers::pi * time) - 1.0f) / 2.0f;
-        }
+        static double SineInOutLerp(double time) { return -(std::cos(std::numbers::pi * time) - 1.0f) / 2.0f; }
 
         // TODO: Get rid of the magic numbers lol
         static constexpr float CONSTANT_F = 7.5625;
         static constexpr float CONSTANT_G = 2.75;
 
-        static constexpr double BounceInLerp(double time) { return 1 - BounceOutLerp(1 - time); }
+        static double BounceInLerp(double time) { return 1 - BounceOutLerp(1 - time); }
 
-        static constexpr double BounceOutLerp(double time)
+        static double BounceOutLerp(double time)
         {
 
             if(time < 1 / CONSTANT_G)
@@ -62,12 +59,12 @@ namespace jul
             return CONSTANT_F * time * time + 0.984375;
         }
 
-        static constexpr double BounceInOutLerp(double time)
+        static double BounceInOutLerp(double time)
         {
             return time < 0.5 ? (1 - BounceOutLerp(1 - 2 * time)) / 2 : (1 + BounceOutLerp(2 * time - 1)) / 2;
         }
 
-        static constexpr double Evaluate(double time, Type type)
+        static double Evaluate(double time, Type type)
         {
             switch(type)
             {
@@ -94,8 +91,7 @@ namespace jul
                     break;
             }
 
-            throw std::runtime_error("Ease Function Not Defined");
-            return 0.0f;
+            return 0.0;
         }
     };
 }  // namespace jul
