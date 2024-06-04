@@ -63,12 +63,6 @@ void jul::Rigidbody::SetPosition(glm::vec2 position) const
 
 void jul::Rigidbody::FixedUpdate()
 {
-    const auto position = m_BodyPtr->GetPosition();
-    const glm::vec3 targetPosition = { position.x, position.y, 0 };
-    GetTransform().SetWorldPosition(targetPosition);
-
-    UpdateCollisionListeners();
-
     if(m_ModeFlag != m_Settings.mode)
     {
         m_Settings.mode = m_ModeFlag;
@@ -82,6 +76,16 @@ void jul::Rigidbody::FixedUpdate()
             newType = b2BodyType::b2_staticBody;
 
         m_BodyPtr->SetType(newType);
+    }
+
+    UpdateCollisionListeners();
+
+    // Static allows it to be moved manually
+    if(m_Settings.mode != Mode::Static)
+    {
+        const auto position = m_BodyPtr->GetPosition();
+        const glm::vec3 targetPosition = { position.x, position.y, 0 };
+        GetTransform().SetWorldPosition(targetPosition);
     }
 }
 

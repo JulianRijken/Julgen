@@ -34,7 +34,11 @@ namespace jul
 
         [[nodiscard]] Scene* FindScene(int id);
 
-        GameObject* AddGameObject(const std::string& name = "GameObject", const glm::vec3& position = {}) const;
+        template<typename... Args>
+        GameObject* AddGameObject(Args... args) const
+        {
+            return m_PrimaryScenePtr->AddGameObject(std::forward<Args>(args)...);
+        }
 
 
     private:

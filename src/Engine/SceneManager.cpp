@@ -24,10 +24,6 @@ void jul::SceneManager::BindScene(int id, std::function<void(Scene&)>&& sceneFun
     m_SceneBinds[id] = std::move(sceneFunction);
 }
 
-jul::GameObject* jul::SceneManager::AddGameObject(const std::string& name, const glm::vec3& position) const
-{
-    return m_PrimaryScenePtr->AddGameObject(name, position);
-}
 
 void jul::SceneManager::Update()
 {

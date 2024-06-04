@@ -33,12 +33,13 @@ void jul::TweenEngine::Start(Tween&& tween, Object* target)
 {
     // Before starting we check if the target is not already getting destroyed
     // this is to prevent starting a tween in a destroy of another tween
-    if(target->IsBeingDestroyed())
+    if(tween.onEnd)
     {
-        if(tween.onEnd and tween.invokeWhenDestroyed)
+        if((target->IsBeingDestroyed() and tween.invokeWhenDestroyed) or (tween.delay + tween.duration <= 0))
+        {
             tween.onEnd();
-
-        return;
+            return;
+        }
     }
 
     GetInstance().m_QueuedTweens.emplace(std::move(tween), target);

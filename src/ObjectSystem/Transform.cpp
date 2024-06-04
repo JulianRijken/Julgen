@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "fmt/core.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
 
@@ -126,11 +127,11 @@ void jul::Transform::UpdateWorldPosition()
 
 void jul::Transform::SetTransformDirty()
 {
-	m_TransformDirty = true;
+    m_TransformDirty = true;
 
-	for (Transform* childPtr : m_ChildPtrs)
-		if(not childPtr->m_TransformDirty)
-			childPtr->SetTransformDirty();
+    for(Transform* childPtr : m_ChildPtrs)
+        if(not childPtr->m_TransformDirty)
+            childPtr->SetTransformDirty();
 }
 
 void jul::Transform::OnRigidbodyDestroyed() { m_Rigidbody = nullptr; }

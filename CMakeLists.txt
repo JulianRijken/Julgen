@@ -4,6 +4,8 @@ project(Julgen)
 # Options
 option(USE_STEAMWORKS "Use steamworks SDK (must provide it in external/steamworks)" FALSE)
 option(USE_VLD "Use VLD on windows" TRUE)
+option(USE_ADDRESS_SANITIZER "Use VLD on windows" FALSE)
+
 
 # Sets
 set(TARGET_NAME julgen)
@@ -168,6 +170,14 @@ if(USE_VLD)
         target_link_libraries(${TARGET_NAME} PUBLIC ${VLD_LIBRARY})
     endif()
 endif()
+
+if(NOT MSVC)
+    if(USE_ADDRESS_SANITIZER)
+        target_compile_options(${TARGET_NAME} PUBLIC -fsanitize=address)
+        target_link_options(${TARGET_NAME} PUBLIC -fsanitize=address)
+    endif()
+endif()
+
 
 
 # enable c++20 features
