@@ -10,7 +10,6 @@ namespace jul
 
     class Component : public Object
     {
-
     public:
         explicit Component(GameObject* parentPtr = nullptr, const std::string& name = "Component");
         ~Component() override = default;
@@ -24,6 +23,12 @@ namespace jul
 
         [[nodiscard]] Transform& GetTransform() const;
 
+        [[nodiscard]] bool IsEnabled() const { return m_IsEnabled; }
+
+        [[nodiscard]] bool IsEnabledAndActive() const;
+
+        void SetEnabled(bool enabled);
+
         virtual void Update() {}
         virtual void LateUpdate() {}
 		virtual void FixedUpdate() {}
@@ -31,6 +36,7 @@ namespace jul
 
     private:
         GameObject* m_ParentGameObjectPtr{};
+        bool m_IsEnabled{ true };
     };
 }
 

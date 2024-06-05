@@ -24,7 +24,7 @@ void jul::Physics::UpdateIsActive()
     {
         auto* rigidbody = static_cast<Rigidbody*>(body->GetUserData());
         if(rigidbody)
-            body->SetActive(rigidbody->GetGameObject()->IsActiveInHierarchy());
+            body->SetActive(rigidbody->IsEnabledAndActive());
     }
 }
 

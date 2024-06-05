@@ -30,7 +30,6 @@ namespace jul
     private:
         bool m_BeingDestroyed{false};
         std::string m_Name{};
-
         Event<> m_OnDestroyedEvent{};
     };
 }  // namespace jul

@@ -62,19 +62,22 @@ void jul::GameObject::CleanupComponents()
 void jul::GameObject::Update() const
 {
 	for (const auto& component : m_Components)
-		component->Update();	
+        if(component->IsEnabledAndActive())
+            component->Update();	
 }
 
 void jul::GameObject::LateUpdate() const
 {
 	for (const auto& component : m_Components)
-		component->LateUpdate();
+        if(component->IsEnabledAndActive())
+            component->LateUpdate();
 }
 
 void jul::GameObject::FixedUpdate() const
 {
 	for (const auto& component : m_Components)
-		component->FixedUpdate();
+        if(component->IsEnabledAndActive())
+            component->FixedUpdate();
 }
 
 void jul::GameObject::UpdateActiveInHierarchy()

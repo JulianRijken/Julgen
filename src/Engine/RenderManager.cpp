@@ -112,10 +112,10 @@ void jul::RenderManager::RenderObjects() const
 		};
 
 
-    const auto isActive = std::ranges::remove_if(renderers,
-                                                 [](const RenderComponent* rendererPtr)
-                                                 { return not rendererPtr->GetGameObject()->IsActiveInHierarchy(); })
-                              .begin();
+    const auto isActive =
+        std::ranges::remove_if(renderers,
+                               [](const RenderComponent* rendererPtr) { return not rendererPtr->IsEnabledAndActive(); })
+            .begin();
 
     renderers.resize(std::distance(renderers.begin(), isActive));
 

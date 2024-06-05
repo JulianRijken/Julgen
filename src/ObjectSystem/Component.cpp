@@ -10,3 +10,7 @@ jul::Component::Component(GameObject* parentPtr, const std::string& name) :
 }
 
 jul::Transform& jul::Component::GetTransform() const { return m_ParentGameObjectPtr->GetTransform(); }
+
+bool jul::Component::IsEnabledAndActive() const { return m_IsEnabled and m_ParentGameObjectPtr->IsActiveInHierarchy(); }
+
+void jul::Component::SetEnabled(bool enabled) { m_IsEnabled = enabled; }

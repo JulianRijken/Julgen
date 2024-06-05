@@ -13,10 +13,10 @@ jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr
         m_SpriteRendererPtr = parentPtr->GetComponent<SpriteRenderer>();
 
     if(not defaultAnimation.empty())
-        PlayAnimation(defaultAnimation, true);
+        Play(defaultAnimation, true);
 }
 
-void jul::Animator::PlayAnimation(const std::string& name, bool looping, float startFrameTime, float speedMultiplier)
+void jul::Animator::Play(const std::string& name, bool looping, float startFrameTime, float speedMultiplier)
 {
 	m_IsPlaying = true;
 	m_IsLooping = looping;
@@ -24,7 +24,13 @@ void jul::Animator::PlayAnimation(const std::string& name, bool looping, float s
 	m_FrameTime = startFrameTime;
     m_ActiveAnimationName = name;
 
-    m_ActiveAnimation = m_SpriteRendererPtr->GetSprite()->GetAnimation(name);
+    m_ActiveAnimationPtr = m_SpriteRendererPtr->GetSprite()->GetAnimation(name);
+}
+
+void jul::Animator::Stop()
+{
+    m_IsPlaying = false;
+    m_ActiveAnimationPtr = nullptr;
 }
 
 
@@ -41,14 +47,14 @@ void jul::Animator::SetPlaybackSpeed(float playbackSpeed)
 
 void jul::Animator::Update()
 {
-	if(m_ActiveAnimation == nullptr)
-		return;
+    if(m_ActiveAnimationPtr == nullptr)
+        return;
 
     if (m_IsPlaying)
 	{
         m_FrameTime += GameTime::GetDeltaTime<float>() *
-                       (static_cast<float>(m_ActiveAnimation->framesPerSecond) /
-                        static_cast<float>(m_ActiveAnimation->frameCount)) *
+                       (static_cast<float>(m_ActiveAnimationPtr->framesPerSecond) /
+                        static_cast<float>(m_ActiveAnimationPtr->frameCount)) *
                        m_SpeedMultiplier;
 
         if(m_IsLooping)
@@ -62,5 +68,5 @@ void jul::Animator::Update()
         }
 	}
 
-    m_SpriteRendererPtr->SetDrawCell(m_ActiveAnimation->GetCellFromNormalizedTime(m_FrameTime));
+    m_SpriteRendererPtr->SetDrawCell(m_ActiveAnimationPtr->GetCellFromNormalizedTime(m_FrameTime));
 }
