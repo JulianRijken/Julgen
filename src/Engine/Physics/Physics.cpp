@@ -80,12 +80,13 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     b2PolygonShape boxShape;
     boxShape.SetAsBox(settings.size.x * 0.5f, settings.size.y * 0.5f, { settings.center.x, settings.center.y }, 0.0f);
 
-    b2FixtureDef fixtureDef;
+    b2FixtureDef fixtureDef{};
     fixtureDef.shape = &boxShape;
     fixtureDef.density = settings.density;
     fixtureDef.friction = settings.friction;
     fixtureDef.restitution = settings.restitution;
     fixtureDef.userData = colliderPtr;
+    fixtureDef.isSensor = settings.isSensor;
 
     // If collider gets connected we can just create and return
     if(colliderPtr->m_ConnectedRigidbody)

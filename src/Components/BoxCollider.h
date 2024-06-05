@@ -21,6 +21,8 @@ namespace jul
             glm::vec2 size{ 1.0f, 1.0f };
             glm::vec2 center{ 0, 0 };
 
+            bool isSensor{ false };
+
             static Settings Default() { return {}; }
         };
 
