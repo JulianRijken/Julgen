@@ -5,6 +5,7 @@
 
 #include <memory>
 
+#include "GameObject.h"
 #include "GameTime.h"
 #include "Locator.h"
 #include "Rigidbody.h"
@@ -16,7 +17,18 @@ jul::Physics::Physics() :
     m_World->SetContactListener(this);
 }
 
-void jul::Physics::FixedUpdate()
+void jul::Physics::UpdateIsActive()
+{
+    // Disable all rigidbodys before world step
+    for(b2Body* body = m_World->GetBodyList(); body != nullptr; body = body->GetNext())
+    {
+        auto* rigidbody = static_cast<Rigidbody*>(body->GetUserData());
+        if(rigidbody)
+            body->SetActive(rigidbody->GetGameObject()->IsActiveInHierarchy());
+    }
+}
+
+void jul::Physics::UpdateWorld()
 {
     m_World->Step(jul::GameTime::GetFixedDeltaTime<float>(), m_VelocityIterations, m_PositionIterations);
 }

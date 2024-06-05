@@ -35,7 +35,8 @@ void jul::Scene::LateUpdate() const
 void jul::Scene::FixedUpdate() const
 {
     for(const std::unique_ptr<jul::GameObject>& gameObject : m_GameObjectsInScene)
-        gameObject->FixedUpdate();
+        if(gameObject->IsActiveInHierarchy())
+            gameObject->FixedUpdate();
 }
 
 void jul::Scene::AddNewGameObjects()

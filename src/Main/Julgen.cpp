@@ -166,8 +166,9 @@ void jul::Julgen::RunOneFrame()
     // Fixed Update,
     while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
+        Locator::Get<Physics>().UpdateIsActive();
         SceneManager::GetInstance().FixedUpdate();
-        Locator::Get<Physics>().FixedUpdate();
+        Locator::Get<Physics>().UpdateWorld();
         m_Lag -= GameTime::GetFixedDeltaTime();
 	}
 

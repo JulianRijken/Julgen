@@ -78,8 +78,6 @@ void jul::Rigidbody::FixedUpdate()
         m_BodyPtr->SetType(newType);
     }
 
-    UpdateCollisionListeners();
-
     // Static allows it to be moved manually
     if(m_Settings.mode != Mode::Static)
     {
@@ -87,6 +85,8 @@ void jul::Rigidbody::FixedUpdate()
         const glm::vec3 targetPosition = { position.x, position.y, 0 };
         GetTransform().SetWorldPosition(targetPosition);
     }
+
+    UpdateCollisionListeners();
 }
 
 void jul::Rigidbody::SetMode(Mode mode) { m_ModeFlag = mode; }

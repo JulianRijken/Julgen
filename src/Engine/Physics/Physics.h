@@ -29,7 +29,8 @@ namespace jul
     public:
         Physics();
 
-        void FixedUpdate();
+        void UpdateIsActive();
+        void UpdateWorld();
 
         void AddRigidbody(Rigidbody* rigidbodyPtr);
         void RemoveRigidbody(const Rigidbody* rigidbodyPtr);
