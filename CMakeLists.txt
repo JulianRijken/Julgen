@@ -88,6 +88,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Tweening/Tween.h               ${SOURCE_DIR}/Engine/Tweening/Tween.cpp
     ${SOURCE_DIR}/Engine/Tweening/TweenEngine.h         ${SOURCE_DIR}/Engine/Tweening/TweenEngine.cpp
     ${SOURCE_DIR}/Engine/Tweening/TweenInstance.h       ${SOURCE_DIR}/Engine/Tweening/TweenInstance.cpp
+    ${SOURCE_DIR}/Engine/Tweening/EaseFunction.h
 
     # Acces
     ${SOURCE_DIR}/Engine/Singleton.h
@@ -112,14 +113,13 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Components/Animator.h                 ${SOURCE_DIR}/Components/Animator.cpp
     ${SOURCE_DIR}/Components/Rigidbody.h                ${SOURCE_DIR}/Components/Rigidbody.cpp
     ${SOURCE_DIR}/Components/BoxCollider.h              ${SOURCE_DIR}/Components/BoxCollider.cpp
+    ${SOURCE_DIR}/Components/Camera.h                   ${SOURCE_DIR}/Components/Camera.cpp
 )
 
 
 add_library(${TARGET_NAME} STATIC
     ${IMGUI_SOURCE_FILES}
     ${JULGEN_SOURCE_FILES}
-    src/Engine/Tweening/EaseFunction.h
-    src/Components/Camera.h src/Components/Camera.cpp
 )
 
 target_include_directories(${TARGET_NAME} PUBLIC

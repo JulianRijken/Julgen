@@ -11,7 +11,7 @@ namespace jul
     {
 
     public:
-        Transform(GameObject* parent, const glm::vec3& position = { 0,0,0 });
+        Transform(GameObject* parentPtr, const glm::vec3& position = { 0, 0, 0 });
         ~Transform() override;
 
         Transform(const Transform&) = delete;

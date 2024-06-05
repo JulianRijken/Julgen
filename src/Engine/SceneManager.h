@@ -2,7 +2,6 @@
 #include <functional>
 #include <glm/vec3.hpp>
 #include <memory>
-#include <string>
 #include <unordered_map>
 #include <utility>
 
@@ -13,10 +12,13 @@
 
 namespace jul
 {
-
+    // Override: Clears all other scenes set to load
+    // OverrideForce: Force loads scene current frame and negates otehr overrides that come after during that frame
+    // Additive: Adds to current scenes set to load
     enum class SceneLoadMode
     {
         Override,
+        OverrideForce,
         Additive,
     };
 
@@ -41,6 +43,8 @@ namespace jul
         void FixedUpdate();
 
         void Destroy();
+
+        void AddNewGameObjects();
 
         void CleanupGameObjects();
         void CleanupScenes();

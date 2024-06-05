@@ -4,7 +4,11 @@
 
 void jul::SceneManager::LoadScene(int id, SceneLoadMode loadMode)
 {
-    if(loadMode == SceneLoadMode::Override)
+    // Cancle load when first scene in scenesToLoad is override force
+    if(not m_ScenesToLoad.empty() and m_ScenesToLoad.front().second == SceneLoadMode::OverrideForce)
+        return;
+
+    if(loadMode != SceneLoadMode::Additive)
         m_ScenesToLoad.clear();
 
     m_ScenesToLoad.emplace_back(id, loadMode);
@@ -52,13 +56,19 @@ void jul::SceneManager::Destroy()
     CleanupScenes();
 }
 
+void jul::SceneManager::AddNewGameObjects()
+{
+    for(const auto& scene : m_LoadedScenes)
+        scene->AddNewGameObjects();
+}
+
 void jul::SceneManager::MarkScenesForUnload()
 {
     if(m_ScenesToLoad.empty())
         return;
 
     // If the first scene is set to override all scenes should be unloaded
-    if(m_ScenesToLoad.front().second == SceneLoadMode::Override)
+    if(m_ScenesToLoad.front().second != SceneLoadMode::Additive)
         for(auto&& scene : m_LoadedScenes)
             scene->Unload();
 }

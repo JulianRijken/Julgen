@@ -31,11 +31,14 @@ namespace jul
         void LateUpdate() const;
 		void FixedUpdate() const;
 
+        void AddNewGameObjects();
         void CleanupGameObjects();
 
         int m_Id;
         bool m_BeingUnloaded{ false };
-        std::vector<std::unique_ptr<GameObject>> m_GameObjectsInSceneSPtr{};
+
+        std::vector<std::unique_ptr<GameObject>> n_GameObjectsAddedPriviousFrame{};
+        std::vector<std::unique_ptr<GameObject>> m_GameObjectsInScene{};
     };
 
 }  // namespace jul

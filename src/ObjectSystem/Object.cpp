@@ -26,5 +26,6 @@ jul::Object::Object(std::string name) :
 jul::Object::~Object()
 {
     // We want to ensure objects are destoryed in the right order
-    assert(m_BeingDestroyed);
+    if(not m_BeingDestroyed)
+        assert(false);
 }

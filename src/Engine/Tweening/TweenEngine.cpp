@@ -37,13 +37,20 @@ void jul::TweenEngine::Start(Tween&& tween, Object* target)
     if(target == nullptr)
         throw std::runtime_error("Tween started with nullptr");
 
-    fmt::println("Starting Tween :)");
-
     // Before starting we check if the target is not already getting destroyed
     // this is to prevent starting a tween in a destroy of another tween
-    if(target->IsBeingDestroyed() or (tween.delay + tween.duration <= 0))
+    if(target->IsBeingDestroyed())
     {
         if(tween.invokeWhenDestroyed and tween.onEnd)
+            tween.onEnd();
+
+        return;
+    }
+
+
+    if(tween.delay + tween.duration <= 0)
+    {
+        if(tween.onEnd)
             tween.onEnd();
 
         return;

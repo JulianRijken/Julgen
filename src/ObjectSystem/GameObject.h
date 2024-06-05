@@ -39,6 +39,8 @@ namespace jul
 
         void CleanupComponents();
 
+        // TODO: Make sure adding components during the update of the components is handled
+        // (Components should avoid the update from the frame they are created in)
         template<typename ComponentType, typename... Args>
             requires std::derived_from<ComponentType, Component>
         ComponentType* AddComponent(Args&&... args)

@@ -2,14 +2,12 @@
 
 #include <algorithm>
 
-#include "fmt/core.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
 
-
-jul::Transform::Transform(GameObject* parent,const glm::vec3& position) :
-	Component(parent,"Transform"),
-	m_LocalPosition(position)
+jul::Transform::Transform(GameObject* parentPtr, const glm::vec3& position) :
+    Component(parentPtr, "Transform"),
+    m_LocalPosition(position)
 {}
 
 jul::Transform::~Transform()
