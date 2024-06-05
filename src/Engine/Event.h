@@ -88,14 +88,12 @@ namespace jul
         }
 
         template<typename... Args>
-        void Invoke(Args&&... args)
+        void Invoke(Args&&... args) const
         {
             for(auto&& listenerFunction : m_FunctionBinds)
                 listenerFunction.second(args...);
         }
 
-
-    private:
         void RemoveListener(IEventListener* listener) override
         {
             m_EventListeners.erase(listener);
@@ -106,6 +104,9 @@ namespace jul
                                                  { return bind.first == static_cast<void*>(listener); }),
                                   m_FunctionBinds.end());
         }
+
+
+    private:
 
         std::vector<FunctionBind> m_FunctionBinds{};
         std::unordered_set<IEventListener*> m_EventListeners{};

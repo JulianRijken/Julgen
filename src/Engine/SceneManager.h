@@ -25,20 +25,14 @@ namespace jul
         friend class Julgen;
 
     public:
-        [[nodiscard]] Scene& GetPrimaryScene() const { return *m_PrimaryScenePtr; }
+        [[nodiscard]] static Scene& GetPrimaryScene() { return *GetInstance().m_PrimaryScenePtr; }
+
+        [[nodiscard]] Scene* FindScene(int id);
 
         // Binds the scene to a string allowing it to be loaded based on a name
         void BindScene(int id, std::function<void(Scene&)>&& sceneFunction);
 
         void LoadScene(int id, SceneLoadMode loadMode = SceneLoadMode::Override);
-
-        [[nodiscard]] Scene* FindScene(int id);
-
-        template<typename... Args>
-        GameObject* AddGameObject(Args... args) const
-        {
-            return m_PrimaryScenePtr->AddGameObject(std::forward<Args>(args)...);
-        }
 
 
     private:

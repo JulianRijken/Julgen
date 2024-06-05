@@ -98,11 +98,11 @@ void jul::SceneManager::LoadScenesSetToLoad()
         if(loadMode == SceneLoadMode::Override)
             m_PrimaryScenePtr = newSceneUPtr.get();
 
-        // Call load function
-        m_SceneBinds[id](*newSceneUPtr);
-
         // Store scene
         m_LoadedScenes.emplace_back(std::move(newSceneUPtr));
+
+        // Call load function
+        m_SceneBinds[id](*m_LoadedScenes.back());
     }
 
     // Wouw our user actually loaded a scene during the loading of the scene

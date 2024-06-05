@@ -20,13 +20,15 @@ jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::v
 void jul::Scene::Update() const
 {
 	for(const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
-		gameObject->Update();
+        if(gameObject->IsActiveInHierarchy())
+            gameObject->Update();
 }
 
 void jul::Scene::LateUpdate() const
 {
 	for (const std::unique_ptr<GameObject>& gameObject : m_GameObjectsInSceneSPtr)
-		gameObject->LateUpdate();
+        if(gameObject->IsActiveInHierarchy())
+            gameObject->LateUpdate();
 }
 
 void jul::Scene::FixedUpdate() const

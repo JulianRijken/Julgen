@@ -1,5 +1,8 @@
 #include "TweenEngine.h"
 
+#include <fmt/core.h>
+
+
 void jul::TweenEngine::Update()
 {
     while(not m_QueuedTweens.empty())
@@ -32,10 +35,9 @@ bool jul::TweenEngine::HasActiveTweens(Object* target)
 void jul::TweenEngine::Start(Tween&& tween, Object* target)
 {
     if(target == nullptr)
-    {
-        std::cerr << "Starting tween on nullptr object" << std::endl;
-        return;
-    }
+        throw std::runtime_error("Tween started with nullptr");
+
+    fmt::println("Starting Tween :)");
 
     // Before starting we check if the target is not already getting destroyed
     // this is to prevent starting a tween in a destroy of another tween

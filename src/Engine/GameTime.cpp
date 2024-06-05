@@ -14,8 +14,8 @@ void jul::GameTime::Update()
     g_DeltaTime = std::min(MAX_DELTA_TIME, std::chrono::duration<double>(currentTime - s_LastTime).count());
     s_LastTime = currentTime;
 
-    // Update elapsed time
-    g_ElapsedTime += g_DeltaTime;
+    // Update elapsed time (Scaled)
+    g_ElapsedTime += GetDeltaTime();
 
 
     // Update Avrage FPS
