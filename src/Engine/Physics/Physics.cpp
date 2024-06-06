@@ -87,6 +87,9 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
     fixtureDef.restitution = settings.restitution;
     fixtureDef.userData = colliderPtr;
     fixtureDef.isSensor = settings.isSensor;
+    fixtureDef.filter.categoryBits = settings.mask.category;
+    fixtureDef.filter.maskBits = settings.mask.collideWith;
+    fixtureDef.filter.groupIndex = settings.mask.groupIndex;
 
     // If collider gets connected we can just create and return
     if(colliderPtr->m_ConnectedRigidbody)

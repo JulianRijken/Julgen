@@ -12,6 +12,22 @@ namespace jul
         friend class Physics;
 
     public:
+        struct Mask
+        {
+            /// The collision category bits. Normally you would just set one bit.
+            uint16_t category = 0x0001;
+
+            /// The collision mask bits. This states the categories that this
+            /// shape would accept for collision.
+            /// DEFAULT TO ALL
+            uint16_t collideWith = 0xFFFF;
+
+            /// Collision groups allow a certain group of objects to never collide (negative)
+            /// or always collide (positive). Zero means no collision group. Non-zero group
+            /// filtering always wins against the mask bits.
+            uint16_t groupIndex = 0;
+        };
+
         struct Settings
         {
             float friction{ 0.2f };
@@ -21,12 +37,15 @@ namespace jul
             glm::vec2 size{ 1.0f, 1.0f };
             glm::vec2 center{ 0, 0 };
 
+            Mask mask{};
+
             bool isSensor{ false };
 
             static Settings Default() { return {}; }
         };
 
-        BoxCollider(GameObject* parentPtr, const Settings& setting = Settings::Default(), Rigidbody* connectedBody = nullptr);
+        BoxCollider(GameObject* parentPtr, const Settings& setting = Settings::Default(),
+                    Rigidbody* connectedBody = nullptr);
         ~BoxCollider() override;
 
         void SetRestitution(float restitution);
