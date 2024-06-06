@@ -70,7 +70,7 @@ namespace jul
 
         void SetGravityScale(float scale);
 
-        void AddForce(glm::vec2 force, ForceMode forceMode, bool wake = true);
+        void AddForce(glm::vec2 force, ForceMode forceMode = ForceMode::Force, bool wake = true);
         void SetPosition(glm::vec2 position) const;
         void FixedUpdate() override;
         void SetMode(Mode mode);
