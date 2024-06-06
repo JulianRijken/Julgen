@@ -29,7 +29,7 @@ glm::vec2 jul::Rigidbody::Position() const
     return { x, y };
 }
 
-glm::vec2 jul::Rigidbody::Velocity() const
+glm::vec2 jul::Rigidbody::GetVelocity() const
 {
     auto [x, y] = m_BodyPtr->GetLinearVelocity();
     return { x, y };

@@ -65,7 +65,7 @@ namespace jul
         Rigidbody& operator=(Rigidbody&&) noexcept = delete;
 
         glm::vec2 Position() const;
-        glm::vec2 Velocity() const;
+        glm::vec2 GetVelocity() const;
         glm::vec2 LinearVelocityFromWorldPoint(glm::vec2 worldPoint) const;
 
         void SetGravityScale(float scale);
