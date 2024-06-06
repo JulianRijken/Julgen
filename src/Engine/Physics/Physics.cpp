@@ -122,22 +122,23 @@ void jul::Physics::RemoveCollider(const BoxCollider* colliderPtr)
         m_World->DestroyBody(colliderPtr->m_BodyPtr);
 }
 
-bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance)
+bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, uint16_t collisionMask)
 {
     RayCastResult temp{};
-    return RayCast(from, direction, distance, temp);
+    return RayCast(from, direction, distance, temp, collisionMask);
 }
 
-bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, RayCastResult& result)
+bool jul::Physics::RayCast(glm::vec2 from, glm::vec2 direction, float distance, RayCastResult& result,
+                           uint16_t collisionMask)
 {
     const glm::vec2 normalizedDirection = glm::normalize(direction);
     const b2Vec2 b2From(from.x, from.y);
     const b2Vec2 b2To(from.x + normalizedDirection.x * distance, from.y + normalizedDirection.y * distance);
 
-    RayCastCallback callback{};
+    RayCastCallback callback{ collisionMask };
     Locator::Get<Physics>().m_World->RayCast(&callback, b2From, b2To);
 
-    result = callback.result;
+    result = callback.GetResult();
     return result.hit;
 }
 
