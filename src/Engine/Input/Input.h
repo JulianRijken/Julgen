@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "Command.h"
-#include "Event.h"
 #include "InputAction.h"
 #include "InputBinding.h"
 #include "Singleton.h"
