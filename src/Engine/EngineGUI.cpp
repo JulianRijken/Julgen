@@ -36,6 +36,14 @@ void jul::EngineGUI::NewFrame()
     // to make a nice engine GUI
     if(g_ShowDebugInfo)
     {
+        ImGui::SetNextWindowBgAlpha(0.0f);  // Transparent background
+        ImGui::Begin("Debug Info",
+                     nullptr,
+                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                         ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+                         ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+
+
         ImGui::Text("Active Tweens:");
         const auto& tweens = TweenEngine::GetAllActiveTweens();
 
@@ -63,6 +71,7 @@ void jul::EngineGUI::NewFrame()
             if(tween->IsHalting())
                 ImGui::PopStyleColor();
         }
+        ImGui::End();
     }
 }
 
