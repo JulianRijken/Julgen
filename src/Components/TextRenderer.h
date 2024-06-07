@@ -18,7 +18,8 @@ namespace jul
 	{
 	public:
         TextRenderer(GameObject* parent, std::string text, Font* font, int renderLayer = 0,
-                     glm::vec2 alighnment = { 0, 0 }, bool useAllUpper = false, double lineSpacingPercent = 1.0f);
+                     glm::vec2 alighnment = { 0, 0 }, bool useAllUpper = false, double lineSpacingPercent = 1.0f,
+                     SDL_Color textColor = { 255, 255, 255, 255 });
 
         void SetText(const std::string& text); 
 		void SetColor(const SDL_Color& color);

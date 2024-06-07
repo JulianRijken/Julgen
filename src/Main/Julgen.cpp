@@ -188,7 +188,6 @@ void jul::Julgen::RunOneFrame()
     RenderManager::GetInstance().UpdateCamera();
     RenderManager::GetInstance().Render();
 
-
     // Scene Cleanup and Loading
     SceneManager::GetInstance().MarkScenesForUnload();
     // Cleanup game objects

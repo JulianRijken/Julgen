@@ -10,10 +10,11 @@
 #include "Transform.h"
 
 jul::TextRenderer::TextRenderer(GameObject* parent, std::string text, Font* font, int renderLayer, glm::vec2 alighnment,
-                                bool useAllUpper, double lineSpacing) :
+                                bool useAllUpper, double lineSpacing, SDL_Color textColor) :
     RenderComponent(parent, "TextRenderer", renderLayer),
     m_UseAllCaps(useAllUpper),
     m_LineSpacing(lineSpacing),
+    m_TextColor(textColor),
     m_Text(std::move(text)),
     m_FontSPtr(font),
     m_Alighnment(alighnment)
