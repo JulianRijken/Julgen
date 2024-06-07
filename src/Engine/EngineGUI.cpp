@@ -1,9 +1,14 @@
 #include "EngineGUI.h"
 
+#include <fmt/core.h>
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
+#include <SceneManager.h>
 #include <SDL_render.h>
+
+#include "TweenEngine.h"
+
 
 void jul::EngineGUI::Initialize(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 {
@@ -25,6 +30,33 @@ void jul::EngineGUI::NewFrame()
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+
+    // TODO: Should be moved to a nice engine GUI dugger etc
+    // This would be a nice project for in the future,
+    // to make a nice engine GUI
+    if(g_ShowDebugInfo)
+    {
+        ImGui::Text("Active Tweens:");
+        const auto& tweens = TweenEngine::GetAllActiveTweens();
+
+        for(auto&& tween : tweens)
+        {
+            std::string tweenText{};
+            if(tween->GetTarget() == nullptr)
+                tweenText = "Dead";
+            else
+                tweenText = tween->GetTarget()->GetName();
+
+            ImGui::Text("%s", tweenText.c_str());
+
+            auto value = static_cast<float>(tween->GetTime());
+            ImGui::SliderFloat(
+                "alpha",
+                &value,
+                0.0,
+                static_cast<float>(tween->GetTween().duration) + static_cast<float>(tween->GetTween().delay));
+        }
+    }
 }
 
 void jul::EngineGUI::EndFrame()
@@ -34,6 +66,8 @@ void jul::EngineGUI::EndFrame()
 }
 
 bool jul::EngineGUI::ProcessEvent(const SDL_Event* event) { return ImGui_ImplSDL2_ProcessEvent(event); }
+
+void jul::EngineGUI::ShowDebugInfo(bool show) { g_ShowDebugInfo = show; }
 
 
 void jul::EngineGUI::Destory()

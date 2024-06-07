@@ -6,20 +6,22 @@
 
 jul::TweenInstance::TweenInstance(Tween&& tween, Object* target) :
     m_IsHalting(tween.delay > 0),
-    m_Tween(std::move(tween)),
-    m_Target(target)
+    m_Target(target),
+    m_Tween(std::move(tween))
 {
     // Sets target to nullptr when detroyed
     m_Target->GetOnDestroyedEvent().AddListener(this, &TweenInstance::OnTargetDestroyed);
 }
 
-
-void jul::TweenInstance::OnTargetDestroyed() { Cancel(); }
+void jul::TweenInstance::OnTargetDestroyed() { m_Target = nullptr; }
 
 void jul::TweenInstance::Cancel()
 {
-    if(m_Tween.onEnd and m_Tween.invokeWhenDestroyed)
-        m_Tween.onEnd();
+    if(m_Tween.invokeWhenDestroyed and m_Target == nullptr)
+    {
+        if(m_Tween.onEnd)
+            m_Tween.onEnd();
+    }
 
     m_IsDecommissioned = true;
 }
@@ -27,6 +29,12 @@ void jul::TweenInstance::Cancel()
 
 void jul::TweenInstance::Update()
 {
+    if(m_Target == nullptr)
+    {
+        Cancel();
+        return;
+    }
+
     const double deltaTime = m_Tween.igunoreTimeScale ? GameTime::GetUnScaledDeltaTime() : GameTime::GetDeltaTime();
 
     if(m_IsHalting)
@@ -60,14 +68,11 @@ void jul::TweenInstance::Update()
     }
 
 
-    // TODO: Add ease function in to the mix (linear now)
     const double alpha = m_Time / m_Tween.duration;
     const double easedTime = EaseFunction::Evaluate(alpha, m_Tween.easeFunction);
     const double interpolatedValue = std::lerp(m_Tween.from, m_Tween.to, easedTime);
 
 
-    // TODO: Should never not be set, but might not be needed
-    // in the future when adding specific tweens like a positon tween
     if(m_Tween.onUpdate)
         m_Tween.onUpdate(interpolatedValue);
 

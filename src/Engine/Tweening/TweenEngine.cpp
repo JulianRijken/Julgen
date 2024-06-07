@@ -32,6 +32,12 @@ bool jul::TweenEngine::HasActiveTweens(Object* target)
                                [target](const auto& tween) { return target == tween->GetTarget(); });
 }
 
+const std::vector<std::unique_ptr<jul::TweenInstance> >& jul::TweenEngine::GetAllActiveTweens()
+{
+    return GetInstance().m_ActiveTweens;
+}
+
+
 void jul::TweenEngine::Start(Tween&& tween, Object* target)
 {
     if(target == nullptr)
@@ -47,7 +53,8 @@ void jul::TweenEngine::Start(Tween&& tween, Object* target)
         return;
     }
 
-
+    // Instantly stop with 0 time
+    // In senarios where the user might input a variable time
     if(tween.delay + tween.duration <= 0)
     {
         if(tween.onEnd)

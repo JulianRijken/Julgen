@@ -39,8 +39,6 @@ void jul::RenderManager::Initialize(SDL_Window* window)
 
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
-
-    SDL_RenderSetLogicalSize(m_RendererPtr,GameSettings::g_RenderWidth,GameSettings::g_RenderHeight);
 }
 
 
@@ -68,8 +66,12 @@ void jul::RenderManager::Render() const
 
     EngineGUI::NewFrame();
 
+    // Render Objects in render size
+    SDL_RenderSetLogicalSize(m_RendererPtr, GameSettings::g_RenderWidth, GameSettings::g_RenderHeight);
     RenderObjects();
 
+    // Render GUI In window size
+    SDL_RenderSetLogicalSize(m_RendererPtr, GameSettings::g_WindowWidth, GameSettings::g_WindowHeight);
     EngineGUI::EndFrame();
 
     SDL_RenderPresent(m_RendererPtr);

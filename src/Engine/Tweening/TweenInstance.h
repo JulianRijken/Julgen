@@ -14,22 +14,25 @@ namespace jul
 
         [[nodiscard]] bool IsDecommisioned() const { return m_IsDecommissioned; }
 
+        [[nodiscard]] const Tween& GetTween() const { return m_Tween; }
+
+        [[nodiscard]] double GetTime() const { return m_Time; }
+
         // Used internaly for tween engine to compare target
         [[nodiscard]] Object* GetTarget() const { return m_Target; }
 
         void Cancel();
-
-        void OnTargetDestroyed();
-
         void Update();
 
     private:
+        void OnTargetDestroyed();
+
         bool m_IsHalting{ false };
         bool m_IsDecommissioned{ false };
         bool m_HasReachedEnd{ false };
-        double m_Time{};
+        double m_Time{ 0 };
 
-        Tween m_Tween;
         Object* m_Target{ nullptr };
+        Tween m_Tween;
     };
 }  // namespace jul

@@ -16,6 +16,11 @@ namespace jul
         static void NewFrame();
         static void EndFrame();
         static bool ProcessEvent(const SDL_Event* event);
+
+        static void ShowDebugInfo(bool show);
+
+    private:
+        static inline bool g_ShowDebugInfo{ false };
     };
 }
 
