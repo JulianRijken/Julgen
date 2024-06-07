@@ -18,6 +18,9 @@ namespace jul
 
         [[nodiscard]] double GetTime() const { return m_Time; }
 
+        [[nodiscard]] bool IsHalting() const { return m_IsHalting; }
+
+
         // Used internaly for tween engine to compare target
         [[nodiscard]] Object* GetTarget() const { return m_Target; }
 

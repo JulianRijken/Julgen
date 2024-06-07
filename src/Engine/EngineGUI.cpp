@@ -42,19 +42,26 @@ void jul::EngineGUI::NewFrame()
         for(auto&& tween : tweens)
         {
             std::string tweenText{};
+
             if(tween->GetTarget() == nullptr)
                 tweenText = "Dead";
             else
                 tweenText = tween->GetTarget()->GetName();
 
-            ImGui::Text("%s", tweenText.c_str());
+            if(tween->IsHalting())
+                ImGui::PushStyleColor(ImGuiCol_SliderGrab,
+                                      ImVec4(1.0f, 0.0f, 0.0f, 1.0f));  // Red color for halting tweens
+
 
             auto value = static_cast<float>(tween->GetTime());
             ImGui::SliderFloat(
-                "alpha",
+                tweenText.c_str(),
                 &value,
                 0.0,
                 static_cast<float>(tween->GetTween().duration) + static_cast<float>(tween->GetTween().delay));
+
+            if(tween->IsHalting())
+                ImGui::PopStyleColor();
         }
     }
 }
