@@ -22,6 +22,8 @@ namespace jul
 
         [[nodiscard]] Event<>& GetOnDestroyedEvent() { return m_OnDestroyedEvent; }
 
+        void DestroyDelayed(double delay);
+
         virtual void Destroy();
 
     protected:

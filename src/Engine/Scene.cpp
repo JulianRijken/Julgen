@@ -74,13 +74,19 @@ void jul::Scene::Unload()
         return;
 
     Clean();
-
     m_BeingUnloaded = true;
 }
 
 void jul::Scene::Clean()
 {
+    // Set all objects to unload
     for(auto& gameObject : m_GameObjectsInScene)
+    {
+        gameObject->Destroy();
+        gameObject->PropagateDestroy();
+    }
+
+    for(auto& gameObject : n_GameObjectsAddedPriviousFrame)
     {
         gameObject->Destroy();
         gameObject->PropagateDestroy();

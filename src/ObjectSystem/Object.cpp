@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include "TweenEngine.h"
+
 void jul::Object::Destroy()
 {
     if(not m_BeingDestroyed)
@@ -18,6 +20,17 @@ void jul::Object::Destroy()
     }
 }
 
+void jul::Object::DestroyDelayed(double delay)
+{
+    TweenEngine::Start({ .delay = delay,
+                         .duration = 0,
+                         .invokeWhenDestroyed = false,
+                         // Destroy Delayed
+                         .onEnd = [this]() { Destroy(); } },
+                       this);
+}
+
+
 jul::Object::Object(std::string name) :
     m_Name(std::move(name))
 {
@@ -27,5 +40,5 @@ jul::Object::~Object()
 {
     // We want to ensure objects are destoryed in the right order
     if(not m_BeingDestroyed)
-        assert(false);
+        assert(false && "Object Destroyed Before Destroy Called");
 }
