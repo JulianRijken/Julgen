@@ -188,13 +188,14 @@ void jul::Julgen::RunOneFrame()
     RenderManager::GetInstance().UpdateCamera();
     RenderManager::GetInstance().Render();
 
-    // Add new game objects to thier scenes
-    SceneManager::GetInstance().AddNewGameObjects();
 
     // Scene Cleanup and Loading
     SceneManager::GetInstance().MarkScenesForUnload();
+    // Cleanup game objects
     SceneManager::GetInstance().CleanupGameObjects();
+    // Destroy old scenes
     SceneManager::GetInstance().CleanupScenes();
+    // Load scenes
     SceneManager::GetInstance().LoadScenesSetToLoad();
 
 

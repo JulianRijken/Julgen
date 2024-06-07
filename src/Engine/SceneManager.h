@@ -44,8 +44,6 @@ namespace jul
 
         void Destroy();
 
-        void AddNewGameObjects();
-
         void CleanupGameObjects();
         void CleanupScenes();
 

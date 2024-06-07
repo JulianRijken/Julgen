@@ -56,11 +56,6 @@ void jul::SceneManager::Destroy()
     CleanupScenes();
 }
 
-void jul::SceneManager::AddNewGameObjects()
-{
-    for(const auto& scene : m_LoadedScenes)
-        scene->AddNewGameObjects();
-}
 
 void jul::SceneManager::MarkScenesForUnload()
 {
@@ -72,6 +67,7 @@ void jul::SceneManager::MarkScenesForUnload()
         for(auto&& scene : m_LoadedScenes)
             scene->Unload();
 }
+
 
 void jul::SceneManager::CleanupGameObjects()
 {

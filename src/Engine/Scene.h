@@ -23,21 +23,19 @@ namespace jul
         // Unloads whole scene
         void Unload();
 
-        // Removes all game objects from the scene
-        void Clean();
 
     private:
         void Update() const;
         void LateUpdate() const;
 		void FixedUpdate() const;
 
-        void AddNewGameObjects();
+        void MoveGameObjectsAdded();
         void CleanupGameObjects();
 
         int m_Id;
         bool m_BeingUnloaded{ false };
 
-        std::vector<std::unique_ptr<GameObject>> n_GameObjectsAddedPriviousFrame{};
+        std::vector<std::unique_ptr<GameObject>> m_GameObjectsAdded{};
         std::vector<std::unique_ptr<GameObject>> m_GameObjectsInScene{};
     };
 

@@ -9,13 +9,20 @@ jul::Scene::Scene(int id) :
 jul::GameObject* jul::Scene::AddGameObject(const std::string& name, const glm::vec3& position, const GameObject* parent,
                                            bool worldPositionStays)
 {
-    n_GameObjectsAddedPriviousFrame.emplace_back(std::make_unique<GameObject>(name, this, position));
+    m_GameObjectsAdded.emplace_back(std::make_unique<GameObject>(name, this, position));
 
     if(parent != nullptr)
-        n_GameObjectsAddedPriviousFrame.back().get()->GetTransform().SetParent(&parent->GetTransform(),
-                                                                               worldPositionStays);
+        m_GameObjectsAdded.back().get()->GetTransform().SetParent(&parent->GetTransform(), worldPositionStays);
 
-    return n_GameObjectsAddedPriviousFrame.back().get();
+    return m_GameObjectsAdded.back().get();
+}
+
+void jul::Scene::Unload()
+{
+    if(m_BeingUnloaded)
+        return;
+
+    m_BeingUnloaded = true;
 }
 
 void jul::Scene::Update() const
@@ -39,56 +46,49 @@ void jul::Scene::FixedUpdate() const
             gameObject->FixedUpdate();
 }
 
-void jul::Scene::AddNewGameObjects()
+void jul::Scene::MoveGameObjectsAdded()
 {
-    std::move(n_GameObjectsAddedPriviousFrame.begin(),
-              n_GameObjectsAddedPriviousFrame.end(),
-              std::back_inserter(m_GameObjectsInScene));
-    n_GameObjectsAddedPriviousFrame.clear();
+    std::move(m_GameObjectsAdded.begin(), m_GameObjectsAdded.end(), std::back_inserter(m_GameObjectsInScene));
+    m_GameObjectsAdded.clear();
 }
 
 void jul::Scene::CleanupGameObjects()
 {
-	// We propagate the destroy, only at the end of the frame!
-	// This is very important:
-	// - If we propagate the destroy immediately, we might end up destroying a game object whos parent has changes after calling the destroy
-    for(auto& gameObject : m_GameObjectsInScene)
-        if(gameObject->IsBeingDestroyed())
-            gameObject->PropagateDestroy();
+    MoveGameObjectsAdded();
 
-    // Clean up individual components from game objects
-    for(auto& gameObject : m_GameObjectsInScene)
-        gameObject->CleanupComponents();
-
-    // Remove all game objects that are set to be destroyed
-    for(auto iterator = m_GameObjectsInScene.begin(); iterator != m_GameObjectsInScene.end();)
-        if ((*iterator)->IsBeingDestroyed())
-            iterator = m_GameObjectsInScene.erase(iterator);
-        else
-            ++iterator;
-}
-
-void jul::Scene::Unload()
-{
     if(m_BeingUnloaded)
-        return;
-
-    Clean();
-    m_BeingUnloaded = true;
-}
-
-void jul::Scene::Clean()
-{
-    // Set all objects to unload
-    for(auto& gameObject : m_GameObjectsInScene)
     {
-        gameObject->Destroy();
-        gameObject->PropagateDestroy();
+        for(auto& gameObject : m_GameObjectsInScene)
+        {
+            if(not gameObject->IsBeingDestroyed())
+            {
+                gameObject->Destroy();
+                gameObject->PropagateDestroy();
+            }
+        }
+
+        // If scene is getting unloaded we can't have new game objects
+        // so we just restart
+        if(not m_GameObjectsAdded.empty())
+            CleanupGameObjects();
+
+        m_GameObjectsInScene.clear();
     }
-
-    for(auto& gameObject : n_GameObjectsAddedPriviousFrame)
+    else
     {
-        gameObject->Destroy();
-        gameObject->PropagateDestroy();
+        for(auto& gameObject : m_GameObjectsInScene)
+            if(gameObject->IsBeingDestroyed())
+                gameObject->PropagateDestroy();
+
+        // Clean up individual components from game objects
+        for(auto& gameObject : m_GameObjectsInScene)
+            gameObject->CleanupComponents();
+
+        // Remove all game objects that are set to be destroyed
+        for(auto iterator = m_GameObjectsInScene.begin(); iterator != m_GameObjectsInScene.end();)
+            if((*iterator)->IsBeingDestroyed())
+                iterator = m_GameObjectsInScene.erase(iterator);
+            else
+                ++iterator;
     }
 }
