@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <functional>
 #include <unordered_set>
 
@@ -72,6 +73,7 @@ namespace jul
         template<typename Function>
         void AddListener(Function function)
         {
+            assert(not m_Invoking && "Can't Add Listener While Invoking");
             m_FunctionBinds.emplace_back(nullptr, [function](EventArgs... args) { function(args...); });
         }
 
@@ -79,6 +81,7 @@ namespace jul
             requires std::derived_from<ObjectType, IEventListener>
         void AddListener(ObjectType* object, void (ObjectType::*memberFunction)(EventArgs...))
         {
+            assert(not m_Invoking && "Can't Add Listener While Invoking");
             auto* listener = static_cast<IEventListener*>(object);
             listener->AddEvent(this);
             m_EventListeners.insert(listener);
@@ -88,14 +91,17 @@ namespace jul
         }
 
         template<typename... Args>
-        void Invoke(Args&&... args) const
+        void Invoke(Args&&... args)
         {
+            m_Invoking = true;
             for(auto&& listenerFunction : m_FunctionBinds)
                 listenerFunction.second(args...);
+            m_Invoking = false;
         }
 
         void RemoveListener(IEventListener* listener) override
         {
+            assert(not m_Invoking && "Can't Remove Listener While Invoking");
             m_EventListeners.erase(listener);
 
             m_FunctionBinds.erase(std::remove_if(m_FunctionBinds.begin(),
@@ -107,7 +113,7 @@ namespace jul
 
 
     private:
-
+        bool m_Invoking{ false };
         std::vector<FunctionBind> m_FunctionBinds{};
         std::unordered_set<IEventListener*> m_EventListeners{};
     };

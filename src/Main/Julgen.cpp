@@ -156,40 +156,55 @@ void jul::Julgen::RunOneFrame()
     SteamAPI_RunCallbacks(); // Valve Please Run :)
 #endif
 
-	// Update time
-	GameTime::Update();
-	m_Lag += GameTime::GetDeltaTime();
+    // GameTimeUpdate
+    g_LoopState = LoopState::GameTimeUpdate;
+    GameTime::Update();
+    m_Lag += GameTime::GetDeltaTime();
 
-    // Handle input
+    // ProcessInput
+    g_LoopState = LoopState::ProcessInput;
     Input::GetInstance().ProcessInput(m_IsApplicationQuitting);
 
-    // Fixed Update,
+    // FixedUpdate
     while (m_Lag >= GameTime::GetFixedDeltaTime())
 	{
+        g_LoopState = LoopState::FixedUpdateActive;
         Locator::Get<Physics>().UpdateIsActive();
+
+        g_LoopState = LoopState::FixedUpdate;
         SceneManager::GetInstance().FixedUpdate();
+
+        g_LoopState = LoopState::FixedUpdateWorld;
         Locator::Get<Physics>().UpdateWorld();
+
         m_Lag -= GameTime::GetFixedDeltaTime();
-	}
+    }
 
     // Update
+    g_LoopState = LoopState::Update;
     SceneManager::GetInstance().Update();
 
     // Message Dispatch
+    g_LoopState = LoopState::MessageDispatch;
     MessageQueue::Dispatch();
 
     // Tween Update
+    g_LoopState = LoopState::Update;
     TweenEngine::GetInstance().Update();
 
     // Late Update
+    g_LoopState = LoopState::LateUpdate;
     SceneManager::GetInstance().LateUpdate();
 
     // Render
+    g_LoopState = LoopState::Render;
     RenderManager::GetInstance().PickCamera();
     RenderManager::GetInstance().Render();
 
     // Load / Unload Game Objects and Scenes
+    // Loop state happends inside of process scenes
     SceneManager::GetInstance().ProcessScenes();
 
+    g_LoopState = LoopState::AddingFrameCount;
     GameTime::AddToFrameCount();
 }

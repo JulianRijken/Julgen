@@ -49,9 +49,11 @@ void jul::SceneManager::FixedUpdate()
 
 void jul::SceneManager::Destroy()
 {
+    // Unload al scenes
     for(auto&& scene : m_LoadedScenes)
         scene->Unload();
 
+    MarkGameObjectsForDestroy();
     CleanupGameObjects();
     CleanupScenes();
 }
@@ -59,6 +61,7 @@ void jul::SceneManager::Destroy()
 void jul::SceneManager::ProcessScenes()
 {
     MarkScenesForUnload();
+    MarkGameObjectsForDestroy();
     CleanupGameObjects();
     CleanupScenes();
     LoadScenesSetToLoad();
@@ -72,6 +75,8 @@ void jul::SceneManager::ProcessScenes()
 
 void jul::SceneManager::MarkScenesForUnload()
 {
+    Julgen::g_LoopState = Julgen::LoopState::MarkScenesForUnload;
+
     if(m_ScenesToLoad.empty())
         return;
 
@@ -81,30 +86,36 @@ void jul::SceneManager::MarkScenesForUnload()
             scene->Unload();
 }
 
-
-void jul::SceneManager::CleanupGameObjects()
+void jul::SceneManager::MarkGameObjectsForDestroy()
 {
+    Julgen::g_LoopState = Julgen::LoopState::MarkGameObjectsForDestroy;
+
     // We clean up all game objects
     for(const auto& scene : m_LoadedScenes)
     {
         scene->MoveGameObjectsAdded();
-        scene->CleanupGameObjects();
+        scene->MarkGameObjectsForDestroy();
     }
 
     // What if a game object has been added during the destroy?
     // We do another cleanup and move
     for(const auto& scene : m_LoadedScenes)
-    {
         if(not scene->m_GameObjectsAdded.empty())
-        {
-            scene->MoveGameObjectsAdded();
-            CleanupGameObjects();
-        }
-    }
+            MarkGameObjectsForDestroy();  // RECURSE CALL
+}
+
+void jul::SceneManager::CleanupGameObjects()
+{
+    Julgen::g_LoopState = Julgen::LoopState::CleanupGameObjects;
+
+    for(const auto& scene : m_LoadedScenes)
+        scene->CleanupGameObjects();
 }
 
 void jul::SceneManager::CleanupScenes()
 {
+    Julgen::g_LoopState = Julgen::LoopState::CleanupScenes;
+
     for(auto iterator = m_LoadedScenes.begin(); iterator != m_LoadedScenes.end();)
         if((*iterator)->m_BeingUnloaded)
             iterator = m_LoadedScenes.erase(iterator);
@@ -114,6 +125,8 @@ void jul::SceneManager::CleanupScenes()
 
 void jul::SceneManager::LoadScenesSetToLoad()
 {
+    Julgen::g_LoopState = Julgen::LoopState::LoadScenesSetToLoad;
+
     if(m_ScenesToLoad.empty())
         return;
 
@@ -121,7 +134,6 @@ void jul::SceneManager::LoadScenesSetToLoad()
     // TODO: Maybe do this with a itterator and fixed length
     auto scenesToLoadLocal = m_ScenesToLoad;
     m_ScenesToLoad.clear();
-
 
     for(auto&& [id, loadMode] : scenesToLoadLocal)
     {

@@ -29,7 +29,7 @@ void jul::GameObject::SetActive(bool active)
 
 void jul::GameObject::Destroy()
 {
-	Object::Destroy();
+    Object::Destroy();
 
     for(const auto& component : m_Components)
         component->Destroy();
@@ -38,13 +38,10 @@ void jul::GameObject::Destroy()
 void jul::GameObject::PropagateDestroy() const
 {
 	for (const Transform* child : m_TransformPtr->GetChildren())
-	{
-		if(child->GetGameObject()->IsBeingDestroyed())
-			continue;
-
-		child->GetGameObject()->Destroy();
-		child->GetGameObject()->PropagateDestroy();
-	}
+    {
+        child->GetGameObject()->Destroy();
+        child->GetGameObject()->PropagateDestroy();
+    }
 }
 
 void jul::GameObject::CleanupComponents()

@@ -52,27 +52,32 @@ void jul::Scene::MoveGameObjectsAdded()
     m_GameObjectsAdded.clear();
 }
 
-void jul::Scene::CleanupGameObjects()
+void jul::Scene::MarkGameObjectsForDestroy()
 {
     if(m_BeingUnloaded)
     {
         for(auto& gameObject : m_GameObjectsInScene)
         {
-            if(not gameObject->IsBeingDestroyed())
-            {
-                gameObject->Destroy();
-                gameObject->PropagateDestroy();
-            }
+            gameObject->Destroy();
+            gameObject->PropagateDestroy();
         }
-
-        m_GameObjectsInScene.clear();
     }
     else
     {
         for(auto& gameObject : m_GameObjectsInScene)
             if(gameObject->IsBeingDestroyed())
                 gameObject->PropagateDestroy();
+    }
+}
 
+void jul::Scene::CleanupGameObjects()
+{
+    if(m_BeingUnloaded)
+    {
+        m_GameObjectsInScene.clear();
+    }
+    else
+    {
         // Clean up individual components from game objects
         for(auto& gameObject : m_GameObjectsInScene)
             gameObject->CleanupComponents();

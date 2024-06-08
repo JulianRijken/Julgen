@@ -32,6 +32,7 @@ namespace jul
 		void FixedUpdate() const;
 
         void MoveGameObjectsAdded();
+        void MarkGameObjectsForDestroy();
         void CleanupGameObjects();
 
         int m_Id;

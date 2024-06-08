@@ -44,10 +44,10 @@ namespace jul
 
         void Destroy();
 
-        // Will Mark - Clean GO - Clean Scene - Load/Unload - Restart if needed
         void ProcessScenes();
 
         void MarkScenesForUnload();
+        void MarkGameObjectsForDestroy();
         void CleanupGameObjects();
         void CleanupScenes();
         void LoadScenesSetToLoad();

@@ -15,8 +15,12 @@ bool jul::Component::IsEnabledAndActive() const { return m_IsEnabled and m_Paren
 
 void jul::Component::Destroy()
 {
+    const bool alreadyDestroyed = IsBeingDestroyed();
     Object::Destroy();
-    OnDestroy();
+
+    // We want to call destroy only after the object destroy
+    if(not alreadyDestroyed)
+        OnDestroy();
 }
 
 void jul::Component::SetEnabled(bool enabled) { m_IsEnabled = enabled; }
