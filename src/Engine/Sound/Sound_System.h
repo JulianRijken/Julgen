@@ -16,7 +16,7 @@ namespace jul
         ~SoundWave();
 
         // TODO: Is this still valid in hiding the impl?
-        SoundWave_Impl& GetImpl() const { return *m_SoundWaveImplUPtr; }
+        [[nodiscard]] SoundWave_Impl& GetImpl() const { return *m_SoundWaveImplUPtr; }
     };
 
     class Sound_System final : public Sound
