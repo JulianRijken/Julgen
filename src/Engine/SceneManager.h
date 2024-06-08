@@ -34,7 +34,7 @@ namespace jul
         // Binds the scene to a string allowing it to be loaded based on a name
         void BindScene(int id, std::function<void(Scene&)>&& sceneFunction);
 
-        void LoadScene(int id, SceneLoadMode loadMode = SceneLoadMode::Override);
+        void LoadScene(int id, SceneLoadMode loadMode = SceneLoadMode::OverrideForce);
 
 
     private:
@@ -44,10 +44,12 @@ namespace jul
 
         void Destroy();
 
-        void CleanupGameObjects();
-        void CleanupScenes();
+        // Will Mark - Clean GO - Clean Scene - Load/Unload - Restart if needed
+        void ProcessScenes();
 
         void MarkScenesForUnload();
+        void CleanupGameObjects();
+        void CleanupScenes();
         void LoadScenesSetToLoad();
 
         Scene* m_PrimaryScenePtr{};

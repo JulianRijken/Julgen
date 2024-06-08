@@ -27,7 +27,7 @@ namespace jul
 
 
         void Render() const;
-        void UpdateCamera();
+        void PickCamera();
 
         void RenderTexture(const Texture2D& texture, float x, float y) const;
         void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;

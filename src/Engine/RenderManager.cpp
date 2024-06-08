@@ -77,7 +77,7 @@ void jul::RenderManager::Render() const
     SDL_RenderPresent(m_RendererPtr);
 }
 
-void jul::RenderManager::UpdateCamera()
+void jul::RenderManager::PickCamera()
 {
     if(g_Cameras.empty())
     {

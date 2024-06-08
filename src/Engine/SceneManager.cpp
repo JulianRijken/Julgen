@@ -56,6 +56,19 @@ void jul::SceneManager::Destroy()
     CleanupScenes();
 }
 
+void jul::SceneManager::ProcessScenes()
+{
+    MarkScenesForUnload();
+    CleanupGameObjects();
+    CleanupScenes();
+    LoadScenesSetToLoad();
+
+    // Our user actually loded a scene when loading a scene
+    // So we start our whole cleanup process over again
+    if(not m_ScenesToLoad.empty())
+        ProcessScenes();
+}
+
 
 void jul::SceneManager::MarkScenesForUnload()
 {
@@ -71,8 +84,23 @@ void jul::SceneManager::MarkScenesForUnload()
 
 void jul::SceneManager::CleanupGameObjects()
 {
+    // We clean up all game objects
     for(const auto& scene : m_LoadedScenes)
+    {
+        scene->MoveGameObjectsAdded();
         scene->CleanupGameObjects();
+    }
+
+    // What if a game object has been added during the destroy?
+    // We do another cleanup and move
+    for(const auto& scene : m_LoadedScenes)
+    {
+        if(not scene->m_GameObjectsAdded.empty())
+        {
+            scene->MoveGameObjectsAdded();
+            CleanupGameObjects();
+        }
+    }
 }
 
 void jul::SceneManager::CleanupScenes()
@@ -89,6 +117,8 @@ void jul::SceneManager::LoadScenesSetToLoad()
     if(m_ScenesToLoad.empty())
         return;
 
+    // We need a clear and copy as the vector might change during the loop
+    // TODO: Maybe do this with a itterator and fixed length
     auto scenesToLoadLocal = m_ScenesToLoad;
     m_ScenesToLoad.clear();
 
@@ -101,7 +131,7 @@ void jul::SceneManager::LoadScenesSetToLoad()
         auto newSceneUPtr = std::make_unique<Scene>(id);
 
         // There should only ever be one override when loading here
-        if(loadMode == SceneLoadMode::Override)
+        if(loadMode == SceneLoadMode::Override or loadMode == SceneLoadMode::OverrideForce)
             m_PrimaryScenePtr = newSceneUPtr.get();
 
         // Store scene
@@ -109,14 +139,5 @@ void jul::SceneManager::LoadScenesSetToLoad()
 
         // Call load function
         m_SceneBinds[id](*m_LoadedScenes.back());
-    }
-
-    // Wouw our user actually loaded a scene during the loading of the scene
-    if(not m_ScenesToLoad.empty())
-    {
-        MarkScenesForUnload();
-        CleanupGameObjects();
-        CleanupScenes();
-        LoadScenesSetToLoad();
     }
 }

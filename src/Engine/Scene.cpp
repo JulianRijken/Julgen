@@ -54,8 +54,6 @@ void jul::Scene::MoveGameObjectsAdded()
 
 void jul::Scene::CleanupGameObjects()
 {
-    MoveGameObjectsAdded();
-
     if(m_BeingUnloaded)
     {
         for(auto& gameObject : m_GameObjectsInScene)
@@ -66,11 +64,6 @@ void jul::Scene::CleanupGameObjects()
                 gameObject->PropagateDestroy();
             }
         }
-
-        // If scene is getting unloaded we can't have new game objects
-        // so we just restart
-        if(not m_GameObjectsAdded.empty())
-            CleanupGameObjects();
 
         m_GameObjectsInScene.clear();
     }

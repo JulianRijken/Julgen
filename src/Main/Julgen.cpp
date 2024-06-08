@@ -148,7 +148,7 @@ void jul::Julgen::Run()
 // > Tween Update
 // > Late Update
 // > Render
-// > Cleanup
+// > Cleanup / Load
 
 void jul::Julgen::RunOneFrame()
 {
@@ -185,18 +185,11 @@ void jul::Julgen::RunOneFrame()
     SceneManager::GetInstance().LateUpdate();
 
     // Render
-    RenderManager::GetInstance().UpdateCamera();
+    RenderManager::GetInstance().PickCamera();
     RenderManager::GetInstance().Render();
 
-    // Scene Cleanup and Loading
-    SceneManager::GetInstance().MarkScenesForUnload();
-    // Cleanup game objects
-    SceneManager::GetInstance().CleanupGameObjects();
-    // Destroy old scenes
-    SceneManager::GetInstance().CleanupScenes();
-    // Load scenes
-    SceneManager::GetInstance().LoadScenesSetToLoad();
-
+    // Load / Unload Game Objects and Scenes
+    SceneManager::GetInstance().ProcessScenes();
 
     GameTime::AddToFrameCount();
 }
