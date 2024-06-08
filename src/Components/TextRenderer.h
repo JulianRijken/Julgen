@@ -21,8 +21,11 @@ namespace jul
                      glm::vec2 alighnment = { 0, 0 }, bool useAllUpper = false, double lineSpacingPercent = 1.0f,
                      SDL_Color textColor = { 255, 255, 255, 255 });
 
-        void SetText(const std::string& text); 
-		void SetColor(const SDL_Color& color);
+        [[nodiscard]] const std::string& GetText() const { return m_Text; }
+
+        void SetText(const std::string& text);
+        void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+        void SetColor(const SDL_Color& color);
         bool m_UseAllCaps{false}; // NOLINT - C.131: Avoid trivial getters and setters
 
 	private:

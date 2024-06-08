@@ -28,6 +28,8 @@ namespace jul
         void ProcessInput(bool& shouldQuit);
 
         // Used as a shorthand for a function command
+        // TODO: Currently does not take care of cleaning up command
+        // this creates a memory leak but is not game breaking
         template<typename... Args, typename ActionEnum>
         static void Bind(ActionEnum actionEnum, int controllerIndex, bool allowKeyboard, Args&&... args)
         {

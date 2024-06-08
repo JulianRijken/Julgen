@@ -32,16 +32,16 @@ void jul::TextRenderer::SetText(const std::string& text)
 	UpdateText();
 }
 
+void jul::TextRenderer::SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) { SetColor(SDL_Color{ r, g, b, a }); }
+
 void jul::TextRenderer::SetColor(const SDL_Color& color)
 {
-	m_TextColor = color;
+    m_TextColor = color;
 
-	if (   m_TextColor.r != m_LastDrawnColor.r
-		or m_TextColor.g != m_LastDrawnColor.g
-		or m_TextColor.b != m_LastDrawnColor.b
-		or m_TextColor.a != m_LastDrawnColor.a)
-	{
-		UpdateText();
+    if(m_TextColor.r != m_LastDrawnColor.r or m_TextColor.g != m_LastDrawnColor.g or
+       m_TextColor.b != m_LastDrawnColor.b or m_TextColor.a != m_LastDrawnColor.a)
+    {
+        UpdateText();
     }
 }
 
