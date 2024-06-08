@@ -13,4 +13,10 @@ jul::Transform& jul::Component::GetTransform() const { return m_ParentGameObject
 
 bool jul::Component::IsEnabledAndActive() const { return m_IsEnabled and m_ParentGameObjectPtr->IsActiveInHierarchy(); }
 
+void jul::Component::Destroy()
+{
+    Object::Destroy();
+    OnDestroy();
+}
+
 void jul::Component::SetEnabled(bool enabled) { m_IsEnabled = enabled; }

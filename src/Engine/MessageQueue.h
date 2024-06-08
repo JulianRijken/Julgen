@@ -11,7 +11,7 @@ namespace jul
     struct Message
     {
         int id;
-        std::vector<std::any> arguments;
+        std::vector<std::any> args;
     };
 
     class MessageQueue final

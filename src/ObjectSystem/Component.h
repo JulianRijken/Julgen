@@ -27,14 +27,20 @@ namespace jul
 
         [[nodiscard]] bool IsEnabledAndActive() const;
 
+        void Destroy() override;
+
         void SetEnabled(bool enabled);
 
         virtual void Update() {}
+
         virtual void LateUpdate() {}
-		virtual void FixedUpdate() {}
+
+        virtual void FixedUpdate() {}
 
 
     private:
+        virtual void OnDestroy(){};
+
         GameObject* m_ParentGameObjectPtr{};
         bool m_IsEnabled{ true };
     };
