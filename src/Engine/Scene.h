@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "GameObject.h"
+
 
 namespace jul
 {
-	class GameObject;
-
 	class Scene final
 	{
         friend class SceneManager;

@@ -121,16 +121,16 @@ namespace jul::math
 
     template<typename Type>
         requires std::floating_point<Type>
-    constexpr float MapValueInRange(Type value, Type inRangeMin, Type inRangeMax, Type outRangeMin = 0.0,
-                                    Type outRangeMax = 1.0)
+    constexpr Type MapValueInRange(Type value, Type inRangeMin, Type inRangeMax, Type outRangeMin = 0.0,
+                                   Type outRangeMax = 1.0)
     {
         return (value - inRangeMin) * (outRangeMax - outRangeMin) / (inRangeMax - inRangeMin) + outRangeMin;
     }
 
     template<typename Type>
         requires std::floating_point<Type>
-    constexpr float MapValueInRangeClamped(Type value, Type inRangeMin, Type inRangeMax, Type outRangeMin = 0.0,
-                                           Type outRangeMax = 1.0)
+    constexpr Type MapValueInRangeClamped(Type value, Type inRangeMin, Type inRangeMax, Type outRangeMin = 0.0,
+                                          Type outRangeMax = 1.0)
     {
         return std::clamp((value - inRangeMin) * (outRangeMax - outRangeMin) / (inRangeMax - inRangeMin) + outRangeMin,
                           outRangeMin,
