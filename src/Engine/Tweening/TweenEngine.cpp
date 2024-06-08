@@ -29,7 +29,7 @@ void jul::TweenEngine::Update()
 bool jul::TweenEngine::HasActiveTweens(Object* target)
 {
     return std::ranges::any_of(GetInstance().m_ActiveTweens,
-                               [target](const auto& tween) { return target == tween->GetTarget(); });
+                               [target](auto& tween) { return target == tween->GetTarget(); });
 }
 
 const std::vector<std::unique_ptr<jul::TweenInstance> >& jul::TweenEngine::GetAllActiveTweens()
