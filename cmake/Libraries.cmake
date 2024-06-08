@@ -102,7 +102,26 @@ function(make_libs_available)
             OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2)
 
+
+        set(SDL2IMAGE_BMP ON)
+        set(SDL2IMAGE_GIF ON)
+        set(SDL2IMAGE_JPG ON)
         set(SDL2IMAGE_JXL ON)
+        set(SDL2IMAGE_PNG ON)
+
+        set(SDL2IMAGE_AVIF OFF)
+        set(SDL2IMAGE_LBM OFF)
+        set(SDL2IMAGE_PCX OFF)
+        set(SDL2IMAGE_PNM OFF)
+        set(SDL2IMAGE_QOI OFF)
+        set(SDL2IMAGE_SVG OFF)
+        set(SDL2IMAGE_TGA OFF)
+        set(SDL2IMAGE_TIF OFF)
+        set(SDL2IMAGE_WEBP OFF)
+        set(SDL2IMAGE_XCF OFF)
+        set(SDL2IMAGE_XPM OFF)
+        set(SDL2IMAGE_XV OFF)
+
         set(SDL2IMAGE_VENDORED ON)
         message(STATUS "Downloading " sdl2_image...)
         FetchContent_Declare(
