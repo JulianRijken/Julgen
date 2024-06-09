@@ -8,6 +8,7 @@
 #include <queue>
 #include <thread>
 
+#include "GameTime.h"
 #include "Sound_System.h"
 
 ///////////////////////
@@ -84,7 +85,6 @@ namespace jul
                 if(not m_IsSoundThreadActive)
                     break;
 
-
                 // Manually locking to keep members in scope
                 m_QueueMutex.lock();
                 const int soundIndexToPlay = m_QueuedSounds.front();
@@ -92,7 +92,8 @@ namespace jul
                 m_QueueMutex.unlock();
 
                 const SoundWave* sampleToPlay{ ResourceManager::GetSound(soundIndexToPlay) };
-                soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
+                auto handle = soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
+                soLoudEngine.setRelativePlaySpeed(handle, GameTime::GetTimeScale<float>());
             }
 
             soLoudEngine.deinit();
