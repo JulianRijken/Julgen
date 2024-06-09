@@ -5,7 +5,7 @@
 
 namespace jul
 {
-    class GameSettings
+    class GameSettings final
     {
     public:
         static float GetAspectRatio() { return static_cast<float>(g_WindowWidth) / static_cast<float>(g_WindowHeight); }

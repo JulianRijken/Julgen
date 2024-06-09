@@ -11,7 +11,7 @@ namespace jul
 {
     class Object;
 
-    class TweenEngine : public Singleton<TweenEngine>
+    class TweenEngine final : public Singleton<TweenEngine>
     {
     public:
         void Update();

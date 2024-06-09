@@ -7,7 +7,7 @@ namespace jul
 {
     class GameObject;
 
-    class TweenInstance : public IEventListener
+    class TweenInstance final : public IEventListener
     {
     public:
         TweenInstance(Tween&& tween, Object* target);

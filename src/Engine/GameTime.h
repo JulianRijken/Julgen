@@ -5,7 +5,7 @@
 
 namespace jul
 {
-    class GameTime
+    class GameTime final
     {
         // Required to call update
         friend void Julgen::RunOneFrame();
