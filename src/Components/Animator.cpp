@@ -5,7 +5,8 @@
 
 #include <GameTime.h>
 
-jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr, const std::string& defaultAnimation) :
+jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr, const std::string& defaultAnimation,
+                        bool loop) :
     Component{ parentPtr, "Animator" },
     m_SpriteRendererPtr{ spriteRendererPtr }
 {
@@ -13,7 +14,7 @@ jul::Animator::Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr
         m_SpriteRendererPtr = parentPtr->GetComponent<SpriteRenderer>();
 
     if(not defaultAnimation.empty())
-        Play(defaultAnimation, true);
+        Play(defaultAnimation, loop);
 }
 
 void jul::Animator::Play(const std::string& name, bool looping, float startFrameTime, float speedMultiplier)

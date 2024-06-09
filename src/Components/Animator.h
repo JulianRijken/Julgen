@@ -11,7 +11,7 @@ namespace jul
     {
     public:
         explicit Animator(GameObject* parentPtr, SpriteRenderer* spriteRendererPtr = nullptr,
-                          const std::string& defaultAnimation = {});
+                          const std::string& defaultAnimation = {}, bool loop = true);
 
         void Play(const std::string& name, bool looping = false, float startFrameTime = 0, float speedMultiplier = 1);
         void Stop();
