@@ -13,7 +13,7 @@ jul::TweenInstance::TweenInstance(Tween&& tween, Object* target) :
     m_Target->GetOnDestroyedEvent().AddListener(this, &TweenInstance::OnTargetDestroyed);
 }
 
-void jul::TweenInstance::OnTargetDestroyed() { m_Target = nullptr; }
+void jul::TweenInstance::OnTargetDestroyed(Object*) { m_Target = nullptr; }
 
 void jul::TweenInstance::Cancel()
 {

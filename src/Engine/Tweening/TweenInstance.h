@@ -28,7 +28,7 @@ namespace jul
         void Update();
 
     private:
-        void OnTargetDestroyed();
+        void OnTargetDestroyed(Object* object);
 
         bool m_IsHalting{ false };
         bool m_IsDecommissioned{ false };

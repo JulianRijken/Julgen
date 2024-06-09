@@ -132,4 +132,4 @@ void jul::Transform::SetTransformDirty()
             childPtr->SetTransformDirty();
 }
 
-void jul::Transform::OnRigidbodyDestroyed() { m_Rigidbody = nullptr; }
+void jul::Transform::OnRigidbodyDestroyed(Object*) { m_Rigidbody = nullptr; }

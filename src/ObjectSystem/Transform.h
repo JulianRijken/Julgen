@@ -49,7 +49,7 @@ namespace jul
     private:
         void UpdateWorldPosition();
         void SetTransformDirty();
-        void OnRigidbodyDestroyed();
+        void OnRigidbodyDestroyed(Object* object);
 
         bool m_TransformDirty{ true };
         glm::vec3 m_LocalPosition{};  // Primary Data

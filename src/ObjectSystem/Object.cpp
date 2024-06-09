@@ -21,7 +21,7 @@ void jul::Object::Destroy()
         // BEFORE the event, this is so that weens and other objects
         // can check for being destroyed at event time
         m_BeingDestroyed = true;
-        m_OnDestroyedEvent.Invoke();
+        m_OnDestroyedEvent.Invoke(this);
     }
     else
     {

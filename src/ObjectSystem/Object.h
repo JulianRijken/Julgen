@@ -20,7 +20,7 @@ namespace jul
 
         [[nodiscard]] bool IsBeingDestroyed() const { return m_BeingDestroyed; }
 
-        [[nodiscard]] Event<>& GetOnDestroyedEvent() { return m_OnDestroyedEvent; }
+        [[nodiscard]] Event<Object*>& GetOnDestroyedEvent() { return m_OnDestroyedEvent; }
 
         void DestroyDelayed(double delay);
 
@@ -32,6 +32,6 @@ namespace jul
     private:
         bool m_BeingDestroyed{false};
         std::string m_Name{};
-        Event<> m_OnDestroyedEvent{};
+        Event<Object*> m_OnDestroyedEvent{};
     };
 }  // namespace jul
