@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MATHEXTENSIONS_H
+#define MATHEXTENSIONS_H
 
 #include <algorithm>
 #include <glm/exponential.hpp>
@@ -136,3 +137,4 @@ namespace jul::math
                           outRangeMax);
     }
 }
+#endif // MATHEXTENSIONS_H

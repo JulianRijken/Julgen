@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FONT_H
+#define FONT_H
 #include <SDL_ttf.h>
 
 #include <string>
@@ -26,3 +27,4 @@ namespace jul
         TTF_Font* m_Font;
     };
 }  // namespace jul
+#endif // FONT_H

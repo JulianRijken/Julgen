@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOCATOR_H
+#define LOCATOR_H
 
 #include <memory>
 #include <typeindex>
@@ -62,3 +63,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // LOCATOR_H

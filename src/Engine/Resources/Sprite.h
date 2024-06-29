@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPRITE_H
+#define SPRITE_H
 #include <map>
 #include <string>
 #include <vector>
@@ -35,3 +36,4 @@ namespace jul
         std::map<std::string, SpriteAnimation> animations;
     };
 }
+#endif // SPRITE_H

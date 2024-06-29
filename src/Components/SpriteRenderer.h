@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPRITERENDERER_H
+#define SPRITERENDERER_H
 #include <glm/vec2.hpp>
 
 #include "RenderComponent.h"
@@ -29,3 +30,4 @@ namespace jul
 	};
 }
 
+#endif // SPRITERENDERER_H

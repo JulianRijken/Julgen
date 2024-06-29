@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMMAND_H
+#define COMMAND_H
 
 #include <functional>
 #include <glm/vec2.hpp>
@@ -105,3 +106,4 @@ namespace jul
         void Execute(const InputContext& context) override;
     };
 }
+#endif // COMMAND_H

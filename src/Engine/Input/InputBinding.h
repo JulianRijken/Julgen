@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INPUTBINDING_H
+#define INPUTBINDING_H
 #include <Command.h>
 
 #include <memory>
@@ -38,3 +39,4 @@ namespace jul
         }
     };
 }  // namespace jul
+#endif // INPUTBINDING_H

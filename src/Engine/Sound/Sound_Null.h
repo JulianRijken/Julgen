@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOUND_NULL_H
+#define SOUND_NULL_H
 
 
 #include <iostream>
@@ -23,3 +24,4 @@ namespace jul
     private:
     };
 }  // namespace jul
+#endif // SOUND_NULL_H

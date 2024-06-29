@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANIMATOR_H
+#define ANIMATOR_H
 #include "Component.h"
 
 #include "SpriteRenderer.h"
@@ -38,3 +39,4 @@ namespace jul
     };
 
 }
+#endif // ANIMATOR_H

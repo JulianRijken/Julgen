@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OBJECT_H
+#define OBJECT_H
 #include <string>
 
 #include "Event.h"
@@ -35,3 +36,4 @@ namespace jul
         Event<Object*> m_OnDestroyedEvent{};
     };
 }  // namespace jul
+#endif // OBJECT_H

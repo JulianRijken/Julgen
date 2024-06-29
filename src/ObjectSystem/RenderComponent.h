@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERCOMPONENT_H
+#define RENDERCOMPONENT_H
 
 #include "Component.h"
 
@@ -30,3 +31,4 @@ class RenderComponent : public Component
     };
 }
 
+#endif // RENDERCOMPONENT_H

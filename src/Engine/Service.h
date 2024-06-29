@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SERVICE_H
+#define SERVICE_H
 
 namespace jul
 {
@@ -14,3 +15,4 @@ namespace jul
         Service& operator=(Service&&) noexcept = delete;
     };
 }  // namespace jul
+#endif // SERVICE_H

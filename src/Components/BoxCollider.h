@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOXCOLLIDER_H
+#define BOXCOLLIDER_H
 
 #include <Box2D/Box2D.h>
 
@@ -63,3 +64,4 @@ namespace jul
         bool m_ActiveFlag{ true };
     };
 }  // namespace jul
+#endif // BOXCOLLIDER_H

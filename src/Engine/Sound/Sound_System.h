@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOUND_SYSTEM_H
+#define SOUND_SYSTEM_H
 #include <memory>
 #include <string>
 
@@ -36,3 +37,4 @@ namespace jul
         void PlaySound(int soundType) override;
     };
 }  // namespace jul
+#endif // SOUND_SYSTEM_H

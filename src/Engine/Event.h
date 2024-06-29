@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENT_H
+#define EVENT_H
 
 #include <algorithm>
 #include <cassert>
@@ -118,3 +119,4 @@ namespace jul
         std::unordered_set<IEventListener*> m_EventListeners{};
     };
 }  // namespace jul
+#endif // EVENT_H

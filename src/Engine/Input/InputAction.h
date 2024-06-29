@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INPUTACTION_H
+#define INPUTACTION_H
 #include <SDL_gamecontroller.h>
 #include <SDL_scancode.h>
 
@@ -29,3 +30,4 @@ namespace jul
         }
     };
 }  // namespace jul
+#endif // INPUTACTION_H

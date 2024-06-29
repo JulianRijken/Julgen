@@ -1,10 +1,11 @@
-#pragma once
+#ifndef PHYSICS_H
+#define PHYSICS_H
 #include <Box2D/Box2D.h>
+#include <fmt/core.h>
 
 #include <functional>
 
 #include "BoxCollider.h"
-#include "fmt/core.h"
 #include "Rigidbody.h"
 #include "Service.h"
 
@@ -91,3 +92,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // PHYSICS_H

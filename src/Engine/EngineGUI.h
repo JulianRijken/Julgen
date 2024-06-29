@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ENGINEGUI_H
+#define ENGINEGUI_H
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -24,3 +25,4 @@ namespace jul
     };
 }
 
+#endif // ENGINEGUI_H

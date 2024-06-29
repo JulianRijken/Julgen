@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TWEEN_H
+#define TWEEN_H
 
 
 #include <functional>
@@ -26,3 +27,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // TWEEN_H

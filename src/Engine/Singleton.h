@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SINGLETON_H
+#define SINGLETON_H
 
 namespace jul
 {
@@ -23,3 +24,4 @@ namespace jul
 		Singleton() = default;
 	};
 }  // namespace jul
+#endif // SINGLETON_H

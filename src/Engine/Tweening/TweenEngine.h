@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TWEENENGINE_H
+#define TWEENENGINE_H
 #include <GameObject.h>
 
 #include <queue>
@@ -32,3 +33,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // TWEENENGINE_H

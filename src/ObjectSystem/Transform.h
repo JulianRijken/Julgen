@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
 #include <glm/glm.hpp>
 #include <unordered_set>
 
@@ -66,3 +67,4 @@ namespace jul
         std::unordered_set<Transform*> m_ChildPtrs{};
     };
 }
+#endif // TRANSFORM_H

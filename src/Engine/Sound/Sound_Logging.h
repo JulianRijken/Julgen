@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOUND_LOGGING_H
+#define SOUND_LOGGING_H
 #include <fmt/core.h>
 
 #include <memory>
@@ -41,3 +42,4 @@ namespace jul
         std::unique_ptr<SoundSystemType> m_SoundSystemPtr;
     };
 }  // namespace jul
+#endif // SOUND_LOGGING_H

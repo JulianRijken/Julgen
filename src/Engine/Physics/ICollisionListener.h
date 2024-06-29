@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ICOLLISIONLISTENER_H
+#define ICOLLISIONLISTENER_H
 
 #include "Physics.h"
 
@@ -27,3 +28,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // ICOLLISIONLISTENER_H

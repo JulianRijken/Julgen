@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glm/mat4x4.hpp>
 
@@ -34,3 +35,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // CAMERA_H

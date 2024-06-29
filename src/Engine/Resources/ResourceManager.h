@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
 #include <filesystem>
 #include <map>
 #include <unordered_map>
@@ -71,3 +72,4 @@ namespace jul
         inline static std::filesystem::path g_ContentPath{};
     };
 }  // namespace jul
+#endif // RESOURCEMANAGER_H

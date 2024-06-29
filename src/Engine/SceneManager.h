@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
 #include <functional>
 #include <glm/vec3.hpp>
 #include <memory>
@@ -61,3 +62,4 @@ namespace jul
         std::unordered_map<int, std::function<void(Scene&)>> m_SceneBinds{};
     };
 }
+#endif // SCENEMANAGER_H

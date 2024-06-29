@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOUND_H
+#define SOUND_H
 #include "Service.h"
 
 namespace jul
@@ -17,3 +18,4 @@ namespace jul
         virtual void PlaySound(int soundType) = 0;
     };
 }  // namespace jul
+#endif // SOUND_H

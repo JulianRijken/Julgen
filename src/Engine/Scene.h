@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SCENE_H
+#define SCENE_H
 #include <glm/vec3.hpp>
 #include <memory>
 #include <string>
@@ -43,3 +44,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // SCENE_H

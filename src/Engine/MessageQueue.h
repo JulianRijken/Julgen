@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MESSAGEQUEUE_H
+#define MESSAGEQUEUE_H
 
 #include <any>
 #include <functional>
@@ -50,3 +51,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // MESSAGEQUEUE_H

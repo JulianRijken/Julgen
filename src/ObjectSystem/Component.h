@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 #include "Object.h"
 
@@ -46,3 +47,4 @@ namespace jul
     };
 }
 
+#endif // COMPONENT_H

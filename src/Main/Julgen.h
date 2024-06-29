@@ -1,4 +1,5 @@
-#pragma once
+#ifndef JULGEN_H
+#define JULGEN_H
 
 struct SDL_Window;
 
@@ -56,3 +57,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // JULGEN_H

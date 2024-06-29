@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -139,3 +140,4 @@ namespace jul
         std::vector<std::unique_ptr<Component>> m_Components{};
     };
 }  // namespace jul
+#endif // GAMEOBJECT_H

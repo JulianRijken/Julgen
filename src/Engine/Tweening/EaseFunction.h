@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EASEFUNCTION_H
+#define EASEFUNCTION_H
 
 #include <cmath>
 #include <numbers>
@@ -95,3 +96,4 @@ namespace jul
         }
     };
 }  // namespace jul
+#endif // EASEFUNCTION_H

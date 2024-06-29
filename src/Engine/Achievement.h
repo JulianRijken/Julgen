@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ACHIEVEMENT_H
+#define ACHIEVEMENT_H
 
 #include "MessageQueue.h"
 #include "Singleton.h"
@@ -21,3 +22,4 @@ namespace  jul
         void Unlock(AchievementType unlockType);
     };
 }
+#endif // ACHIEVEMENT_H

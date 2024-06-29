@@ -1,5 +1,6 @@
 
-#pragma once
+#ifndef GAMESETTINGS_H
+#define GAMESETTINGS_H
 
 #include <string>
 
@@ -18,3 +19,4 @@ namespace jul
         inline static bool g_ShowConsole{ true };
     };
 }
+#endif // GAMESETTINGS_H

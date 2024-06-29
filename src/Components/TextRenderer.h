@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TEXTRENDERER_H
+#define TEXTRENDERER_H
 #include <SDL_pixels.h>
 
 #include <glm/vec2.hpp>
@@ -44,3 +45,4 @@ namespace jul
     };
 }
 
+#endif // TEXTRENDERER_H

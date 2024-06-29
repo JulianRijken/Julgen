@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERMANAGER_H
+#define RENDERMANAGER_H
 #include <SDL.h>
 
 #include <glm/mat4x4.hpp>
@@ -57,3 +58,4 @@ namespace jul
     };
 }
 
+#endif // RENDERMANAGER_H

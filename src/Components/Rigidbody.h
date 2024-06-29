@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
 
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 
@@ -96,3 +97,4 @@ namespace jul
     };
 
 }  // namespace jul
+#endif // RIGIDBODY_H
