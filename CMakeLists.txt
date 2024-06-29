@@ -64,7 +64,7 @@ set(JULGEN_SOURCE_FILES
     ${SOURCE_DIR}/Engine/Physics/ICollisionListener.h
 
     # Resources
-    ${SOURCE_DIR}/Engine/Resources/ResourceManager.h    ${SOURCE_DIR}/Engine/Resources/ResourceManager.cpp
+    ${SOURCE_DIR}/Engine/Resources/Resources.h    ${SOURCE_DIR}/Engine/Resources/Resources.cpp
     ${SOURCE_DIR}/Engine/Resources/Texture2D.h          ${SOURCE_DIR}/Engine/Resources/Texture2D.cpp
     ${SOURCE_DIR}/Engine/Resources/Sprite.h             ${SOURCE_DIR}/Engine/Resources/Sprite.cpp
     ${SOURCE_DIR}/Engine/Resources/Font.h               ${SOURCE_DIR}/Engine/Resources/Font.cpp

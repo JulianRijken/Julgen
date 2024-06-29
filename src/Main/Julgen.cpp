@@ -16,7 +16,7 @@
 #include "MessageQueue.h"
 #include "Physics.h"
 #include "RenderManager.h"
-#include "ResourceManager.h"
+#include "Resources.h"
 #include "SceneManager.h"
 #include "Sound.h"
 #include "TweenEngine.h"
@@ -87,7 +87,7 @@ jul::Julgen::Julgen()
     RenderManager::GetInstance().Initialize(m_Window);
     Achievement::GetInstance().Initialize();
     EngineGUI::Initialize(m_Window, RenderManager::GetInstance().GetSDLRenderer());
-    ResourceManager::Initialize();
+    Resources::Initialize();
 
     GameStart();
 
@@ -102,7 +102,7 @@ jul::Julgen::~Julgen()
 {
     SceneManager::GetInstance().Destroy();
 
-    ResourceManager::Destroy();
+    Resources::Destroy();
     EngineGUI::Destory();
     RenderManager::GetInstance().Destroy();
 

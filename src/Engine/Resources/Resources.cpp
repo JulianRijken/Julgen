@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "Resources.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -8,7 +8,7 @@
 #include "RenderManager.h"
 
 
-void jul::ResourceManager::Initialize()
+void jul::Resources::Initialize()
 {
     ConfigurePath();
 
@@ -16,7 +16,7 @@ void jul::ResourceManager::Initialize()
         throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
 }
 
-void jul::ResourceManager::Destroy()
+void jul::Resources::Destroy()
 {
     // Force cleanup because of order
     g_SoundUPtrMap.clear();
@@ -26,7 +26,7 @@ void jul::ResourceManager::Destroy()
     TTF_Quit();
 }
 
-jul::Font* jul::ResourceManager::GetFont(const std::string& name)
+jul::Font* jul::Resources::GetFont(const std::string& name)
 {
     if(g_FontUPtrMap.contains(name))
         return g_FontUPtrMap.at(name).get();
@@ -35,7 +35,7 @@ jul::Font* jul::ResourceManager::GetFont(const std::string& name)
     return nullptr;
 }
 
-jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
+jul::Sprite* jul::Resources::GetSprite(const std::string& name)
 {
     if(g_SpriteUPtrMap.contains(name))
         return g_SpriteUPtrMap.at(name).get();
@@ -44,14 +44,14 @@ jul::Sprite* jul::ResourceManager::GetSprite(const std::string& name)
     return nullptr;
 }
 
-jul::Font* jul::ResourceManager::LoadFont(const std::string& assetName, const std::string& filePath, int size)
+jul::Font* jul::Resources::LoadFont(const std::string& assetName, const std::string& filePath, int size)
 {
     assert(size > 0);
     const auto fullPath = g_ContentPath / filePath;
     return g_FontUPtrMap.emplace(assetName, std::make_unique<Font>(fullPath.string(), size)).first->second.get();
 }
 
-jul::Sprite* jul::ResourceManager::LoadSprite(const std::string& assetName, const std::string& filePath,
+jul::Sprite* jul::Resources::LoadSprite(const std::string& assetName, const std::string& filePath,
 	int pixelsPerUnit, const glm::vec2& pivotAlpha,
                                               int rowCount, int colCount, const std::map<std::string, SpriteAnimation>& animations)
 {
@@ -64,7 +64,7 @@ jul::Sprite* jul::ResourceManager::LoadSprite(const std::string& assetName, cons
 }
 
 
-jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
+jul::Texture2D* jul::Resources::LoadTexture(const std::string& filePath)
 {
     const auto fullPath = g_ContentPath / filePath;
     SDL_Texture* texture = IMG_LoadTexture(RenderManager::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
@@ -76,7 +76,7 @@ jul::Texture2D* jul::ResourceManager::LoadTexture(const std::string& filePath)
     return g_LoadedTextureUPtrs.emplace_back(std::make_unique<Texture2D>(texture)).get();
 }
 
-void jul::ResourceManager::ConfigurePath()
+void jul::Resources::ConfigurePath()
 {
 #if __EMSCRIPTEN__
 	m_ContentPath = "";

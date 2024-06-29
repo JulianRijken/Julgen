@@ -1,5 +1,5 @@
 #include <fmt/core.h>
-#include <ResourceManager.h>
+#include <Resources.h>
 #include <soloud.h>
 #include <soloud_wav.h>
 
@@ -91,7 +91,7 @@ namespace jul
                 m_QueuedSounds.pop();
                 m_QueueMutex.unlock();
 
-                const SoundWave* sampleToPlay{ ResourceManager::GetSound(soundIndexToPlay) };
+                const SoundWave* sampleToPlay{ Resources::GetSound(soundIndexToPlay) };
                 auto handle = soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
                 soLoudEngine.setRelativePlaySpeed(handle, GameTime::GetTimeScale<float>());
             }

@@ -1,5 +1,5 @@
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
+#ifndef Resources_H
+#define Resources_H
 #include <filesystem>
 #include <map>
 #include <unordered_map>
@@ -11,11 +11,11 @@
 
 namespace jul
 {
-    class ResourceManager final
+    class Resources final
     {
 
     public:
-        ResourceManager() = delete;
+        Resources() = delete;
 
         static void Initialize();
         static void Destroy();
@@ -72,4 +72,4 @@ namespace jul
         inline static std::filesystem::path g_ContentPath{};
     };
 }  // namespace jul
-#endif // RESOURCEMANAGER_H
+#endif  // Resources_H
