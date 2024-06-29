@@ -19,8 +19,8 @@ void jul::MoveCommand::Execute(const InputContext& context)
     if(context.state != ButtonState::Down)
         return;
 
-    const glm::vec3 VELOCITY = normalize(m_MoveDirection) * m_MoveSpeed;
-    GetGameObject()->GetTransform().Translate(VELOCITY * GameTime::GetDeltaTime<float>());
+    const glm::vec3 velocity = normalize(m_MoveDirection) * m_MoveSpeed;
+    GetGameObject()->GetTransform().Translate(velocity * GameTime::GetDeltaTime<float>());
 }
 
 
@@ -64,13 +64,3 @@ void jul::MuteGameCommand::Execute(const InputContext& context)
 }
 
 void jul::EventCommand::Execute(const InputContext& context) { m_Event.Invoke(context); }
-
-void jul::DebugGameCommand::Execute(const InputContext& context)
-{
-    if(context.state != ButtonState::Down)
-        return;
-
-    m_Debugging = !m_Debugging;
-
-    EngineGUI::ShowDebugInfo(m_Debugging);
-}

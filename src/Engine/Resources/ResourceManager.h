@@ -65,8 +65,6 @@ namespace jul
 
         inline static std::unordered_map<int, std::unique_ptr<SoundWave>> g_SoundUPtrMap{};
         inline static std::unordered_map<int, std::string> g_SoundPathsUPtrMap{};
-
-
         inline static std::map<std::string, std::unique_ptr<Font>> g_FontUPtrMap{};
         inline static std::map<std::string, std::unique_ptr<Sprite>> g_SpriteUPtrMap{};
         inline static std::vector<std::unique_ptr<Texture2D>> g_LoadedTextureUPtrs{};

@@ -104,13 +104,4 @@ namespace jul
     public:
         void Execute(const InputContext& context) override;
     };
-
-    class DebugGameCommand final : public BaseCommand
-    {
-    public:
-        void Execute(const InputContext& context) override;
-
-    private:
-        bool m_Debugging{ false };
-    };
 }
