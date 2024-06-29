@@ -2,8 +2,7 @@
 #ifndef GAMESETTINGS_H
 #define GAMESETTINGS_H
 
-
-#include <string_view>
+#include <string>
 
 namespace jul
 {
@@ -12,7 +11,7 @@ namespace jul
     public:
         static float GetAspectRatio() { return static_cast<float>(g_WindowWidth) / static_cast<float>(g_WindowHeight); }
 
-        inline static std::string_view g_WindowTitle = "Julgen - Custom Engine by Julian Rijken";
+        inline static std::string g_WindowTitle = "Julgen - Custom Engine by Julian Rijken";
         inline static int g_RenderWidth{ 1280 };
         inline static int g_RenderHeight{ 720 };
         inline static int g_WindowWidth{ 1280 };
