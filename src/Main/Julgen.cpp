@@ -5,7 +5,6 @@
 #include <SDL_ttf.h>
 
 #include <stdexcept>
-#include <thread>
 
 #include "Achievement.h"
 #include "EngineGUI.h"

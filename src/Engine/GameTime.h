@@ -1,6 +1,5 @@
 #ifndef GAMETIME_H
 #define GAMETIME_H
-#include <deque>
 
 #include "Julgen.h"
 
@@ -66,4 +65,4 @@ namespace jul
         // clang-format on
     };
 }  // namespace jul
-#endif // GAMETIME_H
+#endif  // GAMETIME_H

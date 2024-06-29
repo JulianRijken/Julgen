@@ -1,7 +1,7 @@
 #include "GameTime.h"
 
+#include <algorithm>
 #include <chrono>
-
 
 void jul::GameTime::Update()
 {

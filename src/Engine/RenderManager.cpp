@@ -35,7 +35,8 @@ int GetOpenGLDriverIndex()
 void jul::RenderManager::Initialize(SDL_Window* window)
 {
     m_WindowPtr = window;
-    m_RendererPtr = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    m_RendererPtr =
+        SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (m_RendererPtr == nullptr)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
