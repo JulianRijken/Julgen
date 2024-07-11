@@ -5,6 +5,7 @@
 ## Goal
 Attempting to simplify the game development process while upholding the C++ Core Guidelines.
 
+## Patterns Used
 Game design patterns are used to simplify the development, I have attempted to implement some patterns specific to the needs of Julgen. Some patterns are more specific and should be left out of the engine, but here are some patterns I included for ease of use.
 
 **Observer Pattern** - Julgen has a build in Event class that allows to be used similar to a [Unity Action](https://docs.unity3d.com/ScriptReference/Events.UnityAction.html) or a [UE Delegates](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Delegates/). These can be used to bind a (member) function to a object of type Event. Once Invoke() is called on the event all (member) functions will immediately be invoked. The observer class will require to inherit from IEventListener, this allows for automatic removal of the observer or the sender.
@@ -20,8 +21,8 @@ Game design patterns are used to simplify the development, I have attempted to i
 **Component**
 The good old Gameobject Component system has been used and allows for more modular and diverse games.
 
-****
-**Used References**
+
+## Used References
 [C++ Core Guidlines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 [Game Programming Patterns by Robert Nystrom](https://gameprogrammingpatterns.com)
 [Beautiful C++](https://www.informit.com/store/beautiful-c-plus-plus-30-core-guidelines-for-writing-9780137647842)
@@ -39,7 +40,9 @@ Web builds can be made using Emscripten.
 
 
 ## Update Loop
-![GameLoop](https://i.imgur.com/4FO7eJY.png)
+<img src="https://i.imgur.com/4FO7eJY.png" style="width:60%;  display: block;
+  margin-left: 0;
+  margin-right: auto;"/>
 
 
 ## todo / ideals
