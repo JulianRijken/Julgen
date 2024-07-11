@@ -48,7 +48,6 @@ Web builds can be made using Emscripten.
 ## todo / ideals
 * **Game Loop**
     The current game loop uses some resources to loop over all components and game objects to check if they are set to be destroyed. There are some similar scenarios and these could be addressed by smartly moving objects between containers. This however should be properly tested for real world performance difference.  
-<br>
 * **Rendering**
     The rendering sorting is currently manually being done on the cpu every frame and should ultimately be replaced with proper rendering. Also allowing hte engine for 3D rendering.
     Rotating and scaling is also on the list ;)
