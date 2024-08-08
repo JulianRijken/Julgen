@@ -4,19 +4,21 @@
 
 void jul::SceneManager::LoadScene(int id, SceneLoadMode loadMode)
 {
+    auto& instance = GetInstance();
+
     // Cancle load when first scene in scenesToLoad is override force
-    if(not m_ScenesToLoad.empty() and m_ScenesToLoad.front().second == SceneLoadMode::OverrideForce)
+    if(not instance.m_ScenesToLoad.empty() and instance.m_ScenesToLoad.front().second == SceneLoadMode::OverrideForce)
         return;
 
     if(loadMode != SceneLoadMode::Additive)
-        m_ScenesToLoad.clear();
+        instance.m_ScenesToLoad.clear();
 
-    m_ScenesToLoad.emplace_back(id, loadMode);
+    instance.m_ScenesToLoad.emplace_back(id, loadMode);
 }
 
 jul::Scene* jul::SceneManager::FindScene(int id)
 {
-    for(const auto& scene : m_LoadedScenes)
+    for(const auto& scene : GetInstance().m_LoadedScenes)
         if(scene->m_Id == id)
             return scene.get();
 
@@ -25,7 +27,7 @@ jul::Scene* jul::SceneManager::FindScene(int id)
 
 void jul::SceneManager::BindScene(int id, std::function<void(Scene&)>&& sceneFunction)
 {
-    m_SceneBinds[id] = std::move(sceneFunction);
+    GetInstance().m_SceneBinds[id] = std::move(sceneFunction);
 }
 
 

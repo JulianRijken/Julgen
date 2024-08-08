@@ -1,6 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <unordered_set>
 
 #include "Component.h"
@@ -21,8 +22,16 @@ namespace jul
         Transform& operator=(Transform&&) noexcept = delete;
 
         [[nodiscard]] const glm::vec3& GetWorldPosition();
+        [[nodiscard]] const glm::quat& GetWorldRotation();
+        [[nodiscard]] const glm::vec3& GetWorldScale();
+        [[nodiscard]] const glm::mat4& GetWorldMatrix();
+        [[nodiscard]] glm::vec3 GetEulerAngles();
 
         [[nodiscard]] const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
+
+        [[nodiscard]] const glm::quat& GetLocalRotation() const { return m_LocalRotation; }
+
+        [[nodiscard]] const glm::vec3& GetLocalScale() const { return m_LocalScale; }
 
         [[nodiscard]] Transform* GetParent() const { return m_ParentPtr; }
 
@@ -33,34 +42,67 @@ namespace jul
 
         void SetLocalPosition(double x, double y, double z);
         void SetLocalPosition(const glm::vec3& position);
+        void SetLocalRotation(double x, double y, double z);
+        void SetLocalRotation(const glm::vec3& rotation);
+        void SetLocalRotation(const glm::quat& rotation);
+        void SetLocalScale(double x, double y, double z);
+        void SetLocalScale(const glm::vec3& scale);
 
         void SetWorldPosition(double x, double y, double z);
         void SetWorldPosition(const glm::vec3& position);
+        void SetWorldRotation(double x, double y, double z);
+        void SetWorldRotation(const glm::vec3& rotation);
+        void SetWorldRotation(const glm::quat& rotation);
+        void SetWorldScale(double x, double y, double z);
+        void SetWorldScale(const glm::vec3& scale);
 
         void Translate(double x, double y, double z);
         void Translate(const glm::vec3& translation);
 
-		void SetParent(Transform* newParentPtr, bool worldPositionStays = true);
+        void Rotate(double x, double y, double z);
+        void Rotate(const glm::vec3& eulerAngles);
 
-		bool IsChild(Transform* checkChildPtr) const;
+
+        void SetParent(Transform* newParentPtr, bool worldPositionStays = true);
+
+        bool IsChild(Transform* checkChildPtr) const;
 
         // Used by transform to force update physics position
         void SetRigidbody(Rigidbody* rigidbody);
 
     private:
         void UpdateWorldPosition();
-        void SetTransformDirty();
+        void UpdateWorldRotation();
+        void UpdateWorldScale();
+        void UpdateWorldMatrix();
+
+
+        void SetPositionDirty();
+        void SetRotationDirty();
+        void SetScaleDirty();
+
         void OnRigidbodyDestroyed(Object* object);
 
-        bool m_TransformDirty{ true };
-        glm::vec3 m_LocalPosition{};  // Primary Data
+        glm::vec3 m_LocalPosition{};                     // Primary Data
+        glm::quat m_LocalRotation{ glm::mat4{ 1.0f } };  // Primary Data
+        glm::vec3 m_LocalScale{};                        // Primary Data
+
+
+        bool m_PositionDirty{ true };
+        bool m_RotationDirty{ true };
+        bool m_ScaleDirty{ true };
+        bool m_MatrixDirty{ true };
+
         glm::vec3 m_WorldPosition{};  // Derived Data
+        glm::quat m_WorldRotation{};  // Derived Data
+        glm::vec3 m_WorldScale{};     // Derived Data
+
+        glm::mat4 m_WorldMatrix{};
 
         // Transform needs acces to the optional rigidbody
         // this is because it needs to update the physics positions
         // when setting the position manually
         Rigidbody* m_Rigidbody{ nullptr };
-
         Transform* m_ParentPtr{ nullptr };
 
         // TODO: Perform performance tests on the use of unordered_set instead of vector

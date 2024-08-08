@@ -57,7 +57,7 @@ void jul::RenderManager::Render() const
 {
     if(m_ActiveCamera == nullptr)
     {
-        std::cerr << "No camera to render with" << std::endl;
+        std::cerr << "No camera to render with\n";
         return;
     }
 
@@ -152,9 +152,9 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, 
     SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2 drawLocation,
-                                       const glm::vec2 srcLocation, const glm::ivec2 cellSize, int pixelsPerUnit,
-                                       glm::vec2 pivot, bool flipX, bool flipY) const
+void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2& drawLocation, float drawAngle,
+                                       const glm::vec2& srcLocation, const glm::ivec2& cellSize, int pixelsPerUnit,
+                                       const glm::vec2& pivot, bool flipX, bool flipY) const
 {
 
     const glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f));
@@ -183,8 +183,9 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
         flip = SDL_FLIP_VERTICAL;
 
 
-    const SDL_Point center{};  // Not needed
-    SDL_RenderCopyEx(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect,0.0f,&center,flip);
+    const SDL_Point center{ static_cast<int>(std::round(static_cast<float>(cellSize.x) * pivot.x)),
+                            static_cast<int>(std::round(static_cast<float>(cellSize.y) * pivot.y)) };  // Not needed
+    SDL_RenderCopyEx(m_RendererPtr, texture.GetSDLTexture(), &srcRect, &dstRect, drawAngle, &center, flip);
 }
 
 // Converts from world to screen pixels

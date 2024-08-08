@@ -26,9 +26,12 @@ void jul::SpriteRenderer::Render() const
 		return;
 
     const glm::vec2& pos = GetTransform().GetWorldPosition();
+    const float angle = GetTransform().GetEulerAngles().z;
+
     RenderManager::GetInstance().RenderTexture(
         m_SpritePtr->GetTexture(),
         pos,
+        angle,
         { m_SpritePtr->cellSize.x * m_DrawCell.x, m_SpritePtr->cellSize.y * m_DrawCell.y },
         m_SpritePtr->cellSize,
         m_SpritePtr->pixelsPerUnit,

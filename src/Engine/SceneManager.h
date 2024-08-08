@@ -30,12 +30,12 @@ namespace jul
     public:
         [[nodiscard]] static Scene& GetPrimaryScene() { return *GetInstance().m_PrimaryScenePtr; }
 
-        [[nodiscard]] Scene* FindScene(int id);
+        [[nodiscard]] static Scene* FindScene(int id);
 
         // Binds the scene to a string allowing it to be loaded based on a name
-        void BindScene(int id, std::function<void(Scene&)>&& sceneFunction);
+        static void BindScene(int id, std::function<void(Scene&)>&& sceneFunction);
 
-        void LoadScene(int id, SceneLoadMode loadMode = SceneLoadMode::OverrideForce);
+        static void LoadScene(int id, SceneLoadMode loadMode = SceneLoadMode::OverrideForce);
 
 
     private:
