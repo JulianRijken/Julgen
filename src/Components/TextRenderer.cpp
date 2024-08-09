@@ -53,9 +53,16 @@ void jul::TextRenderer::Render() const
         const glm::vec2& pos = GetTransform().GetWorldPosition();
         auto textureSize = m_TextTextureUPtr->GetSize();
         const float angle = GetTransform().GetEulerAngles().z;
+        const glm::vec2& scale = GetTransform().GetWorldScale();
 
-        RenderManager::GetInstance().RenderTexture(
-            *m_TextTextureUPtr, pos, angle, {}, { textureSize.x, textureSize.y }, m_FontSPtr->GetSize(), m_Alighnment);
+        RenderManager::GetInstance().RenderTexture(*m_TextTextureUPtr,
+                                                   pos,
+                                                   angle,
+                                                   scale,
+                                                   {},
+                                                   { textureSize.x, textureSize.y },
+                                                   m_FontSPtr->GetSize(),
+                                                   m_Alighnment);
     }
 }
 

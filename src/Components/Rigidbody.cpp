@@ -79,7 +79,13 @@ void jul::Rigidbody::FixedUpdate()
     }
 
     // Static allows it to be moved manually
-    if(m_Settings.mode != Mode::Static)
+    if(m_Settings.mode == Mode::Static or m_Settings.manuallyMove)
+    {
+        const glm::vec3 pos = GetTransform().GetWorldPosition();
+        const float angle = GetTransform().GetEulerAngles().z;
+        m_BodyPtr->SetTransform({ pos.x, pos.y }, glm::radians(angle));
+    }
+    else
     {
         const auto position = m_BodyPtr->GetPosition();
         const glm::vec3 targetPosition = { position.x, position.y, 0 };
@@ -107,17 +113,6 @@ void jul::Rigidbody::UpdateCollisionListeners()
             m_CollisionListeners.emplace(listener);
     }
 }
-
-// void jul::Rigidbody::AddCollisionListener(ICollisionListener* collisionListenerPtr)
-// {
-//     m_CollisionListeners.insert(collisionListenerPtr);
-// }
-
-// void jul::Rigidbody::RemoveCollisionListener(ICollisionListener* collisionListenerPtr)
-// {
-//     m_CollisionListeners.erase(collisionListenerPtr);
-// }
-
 
 void jul::Rigidbody::OnCollisionBegin(const Collision& collision) const
 {

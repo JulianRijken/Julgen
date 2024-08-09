@@ -12,7 +12,6 @@
 #include <glm/gtx/transform.hpp>
 
 #include "EngineGUI.h"
-#include "GameObject.h"
 #include "GameSettings.h"
 #include "RenderComponent.h"
 #include "Texture2D.h"
@@ -56,10 +55,7 @@ void jul::RenderManager::Destroy()
 void jul::RenderManager::Render() const
 {
     if(m_ActiveCamera == nullptr)
-    {
-        std::cerr << "No camera to render with\n";
         return;
-    }
 
     const SDL_Color& color = GetBackgroundColor();
     SDL_SetRenderDrawColor(m_RendererPtr, color.r, color.g, color.b, color.a);
@@ -132,29 +128,9 @@ void jul::RenderManager::RenderObjects() const
 		renderer->UpdateGUI();
 }
 
-
-void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, const float y) const
-{
-    SDL_Rect dst{};
-    dst.x = static_cast<int>(x);
-    dst.y = static_cast<int>(y);
-    SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-    SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
-}
-
-void jul::RenderManager::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
-{
-    SDL_Rect dst{};
-    dst.x = static_cast<int>(x);
-    dst.y = static_cast<int>(y);
-    dst.w = static_cast<int>(width);
-    dst.h = static_cast<int>(height);
-    SDL_RenderCopy(m_RendererPtr, texture.GetSDLTexture(), nullptr, &dst);
-}
-
 void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2& drawLocation, float drawAngle,
-                                       const glm::vec2& srcLocation, const glm::ivec2& cellSize, int pixelsPerUnit,
-                                       const glm::vec2& pivot, bool flipX, bool flipY) const
+                                       glm::vec2 drawScale, const glm::vec2& srcLocation, const glm::ivec2& cellSize,
+                                       int pixelsPerUnit, const glm::vec2& pivot, bool flipX, bool flipY) const
 {
 
     const glm::vec3 topLeft = WorldToScreen(glm::vec3(drawLocation, 0.0f));
@@ -162,11 +138,13 @@ void jul::RenderManager::RenderTexture(const Texture2D& texture, const glm::vec2
                                       -(static_cast<float>(cellSize.y) / static_cast<float>(pixelsPerUnit)) };
     const glm::vec3 rectSize = WorldToScreen(glm::vec3(cellSizeWorld + drawLocation, 0.0f)) - topLeft;
 
+    const glm::vec2 scaledRectSize = glm::vec2(rectSize) * drawScale;
+
     SDL_Rect dstRect{};
-    dstRect.x = static_cast<int>(std::round(topLeft.x - rectSize.x * pivot.x));
-    dstRect.y = static_cast<int>(std::round(topLeft.y - rectSize.y * pivot.y));
-    dstRect.w = static_cast<int>(std::round(rectSize.x));
-    dstRect.h = static_cast<int>(std::round(rectSize.y));
+    dstRect.x = static_cast<int>(std::round(topLeft.x - scaledRectSize.x * pivot.x));
+    dstRect.y = static_cast<int>(std::round(topLeft.y - scaledRectSize.y * pivot.y));
+    dstRect.w = static_cast<int>(std::round(scaledRectSize.x));
+    dstRect.h = static_cast<int>(std::round(scaledRectSize.y));
 
     SDL_Rect srcRect{};
     srcRect.x = static_cast<int>(std::round(srcLocation.x));

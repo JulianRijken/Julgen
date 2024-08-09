@@ -5,7 +5,6 @@
 
 #include <memory>
 
-#include "GameObject.h"
 #include "GameTime.h"
 #include "Locator.h"
 #include "Rigidbody.h"
@@ -112,7 +111,6 @@ void jul::Physics::AddCollider(BoxCollider* colliderPtr)
 
     // Apply fixture
     colliderPtr->m_Fixture = colliderPtr->m_BodyPtr->CreateFixture(&fixtureDef);
-    return;
 }
 
 void jul::Physics::RemoveCollider(const BoxCollider* colliderPtr)

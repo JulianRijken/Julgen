@@ -230,7 +230,7 @@ void jul::Transform::UpdateWorldScale()
     if(m_ParentPtr == nullptr)
         m_WorldScale = m_LocalScale;
     else
-        m_WorldScale = m_LocalScale + m_ParentPtr->GetWorldScale();
+        m_WorldScale = m_LocalScale * m_ParentPtr->GetWorldScale();
 
     m_ScaleDirty = false;
 }

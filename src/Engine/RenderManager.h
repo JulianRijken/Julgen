@@ -30,12 +30,9 @@ namespace jul
         void Render() const;
         void PickCamera();
 
-        void RenderTexture(const Texture2D& texture, float x, float y) const;
-        void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
-
         void RenderTexture(const Texture2D& texture, const glm::vec2& drawLocation, float drawAngle,
-                           const glm::vec2& srcLocation, const glm::ivec2& cellSize, int pixelsPerUnit,
-                           const glm::vec2& pivot, bool flipX = false, bool flipY = false) const;
+                           glm::vec2 drawScale, const glm::vec2& srcLocation, const glm::ivec2& cellSize,
+                           int pixelsPerUnit, const glm::vec2& pivot, bool flipX = false, bool flipY = false) const;
 
         [[nodiscard]] SDL_Renderer* GetSDLRenderer() const { return m_RendererPtr; };
         [[nodiscard]] const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }

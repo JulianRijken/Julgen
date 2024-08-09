@@ -69,6 +69,13 @@ jul::Texture2D* jul::Resources::LoadTexture(const std::string& filePath)
     const auto fullPath = g_ContentPath / filePath;
     SDL_Texture* texture = IMG_LoadTexture(RenderManager::GetInstance().GetSDLRenderer(), fullPath.string().c_str());
 
+    if(not std::filesystem::exists(fullPath))
+        throw std::runtime_error(std::string("File does not exist") + fullPath.string());
+
+    if(std::filesystem::is_block_file(fullPath))
+        throw std::runtime_error(std::string("File is blocked") + fullPath.string());
+
+
     if(texture == nullptr)
         throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 

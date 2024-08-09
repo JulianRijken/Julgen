@@ -53,6 +53,7 @@ namespace jul
             bool fixedRotation = false;
             bool avoidTunnelingOnDynamicBodies = false;
             bool active = true;
+            bool manuallyMove = false;
 
             static Settings Default() { return {}; }
         };

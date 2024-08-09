@@ -83,9 +83,9 @@ namespace jul
 
         void OnRigidbodyDestroyed(Object* object);
 
-        glm::vec3 m_LocalPosition{};                     // Primary Data
+        glm::vec3 m_LocalPosition{ 0, 0, 0 };            // Primary Data
         glm::quat m_LocalRotation{ glm::mat4{ 1.0f } };  // Primary Data
-        glm::vec3 m_LocalScale{};                        // Primary Data
+        glm::vec3 m_LocalScale{ 1, 1, 1 };               // Primary Data
 
 
         bool m_PositionDirty{ true };
