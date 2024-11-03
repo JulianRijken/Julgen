@@ -3,11 +3,6 @@
 #include <soloud.h>
 #include <soloud_wav.h>
 
-#include <condition_variable>
-#include <mutex>
-#include <queue>
-#include <thread>
-
 #include "GameTime.h"
 #include "Sound_System.h"
 
@@ -44,73 +39,25 @@ namespace jul
     class Sound_System::System_Impl
     {
     public:
-        System_Impl() :
-            m_IsSoundThreadActive{ true },
-            m_SoundThread{ &System_Impl::SoundThread, this }
-        {
-        }
+
+        System_Impl() { soLoudEngine.init(); }
 
         ~System_Impl()
         {
-            const std::scoped_lock lock{ m_PlayConditionMutex };
-            m_IsSoundThreadActive = false;
-            m_PlayCondition.notify_all();
+            soLoudEngine.deinit();
         }
 
         void PlaySound(int soundType)
         {
-            const std::scoped_lock lock{ m_PlayConditionMutex, m_QueueMutex };
-            m_QueuedSounds.push(soundType);
-            m_PlayCondition.notify_all();
+            const SoundWave* sampleToPlay{ Resources::GetSound(soundType) };
+            auto handle = soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
+            soLoudEngine.setRelativePlaySpeed(handle, GameTime::GetTimeScale<float>());
         }
 
-
-    private:
-        void SoundThread()
-        {
-            soLoudEngine.init();
-
-            while(m_IsSoundThreadActive)
-            {
-                {
-                    std::unique_lock<std::mutex> lock(m_PlayConditionMutex);
-                    m_PlayCondition.wait(lock,
-                                         [this]
-                                         {
-                                             const std::scoped_lock queueLock{ m_QueueMutex };
-                                             return not m_QueuedSounds.empty() or not m_IsSoundThreadActive;
-                                         });
-                }
-
-                if(not m_IsSoundThreadActive)
-                    break;
-
-                // Manually locking to keep members in scope
-                m_QueueMutex.lock();
-                const int soundIndexToPlay = m_QueuedSounds.front();
-                m_QueuedSounds.pop();
-                m_QueueMutex.unlock();
-
-                const SoundWave* sampleToPlay{ Resources::GetSound(soundIndexToPlay) };
-                auto handle = soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
-                soLoudEngine.setRelativePlaySpeed(handle, GameTime::GetTimeScale<float>());
-            }
-
-            soLoudEngine.deinit();
-        }
 
         // Relies on member initialization order!
         // Soloud Engine needs to go out of scope last as the jthread needs it
         SoLoud::Soloud soLoudEngine;
-
-        std::condition_variable m_PlayCondition;
-        std::mutex m_PlayConditionMutex;
-        std::mutex m_QueueMutex;
-
-        std::queue<int> m_QueuedSounds{};  // Using a set to void duplicates
-
-        bool m_IsSoundThreadActive;
-        std::jthread m_SoundThread;
     };
 }  // namespace jul
 

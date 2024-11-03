@@ -19,6 +19,7 @@
 #include "SceneManager.h"
 #include "Sound.h"
 #include "TweenEngine.h"
+#include "Sound_System.h"
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 

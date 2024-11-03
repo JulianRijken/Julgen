@@ -72,6 +72,7 @@ function(make_libs_available)
 
         find_package(SDL2 REQUIRED)
         find_package(SDL2_ttf REQUIRED)
+        find_package(SDL2_image REQUIRED)
     else()
 
         message(STATUS "Downloading " glm...)
@@ -90,45 +91,50 @@ function(make_libs_available)
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(fmt)
 
-        message(STATUS "Downloading " sdl2...)
+        if(WIN32)
+            message(STATUS "Downloading " sdl2...)
 
-        set(SDL_STATIC OFF)
-        FetchContent_Declare(
-            sdl2
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL
-            GIT_TAG release-2.30.2
-            GIT_SHALLOW TRUE
-            OVERRIDE_FIND_PACKAGE TRUE)
-        FetchContent_MakeAvailable(sdl2)
+            set(SDL_STATIC OFF)
+            FetchContent_Declare(
+                sdl2
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL
+                GIT_TAG release-2.30.2
+                GIT_SHALLOW TRUE
+                OVERRIDE_FIND_PACKAGE TRUE)
+            FetchContent_MakeAvailable(sdl2)
 
-        # Windows requires building FreeType
-        set(SDL2TTF_VENDORED ON)
+            # Windows requires building FreeType
+            set(SDL2TTF_VENDORED ON)
 
-        message(STATUS "Downloading " sdl2_ttf...)
-        FetchContent_Declare(
-            sdl2-ttf
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf
-            GIT_TAG release-2.22.0
-            GIT_SHALLOW TRUE
-            OVERRIDE_FIND_PACKAGE TRUE)
-        FetchContent_MakeAvailable(sdl2-ttf)
+            message(STATUS "Downloading " sdl2_ttf...)
+            FetchContent_Declare(
+                sdl2-ttf
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf
+                GIT_TAG release-2.22.0
+                GIT_SHALLOW TRUE
+                OVERRIDE_FIND_PACKAGE TRUE)
+            FetchContent_MakeAvailable(sdl2-ttf)
+
+
+            set(SDL2IMAGE_BMP ON)
+            set(SDL2IMAGE_GIF OFF)
+            set(SDL2IMAGE_JPG ON)
+            set(SDL2IMAGE_PNG ON)
+
+
+            set(SDL2IMAGE_VENDORED ON)
+            message(STATUS "Downloading " sdl2_image...)
+            FetchContent_Declare(
+                sdl2-image
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
+                GIT_TAG release-2.8.2
+                GIT_SHALLOW TRUE
+                OVERRIDE_FIND_PACKAGE TRUE)
+            FetchContent_MakeAvailable(sdl2-image)
+
+        endif()
     endif()
-        
-    set(SDL2IMAGE_BMP ON)
-    set(SDL2IMAGE_GIF OFF)
-    set(SDL2IMAGE_JPG ON)
-    set(SDL2IMAGE_PNG ON)
 
-
-    set(SDL2IMAGE_VENDORED ON)
-    message(STATUS "Downloading " sdl2_image...)
-    FetchContent_Declare(
-        sdl2-image
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
-        GIT_TAG release-2.8.2
-        GIT_SHALLOW TRUE
-        OVERRIDE_FIND_PACKAGE TRUE)
-    FetchContent_MakeAvailable(sdl2-image)
 
 
     # Add and Link box2D
@@ -140,7 +146,14 @@ function(make_libs_available)
     # Again credits to mat for providing submodule
     set(SOLOUD_BACKEND_NULL OFF)
     set(SOLOUD_BACKEND_WINMM OFF)
-    set(SOLOUD_BACKEND_MINIAUDIO ON)
+
+    if(EMSCRIPTEN)
+        set(SOLOUD_BACKEND_SDL2 ON)
+        set(SOLOUD_BACKEND_MINIAUDIO OFF)
+    else()
+        set(SOLOUD_BACKEND_MINIAUDIO ON)
+    endif()
+
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/soloud)
     if(NOT MSVC)
         target_compile_options(soloud PRIVATE -Wno-multichar)

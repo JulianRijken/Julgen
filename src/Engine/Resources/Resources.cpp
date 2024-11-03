@@ -86,7 +86,7 @@ jul::Texture2D* jul::Resources::LoadTexture(const std::string& filePath)
 void jul::Resources::ConfigurePath()
 {
 #if __EMSCRIPTEN__
-	m_ContentPath = "";
+	g_ContentPath = "/Assets/";
 #else
     g_ContentPath = "./Assets/";
 

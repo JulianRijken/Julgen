@@ -140,23 +140,135 @@ target_include_directories(${TARGET_NAME} PUBLIC
 
 
 
+
 if(MSVC)
     target_link_libraries(${TARGET_NAME} PUBLIC SDL2::SDL2main)
 endif()
 
+
 target_link_libraries(${TARGET_NAME} PUBLIC
     glm::glm
     fmt::fmt
-
     tobanteGaming::Box2D #TODO:  Needs to also be PRIVATE once abstraction finished
-    SDL2::SDL2 # TODO: SDL is still needed for Input and color, could also be abstacted
-    SDL2_ttf::SDL2_ttf
-    SDL2_image::SDL2_image
 )
+
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     soloud
 )
+
+
+if(EMSCRIPTEN)
+    target_compile_options(${TARGET_NAME} PUBLIC -pthread -gsource-map -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -g -Wno-switch)
+    target_link_libraries(${TARGET_NAME} PUBLIC -sERROR_ON_UNDEFINED_SYMBOLS=0 -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2)
+
+    SET(CMAKE_EXECUTABLE_SUFFIX ".html")
+
+    target_link_libraries(${TARGET_NAME} PUBLIC
+        "--preload-file ${CMAKE_SOURCE_DIR}/Assets@Assets"
+        "-s ALLOW_MEMORY_GROWTH" 
+        "-s EXIT_RUNTIME=1"
+        "-s SDL2_IMAGE_FORMATS='[\"png\"]'"
+        "-s ASSERTIONS"
+        "-s GL_DEBUG"
+        "-s DEMANGLE_SUPPORT=1"
+        "-s OFFSCREEN_FRAMEBUFFER=1"
+
+        "--shell-file \"${EMSCRIPTEN_ROOT_PATH}/src/shell_minimal.html\""
+    )
+
+
+
+
+
+    # # modify shell_minimal.html to make canvas fill the screen
+    # file(READ ${EMSCRIPTEN_ROOT_PATH}/src/shell_minimal.html EMSCRIPTEN_SHELL_HTML)
+    # string(FIND "${EMSCRIPTEN_SHELL_HTML}" "<style>" HAS_STYLE)
+    # if (${HAS_STYLE} EQUAL -1)
+    #     message(WARNING "<style> not found in shell_minimal.html, copying as-is")
+    # else()
+    #     string(CONCAT STYLE_REPLACEMENT "<meta name=\"viewport\" content=\"width=device-width,user-scalable=no,viewport-fit=cover\">\n"
+    #         "    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n"
+    #         "    <style>\n"
+    #         "      body, html { border: 0px none; padding: 0px; margin: 0px; width: 100%; height: 100%; overflow: hidden; position: fixed; }\n"
+    #         "      canvas.emscripten {"
+    #         "          image-rendering: crisp-edges;"
+    #         "          image-rendering: pixelated;"
+    #         "          aspect-ratio: ${ASPECT_RATIO};"
+    #         "          max-height: 100vh;"
+    #         "          max-width: 100vw;"
+    #         "          width: min(100vw, calc(100vh * calc(${ASPECT_RATIO})));"
+    #         "          height: min(100vh, calc(100vw / calc(${ASPECT_RATIO})));"
+    #         "          overflow: hidden;"
+    #         "          display: block;"
+    #         "          position: absolute;"
+    #         "          top: 0; bottom: 0; left: 0; right: 0;"
+    #         "          margin: auto;"
+    #         "      }\n"
+    #         "      .emscripten_border { width: 100%; height: 100%; border: 0px none !important;}\n"
+    #         "      hr { display: none; }\n"
+    #         "      div[id=\"overlay\"] {"
+    #         "          position: absolute;"
+    #         "          top: 0; left: 0;"
+    #         "          width: 100%; height: 100%;"
+    #         "          background-color: rgba(0, 0, 0, 0.5);"
+    #         "          z-index: 9999;"
+    #         "          display: flex;"
+    #         "          justify-content: center;"
+    #         "          align-items: center;"
+    #         "          cursor: pointer;"
+    #         "          text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);"
+    #         "     }\n"
+    #         "     div[id=\"overlay\"] p {"
+    #         "          background-color: #1E1E2E;"
+    #         "          color: white;"
+    #         "          font-size: 24px;"
+    #         "          padding: 10px;"
+    #         "          border-radius: 4px;"
+    #         "          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);"
+    #         "     }\n"
+    #     )
+    #     string(REPLACE "<style>" "${STYLE_REPLACEMENT}" EMSCRIPTEN_SHELL_HTML "${EMSCRIPTEN_SHELL_HTML}")
+
+    #     if(CLICK_TO_START)
+    #         string(CONCAT BODY_REPLACEMENT "
+    # <body>
+    #     <div id=\"overlay\">
+    #         <p>Click to start game</p>
+    #     </div>
+
+    #     <script>
+    #     window.addEventListener('load', function() {
+    #         // disable events until clicked\n
+    #         let eat = function(event){
+    #             event.stopImmediatePropagation();
+    #         };
+
+    #         window.addEventListener('keydown', eat, true);
+    #         window.addEventListener('keyup', eat, true);
+
+    #         var overlay = document.getElementById('overlay');
+    #         overlay.addEventListener('click', function() {
+    #         overlay.style.display = 'none';
+    #         window.removeEventListener('keydown', eat, true);
+    #         window.removeEventListener('keyup', eat, true);
+    #         });
+    #     });
+    #     </script>")
+    #         string(REPLACE "<body>" "${BODY_REPLACEMENT}" EMSCRIPTEN_SHELL_HTML "${EMSCRIPTEN_SHELL_HTML}")
+    #     endif()
+
+    # endif()
+    # file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/shell.html.in "${EMSCRIPTEN_SHELL_HTML}")
+
+    # set_target_properties("${TARGET_NAME}" PROPERTIES LINK_FLAGS "-s ASSERTIONS -s GL_DEBUG -s DEMANGLE_SUPPORT=1 -s OFFSCREEN_FRAMEBUFFER=1 -s ALLOW_MEMORY_GROWTH -s EXIT_RUNTIME=1 -s SDL2_IMAGE_FORMATS='[\"png\"]' --preload-file \"${CMAKE_SOURCE_DIR}/Assets\"@Assets --shell-file \"${CMAKE_CURRENT_BINARY_DIR}/shell.html.in\"")
+else()
+    target_link_libraries(${TARGET_NAME} PUBLIC
+        SDL2::SDL2 # TODO: SDL is still needed for Input and color, could also be abstacted
+        SDL2_ttf::SDL2_ttf
+        SDL2_image::SDL2_image
+    )
+endif()
 
 
 
@@ -194,14 +306,16 @@ target_compile_options(${TARGET_NAME} PUBLIC
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
-# Make sure the asset folder get's copyed or linked correctly
-if(WIN32)
-    set(SYMLINK_COMMAND copy_directory)
-else()
-    set(SYMLINK_COMMAND create_symlink)
-endif()
+if(NOT EMSCRIPTEN)
+    # Make sure the asset folder get's copyed or linked correctly
+    if(WIN32)
+        set(SYMLINK_COMMAND copy_directory)
+    else()
+        set(SYMLINK_COMMAND create_symlink)
+    endif()
 
-add_custom_command(TARGET ${TARGET_NAME} PRE_BUILD
-                COMMAND ${CMAKE_COMMAND} -E ${SYMLINK_COMMAND}
-                "${CMAKE_SOURCE_DIR}/Assets"
-                "${CMAKE_BINARY_DIR}/Assets")
+    add_custom_command(TARGET ${TARGET_NAME} PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E ${SYMLINK_COMMAND}
+                    "${CMAKE_SOURCE_DIR}/Assets"
+                    "${CMAKE_BINARY_DIR}/Assets")
+endif()
