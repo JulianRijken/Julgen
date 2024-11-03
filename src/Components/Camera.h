@@ -30,8 +30,8 @@ namespace jul
         int m_Priority{ 0 };
         float m_OrthoSize{ 14 };
         float m_AspectRatio{};
-        [[maybe_unused]] glm::mat4 m_ViewMatrix{};
-        [[maybe_unused]] glm::mat4 m_ProjectionMatrix{};
+        glm::mat4 m_ViewMatrix{};
+        glm::mat4 m_ProjectionMatrix{};
     };
 
 }  // namespace jul
