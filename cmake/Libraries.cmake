@@ -66,13 +66,12 @@ function(make_libs_available)
 
     include(FetchContent)
 
-    if(NOT WIN32)
+    if(NOT WIN32 AND NOT EMSCRIPTEN)
         find_package(glm REQUIRED)
         find_package(fmt REQUIRED)
 
         find_package(SDL2 REQUIRED)
         find_package(SDL2_ttf REQUIRED)
-        find_package(SDL2_image REQUIRED)
     else()
 
         message(STATUS "Downloading " glm...)
@@ -102,47 +101,6 @@ function(make_libs_available)
             OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2)
 
-
-        set(SDL2IMAGE_BMP ON)
-        set(SDL2IMAGE_GIF ON)
-        set(SDL2IMAGE_JPG ON)
-        set(SDL2IMAGE_JXL ON)
-        set(SDL2IMAGE_PNG ON)
-
-        # PFF this is what you get on windows :(
-        # TODO: And this still did not turn off all extra libs
-        # when times has been granted fix the executables jxl adds :)
-        set(SDL2IMAGE_AVIF OFF CACHE BOOL "Disable AVIF support" FORCE)
-        set(SDL2IMAGE_LBM OFF CACHE BOOL "Disable LBM support" FORCE)
-        set(SDL2IMAGE_PCX OFF CACHE BOOL "Disable PCX support" FORCE)
-        set(SDL2IMAGE_PNM OFF CACHE BOOL "Disable PNM support" FORCE)
-        set(SDL2IMAGE_QOI OFF CACHE BOOL "Disable QOI support" FORCE)
-        set(SDL2IMAGE_SVG OFF CACHE BOOL "Disable SVG support" FORCE)
-        set(SDL2IMAGE_TGA OFF CACHE BOOL "Disable TGA support" FORCE)
-        set(SDL2IMAGE_TIF OFF CACHE BOOL "Disable TIF support" FORCE)
-        set(SDL2IMAGE_WEBP OFF CACHE BOOL "Disable WEBP support" FORCE)
-        set(SDL2IMAGE_XCF OFF CACHE BOOL "Disable XCF support" FORCE)
-        set(SDL2IMAGE_XPM OFF CACHE BOOL "Disable XPM support" FORCE)
-        set(SDL2IMAGE_XV OFF CACHE BOOL "Disable XV support" FORCE)
-        set(ENABLE_FUZZERS_DEFAULT OFF CACHE BOOL "Disable fuzzers by default" FORCE)
-        set(JPEGXL_ENABLE_FUZZERS OFF CACHE BOOL "Disable JPEGXL fuzzers" FORCE)
-        set(JPEGXL_ENABLE_TOOLS OFF CACHE BOOL "Disable JPEGXL tools" FORCE)
-        set(JPEGXL_ENABLE_BENCHMARK OFF CACHE BOOL "Disable JPEGXL benchmark" FORCE)
-        set(JPEGXL_ENABLE_EXAMPLES OFF CACHE BOOL "Disable JPEGXL examples" FORCE)
-        set(JPEGXL_ENABLE_SJPEG OFF CACHE BOOL "Disable JPEGXL SJPEG support" FORCE)
-        set(JPEGXL_ENABLE_OPENEXR OFF CACHE BOOL "Disable JPEGXL OpenEXR support" FORCE)
-        set(JPEGXL_ENABLE_TRANSCODE_JPEG OFF CACHE BOOL "Disable JPEGXL transcode JPEG support" FORCE)
-
-        set(SDL2IMAGE_VENDORED ON)
-        message(STATUS "Downloading " sdl2_image...)
-        FetchContent_Declare(
-            sdl2-image
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
-            GIT_TAG release-2.8.2
-            GIT_SHALLOW TRUE
-            OVERRIDE_FIND_PACKAGE TRUE)
-        FetchContent_MakeAvailable(sdl2-image)
-
         # Windows requires building FreeType
         set(SDL2TTF_VENDORED ON)
 
@@ -155,6 +113,46 @@ function(make_libs_available)
             OVERRIDE_FIND_PACKAGE TRUE)
         FetchContent_MakeAvailable(sdl2-ttf)
     endif()
+        
+    set(SDL2IMAGE_BMP ON)
+    set(SDL2IMAGE_GIF ON)
+    set(SDL2IMAGE_JPG ON)
+    set(SDL2IMAGE_JXL ON)
+    set(SDL2IMAGE_PNG ON)
+
+    # PFF this is what you get on windows :(
+    # TODO: And this still did not turn off all extra libs
+    # when times has been granted fix the executables jxl adds :)
+    set(SDL2IMAGE_AVIF OFF CACHE BOOL "Disable AVIF support" FORCE)
+    set(SDL2IMAGE_LBM OFF CACHE BOOL "Disable LBM support" FORCE)
+    set(SDL2IMAGE_PCX OFF CACHE BOOL "Disable PCX support" FORCE)
+    set(SDL2IMAGE_PNM OFF CACHE BOOL "Disable PNM support" FORCE)
+    set(SDL2IMAGE_QOI OFF CACHE BOOL "Disable QOI support" FORCE)
+    set(SDL2IMAGE_SVG OFF CACHE BOOL "Disable SVG support" FORCE)
+    set(SDL2IMAGE_TGA OFF CACHE BOOL "Disable TGA support" FORCE)
+    set(SDL2IMAGE_TIF OFF CACHE BOOL "Disable TIF support" FORCE)
+    set(SDL2IMAGE_WEBP OFF CACHE BOOL "Disable WEBP support" FORCE)
+    set(SDL2IMAGE_XCF OFF CACHE BOOL "Disable XCF support" FORCE)
+    set(SDL2IMAGE_XPM OFF CACHE BOOL "Disable XPM support" FORCE)
+    set(SDL2IMAGE_XV OFF CACHE BOOL "Disable XV support" FORCE)
+    set(ENABLE_FUZZERS_DEFAULT OFF CACHE BOOL "Disable fuzzers by default" FORCE)
+    set(JPEGXL_ENABLE_FUZZERS OFF CACHE BOOL "Disable JPEGXL fuzzers" FORCE)
+    set(JPEGXL_ENABLE_TOOLS OFF CACHE BOOL "Disable JPEGXL tools" FORCE)
+    set(JPEGXL_ENABLE_BENCHMARK OFF CACHE BOOL "Disable JPEGXL benchmark" FORCE)
+    set(JPEGXL_ENABLE_EXAMPLES OFF CACHE BOOL "Disable JPEGXL examples" FORCE)
+    set(JPEGXL_ENABLE_SJPEG OFF CACHE BOOL "Disable JPEGXL SJPEG support" FORCE)
+    set(JPEGXL_ENABLE_OPENEXR OFF CACHE BOOL "Disable JPEGXL OpenEXR support" FORCE)
+    set(JPEGXL_ENABLE_TRANSCODE_JPEG OFF CACHE BOOL "Disable JPEGXL transcode JPEG support" FORCE)
+
+    set(SDL2IMAGE_VENDORED ON)
+    message(STATUS "Downloading " sdl2_image...)
+    FetchContent_Declare(
+        sdl2-image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
+        GIT_TAG release-2.8.2
+        GIT_SHALLOW TRUE
+        OVERRIDE_FIND_PACKAGE TRUE)
+    FetchContent_MakeAvailable(sdl2-image)
 
 
     # Add and Link box2D
