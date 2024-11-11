@@ -178,9 +178,6 @@ if(EMSCRIPTEN)
     )
 
 
-
-
-
     # # modify shell_minimal.html to make canvas fill the screen
     # file(READ ${EMSCRIPTEN_ROOT_PATH}/src/shell_minimal.html EMSCRIPTEN_SHELL_HTML)
     # string(FIND "${EMSCRIPTEN_SHELL_HTML}" "<style>" HAS_STYLE)
@@ -292,10 +289,10 @@ endif()
 
 
 
-# enable c++20 features
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
+# enable c++23 features
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
 set_property(TARGET ${TARGET_NAME} PROPERTY
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED TRUE
     CXX_EXTENSIONS FALSE
 )

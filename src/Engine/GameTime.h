@@ -36,6 +36,8 @@ namespace jul
 
         static void SetTimeScale(double timeScale) { g_TimeScale = timeScale; }
 
+        static void SetFixedDeltaTime(double fixedDeltaTime) { g_FixedDeltaTime = fixedDeltaTime; }
+
         // clang-format off
 
         template<typename Type = decltype(g_FrameCount)>

@@ -1,4 +1,5 @@
 #include <fmt/core.h>
+#include <GameSettings.h>
 #include <Resources.h>
 #include <soloud.h>
 #include <soloud_wav.h>
@@ -50,7 +51,8 @@ namespace jul
         void PlaySound(int soundType)
         {
             const SoundWave* sampleToPlay{ Resources::GetSound(soundType) };
-            auto handle = soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), 0.3f);  // TODO: Pass volume
+            auto handle =
+                soLoudEngine.play(*sampleToPlay->GetImpl().GetWave(), GameSettings::g_Volume);  // TODO: Pass volume
             soLoudEngine.setRelativePlaySpeed(handle, GameTime::GetTimeScale<float>());
         }
 

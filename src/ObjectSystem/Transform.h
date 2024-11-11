@@ -76,10 +76,7 @@ namespace jul
         void UpdateWorldScale();
         void UpdateWorldMatrix();
 
-
-        void SetPositionDirty();
-        void SetRotationDirty();
-        void SetScaleDirty();
+        void SetTransformDirty();
 
         void OnRigidbodyDestroyed(Object* object);
 

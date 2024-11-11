@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include <glm/exponential.hpp>
-#include <glm/ext/quaternion_common.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
 #include <numbers>
 
@@ -25,15 +25,15 @@ namespace jul::math
     {
         if (min > max)
         {
-            const Type TEMP_MAX = max;
+            const Type tempMax = max;
             max = min;
-            min = TEMP_MAX;
+            min = tempMax;
         }
 
-        const Type RANDOM_ALPHA{ Type(rand()) / RAND_MAX };
-        const Type RANGE{ max - min };
+        const Type randomAlpha{ Type(rand()) / RAND_MAX };
+        const Type range{ max - min };
 
-        return RANDOM_ALPHA * RANGE + min;
+        return randomAlpha * range + min;
     }
 
     template<typename Type>
@@ -65,21 +65,26 @@ namespace jul::math
 
         if (min > max)
         {
-            const Type TEMP_MAX = max;
+            const Type tempMax = max;
             max = min;
-            min = TEMP_MAX;
+            min = tempMax;
         }
 
         Type range = max - min;
-        Type result = value;
 
-        while (result > max)
-            result -= range;
+        while(value > max)
+        {
+            int offset = value - max;
+            value -= range + offset;
+        }
 
-        while (result < min)
-            result += range;
+        while(value < min)
+        {
+            int offset = min - value;
+            value += range + offset;
+        }
 
-        return result;
+        return value;
     }
 
     template<typename Type>
@@ -96,6 +101,13 @@ namespace jul::math
 
         return glm::mix(b, a, glm::exp2(-deltaTime / h));
     }
+
+    // inline glm::quat LerpSmooth(const glm::quat& a, const glm::quat& b, double duration, double deltaTime)
+    // {
+    //     const double h{ -duration / glm::log2(1.0 / 100.0) };
+
+    //     return glm::slerp(b, a, static_cast<float>(glm::exp2(-deltaTime / h)));
+    // }
 
     template<typename Type, typename DeltaType>
         requires std::integral<Type> or std::floating_point<Type>

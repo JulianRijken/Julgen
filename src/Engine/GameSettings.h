@@ -17,6 +17,7 @@ namespace jul
         inline static int g_WindowWidth{ 1280 };
         inline static int g_WindowHeight{ 720 };
         inline static bool g_ShowConsole{ true };
+        inline static float g_Volume{ 1.0f };
     };
 }
 #endif // GAMESETTINGS_H

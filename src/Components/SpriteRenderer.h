@@ -1,5 +1,6 @@
 #ifndef SPRITERENDERER_H
 #define SPRITERENDERER_H
+
 #include <glm/vec2.hpp>
 
 #include "RenderComponent.h"

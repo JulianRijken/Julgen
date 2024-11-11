@@ -51,6 +51,7 @@ const glm::vec3& jul::Transform::GetWorldScale()
     return m_WorldScale;
 }
 
+
 const glm::mat4& jul::Transform::GetWorldMatrix()
 {
     if(m_MatrixDirty)
@@ -68,7 +69,7 @@ void jul::Transform::SetLocalPosition(const glm::vec3& position)
         return;
 
     m_LocalPosition = position;
-    SetPositionDirty();
+    SetTransformDirty();
 
     if(m_Rigidbody)
         m_Rigidbody->SetPosition(GetWorldPosition());
@@ -87,7 +88,7 @@ void jul::Transform::SetLocalRotation(const glm::quat& rotation)
         return;
 
     m_LocalRotation = rotation;
-    SetRotationDirty();
+    SetTransformDirty();
 }
 
 void jul::Transform::SetLocalScale(double x, double y, double z) { SetLocalScale({ x, y, z }); }
@@ -98,7 +99,7 @@ void jul::Transform::SetLocalScale(const glm::vec3& scale)
         return;
 
     m_LocalScale = scale;
-    SetScaleDirty();
+    SetTransformDirty();
 }
 
 void jul::Transform::SetWorldPosition(double x, double y, double z) { SetWorldPosition({ x, y, z }); }
@@ -111,7 +112,6 @@ void jul::Transform::SetWorldPosition(const glm::vec3& position)
 }
 
 void jul::Transform::SetWorldRotation(double x, double y, double z) { SetWorldRotation({ x, y, z }); }
-
 void jul::Transform::SetWorldRotation(const glm::vec3& rotation)
 {
     SetWorldRotation(glm::quat(glm::radians(rotation)));
@@ -126,7 +126,6 @@ void jul::Transform::SetWorldRotation(const glm::quat& rotation)
 }
 
 void jul::Transform::SetWorldScale(double x, double y, double z) { SetWorldScale({ x, y, z }); }
-
 void jul::Transform::SetWorldScale(const glm::vec3& scale)
 {
 
@@ -162,8 +161,9 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 
 		if (worldPositionStays)
         {
-            m_LocalPosition += m_ParentPtr->GetWorldPosition();
-            // TODO: SHOULD BE DONE FOR SCALE AND ROT
+            m_LocalPosition = glm::vec3(m_ParentPtr->GetWorldMatrix() * glm::vec4(m_LocalPosition, 1.0f));
+            m_LocalScale *= m_ParentPtr->GetWorldScale();
+            m_LocalRotation = m_ParentPtr->GetWorldRotation() * m_LocalRotation;
         }
     }
 
@@ -176,12 +176,13 @@ void jul::Transform::SetParent(Transform* newParentPtr, bool worldPositionStays)
 
 		if (worldPositionStays)
         {
-            m_LocalPosition -= m_ParentPtr->GetWorldPosition();
-            // TODO: SHOULD BE DONE FOR SCALE AND ROT
+            m_LocalPosition = glm::vec3(glm::inverse(m_ParentPtr->GetWorldMatrix()) * glm::vec4(m_LocalPosition, 1.0f));
+            m_LocalScale /= m_ParentPtr->GetWorldScale();
+            m_LocalRotation = glm::inverse(m_ParentPtr->GetWorldRotation()) * m_LocalRotation;
         }
     }
 
-    SetPositionDirty();
+    SetTransformDirty();
     GetGameObject()->SetActiveDirty();
 }
 
@@ -210,7 +211,7 @@ void jul::Transform::UpdateWorldPosition()
 	if(m_ParentPtr == nullptr)
 		m_WorldPosition = m_LocalPosition;
 	else
-        m_WorldPosition = m_LocalPosition + m_ParentPtr->GetWorldPosition();
+        m_WorldPosition = glm::vec3(m_ParentPtr->GetWorldMatrix() * glm::vec4(m_LocalPosition, 1.0f));
 
     m_PositionDirty = false;
 }
@@ -245,34 +246,17 @@ void jul::Transform::UpdateWorldMatrix()
     m_MatrixDirty = false;
 }
 
-void jul::Transform::SetPositionDirty()
+void jul::Transform::SetTransformDirty()
 {
     m_PositionDirty = true;
-    m_MatrixDirty = true;
-
-    for(Transform* childPtr : m_ChildPtrs)
-        if(not childPtr->m_PositionDirty)
-            childPtr->SetPositionDirty();
-}
-
-void jul::Transform::SetRotationDirty()
-{
     m_RotationDirty = true;
-    m_MatrixDirty = true;
-
-    for(Transform* childPtr : m_ChildPtrs)
-        if(not childPtr->m_RotationDirty)
-            childPtr->SetRotationDirty();
-}
-
-void jul::Transform::SetScaleDirty()
-{
     m_ScaleDirty = true;
     m_MatrixDirty = true;
 
     for(Transform* childPtr : m_ChildPtrs)
-        if(not childPtr->m_ScaleDirty)
-            childPtr->SetScaleDirty();
+        if(not childPtr->m_PositionDirty)
+            childPtr->SetTransformDirty();
 }
+
 
 void jul::Transform::OnRigidbodyDestroyed(Object* /*unused*/) { m_Rigidbody = nullptr; }

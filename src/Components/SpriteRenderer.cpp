@@ -1,7 +1,8 @@
 #include "SpriteRenderer.h"
+
+#include "RenderManager.h"
 #include "Sprite.h"
 #include "Transform.h"
-#include "RenderManager.h"
 
 jul::SpriteRenderer::SpriteRenderer(GameObject* parentPtr, const Sprite* spritePtr, int renderLayer, const glm::ivec2& drawCell) :
     RenderComponent(parentPtr, "SpriteRenderer", renderLayer),
@@ -26,7 +27,7 @@ void jul::SpriteRenderer::Render() const
 		return;
 
     const glm::vec2& pos = GetTransform().GetWorldPosition();
-    const float angle = GetTransform().GetEulerAngles().z;
+    const float angle = -GetTransform().GetEulerAngles().z;
     const glm::vec2& scale = GetTransform().GetWorldScale();
 
     RenderManager::GetInstance().RenderTexture(
