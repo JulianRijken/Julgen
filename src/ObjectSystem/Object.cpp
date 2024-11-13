@@ -23,10 +23,6 @@ void jul::Object::Destroy()
         m_BeingDestroyed = true;
         m_OnDestroyedEvent.Invoke(this);
     }
-    else
-    {
-        m_BeingDestroyed = true;
-    }
 }
 
 void jul::Object::DestroyDelayed(double delay)

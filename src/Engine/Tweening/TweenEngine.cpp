@@ -8,7 +8,20 @@ void jul::TweenEngine::Update()
     while(not m_QueuedTweens.empty())
     {
         auto& [tween, target] = m_QueuedTweens.front();
-        m_ActiveTweens.emplace_back(std::make_unique<TweenInstance>(std::move(tween), target));
+
+        // Yes we also do this in start but in the followng senario:
+        // An object was set to be destroyed while a tween is in the queue!
+        // I know stupid, so we do another check
+        if(target->IsBeingDestroyed())
+        {
+            if(tween.invokeWhenDestroyed and tween.onEnd)
+                tween.onEnd();
+        }
+        else
+        {
+            m_ActiveTweens.emplace_back(std::make_unique<TweenInstance>(std::move(tween), target));
+        }
+
         m_QueuedTweens.pop();
     }
 
@@ -32,7 +45,7 @@ bool jul::TweenEngine::HasActiveTweens(Object* target)
                                [target](auto& tween) { return target == tween->GetTarget(); });
 }
 
-const std::vector<std::unique_ptr<jul::TweenInstance> >& jul::TweenEngine::GetAllActiveTweens()
+const std::vector<std::unique_ptr<jul::TweenInstance>>& jul::TweenEngine::GetAllActiveTweens()
 {
     return GetInstance().m_ActiveTweens;
 }

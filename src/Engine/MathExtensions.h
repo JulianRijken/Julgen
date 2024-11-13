@@ -9,7 +9,6 @@
 
 namespace jul::math
 {
-
     // TODO: For the random stuff consider std::rand or random number generator
     //       this also to make it thread safe
     template<typename Type = double>
