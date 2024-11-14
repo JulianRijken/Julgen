@@ -73,13 +73,13 @@ namespace jul::math
 
         while(value > max)
         {
-            int offset = value - max;
+            Type offset = value - max;
             value -= range + offset;
         }
 
         while(value < min)
         {
-            int offset = min - value;
+            Type offset = min - value;
             value += range + offset;
         }
 

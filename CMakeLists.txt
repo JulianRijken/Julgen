@@ -4,7 +4,7 @@ project(Julgen)
 # Options
 option(USE_STEAMWORKS "Use steamworks SDK (must provide it in external/steamworks)" FALSE)
 option(USE_VLD "Use VLD on windows" TRUE)
-option(USE_ADDRESS_SANITIZER "Use VLD on windows" FALSE)
+option(USE_ADDRESS_SANITIZER "Use asan (Adress sanitizer) on windows" FALSE)
 
 
 # Sets
@@ -289,10 +289,10 @@ endif()
 
 
 
-# enable c++23 features
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_23)
+# enable c++20 features
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 set_property(TARGET ${TARGET_NAME} PROPERTY
-    CXX_STANDARD 23
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED TRUE
     CXX_EXTENSIONS FALSE
 )
